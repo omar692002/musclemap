@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="MuscleMap">
+  <rect width="512" height="512" rx="96" fill="#0f172a"/>
+  <path d="M256 96c-44 0-72 26-72 64 0 26 14 44 14 70 0 30-26 44-26 78 0 36 30 60 84 60s84-24 84-60c0-34-26-48-26-78 0-26 14-44 14-70 0-38-28-64-72-64z" fill="#38bdf8"/>
+  <circle cx="256" cy="168" r="22" fill="#0f172a"/>
+</svg>
