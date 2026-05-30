@@ -1,13 +1,13 @@
 import { useState } from 'react'
 import type { ThreeEvent } from '@react-three/fiber'
-import { OrbitControls, useCursor } from '@react-three/drei'
+import { useCursor } from '@react-three/drei'
 import type { MuscleId } from '../../../domain/enums/MuscleId'
 import type { MuscleRole } from '../../../domain/enums/MuscleRole'
 import type { Body3DShape, Vec3 } from './geometry3d'
 import { BODY_3D, MUSCLES_3D } from './geometry3d'
 import { MuscleMapConfig, ROLE_FILL } from '../../../config/muscleMap.config'
 
-interface Body3DSceneProps {
+interface ProceduralBodyProps {
   readonly highlight?: ReadonlyMap<string, MuscleRole>
   readonly selected?: string | null
   readonly onSelect?: (muscleId: MuscleId) => void
@@ -52,8 +52,12 @@ function ShapeMesh({ shape, color, emissive }: { shape: Body3DShape; color: stri
   }
 }
 
-/** The 3D scene: lights, the mannequin, clickable muscle groups, orbit controls. */
-export function Body3DScene({ highlight, selected, onSelect, onHover }: Body3DSceneProps) {
+/**
+ * The procedural mannequin: a stylised body + clickable muscle groups. Used as
+ * the instant fallback while the realistic anatomy model loads (and if it fails
+ * to load). Lights/controls live in the parent so both bodies share them.
+ */
+export function ProceduralBody({ highlight, selected, onSelect, onHover }: ProceduralBodyProps) {
   const [hovered, setHovered] = useState<MuscleId | null>(null)
   const colors = MuscleMapConfig.model3d
   const interactive = Boolean(onSelect)
@@ -61,10 +65,6 @@ export function Body3DScene({ highlight, selected, onSelect, onHover }: Body3DSc
 
   return (
     <>
-      <ambientLight intensity={0.75} />
-      <directionalLight position={[4, 6, 5]} intensity={1.1} />
-      <directionalLight position={[-4, 2, -5]} intensity={0.45} />
-
       {BODY_3D.map((shape, index) => (
         <ShapeMesh key={`body-${index}`} shape={shape} color={colors.body} emissive={NO_EMISSIVE} />
       ))}
@@ -111,8 +111,6 @@ export function Body3DScene({ highlight, selected, onSelect, onHover }: Body3DSc
           </group>
         )
       })}
-
-      <OrbitControls enablePan={false} enableDamping minDistance={2.6} maxDistance={6} />
     </>
   )
 }

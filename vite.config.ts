@@ -12,6 +12,23 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['icon.svg'],
+      workbox: {
+        // The 3D anatomy model is large — keep it out of the precache and
+        // instead cache it on first use so the app installs/loads fast but the
+        // model still works offline once viewed.
+        globIgnores: ['**/models/*.glb'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ url }) => url.pathname.endsWith('.glb'),
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'anatomy-models',
+              expiration: { maxEntries: 4 },
+              cacheableResponse: { statuses: [0, 200] },
+            },
+          },
+        ],
+      },
       manifest: {
         name: AppConfig.name,
         short_name: AppConfig.shortName,

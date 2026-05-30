@@ -170,13 +170,33 @@ Done:
   muscle's name + exercise count beneath. `MuscleMapPage` has a **2D / 3D toggle**; both views
   navigate a tapped muscle to the pre-filtered browser.
 
-### 3D follow-ups / open decision
-- **Realistic model is the next step.** The current mesh is a *procedural prototype* (proves
-  rotate + click + highlight + mobile perf). The "exact anatomical place" look needs a **segmented
-  anatomy GLTF**, which is an **asset + licensing** decision (free CC-BY-SA models like Z-Anatomy/
-  BodyParts3D are fine for the PFA but copyleft for the commercial tier; a licensed/paid model is
-  the commercial path). It swaps in behind the same `Body3DScene` contract — code, not rewrite.
-- Mobile GPU perf on a real device still to be spot-checked; lazy-load already in place.
+### Realistic anatomy model (integrated)
+The procedural mannequin is now the *fallback*; the default 3D body is a **real segmented
+muscular-system model** (`public/models/muscles.glb`, ~6.6 MB, BodyParts3D / Z-Anatomy, CC BY-SA).
+- **Loader** (`three/AnatomyModel.tsx`): `useGLTF`, clones the scene, tags each mesh with the
+  muscle id it belongs to, gives it its own material (recoloured by role/hover/selection), and
+  auto-fits (centre + scale). Same `highlight`/`selected`/`onSelect` contract as everything else.
+- **Mapping** (`three/anatomyMuscleMap.ts`): ordered keyword rules matched against each mesh's
+  **ancestor chain** (own name + parent group names), so the model's compartment groups
+  (e.g. "Anterior compartment of forearm.g") map a whole region in one rule. 15 tests cover the
+  representative cases + assert every taxonomy muscle has a rule. Unmatched tissue (fasciae,
+  hand/foot intrinsics) stays neutral. This table is the curation seam — refine on review.
+- **Robust loading**: `ProceduralBody` shows instantly as the `<Suspense>` fallback while the
+  model streams in, and a `ModelErrorBoundary` falls back to it if the asset fails. Lights +
+  `OrbitControls` live in `Muscle3DView`, shared by both bodies.
+- **PWA**: the `.glb` is excluded from precache (`vite.config.ts` workbox `globIgnores`) and
+  runtime-cached CacheFirst on first view, so install stays light but the model works offline after.
+- **CC BY-SA attribution** shown under the model (`AnatomyModelConfig.attribution`).
+
+### 3D open items (not blockers)
+- **Orientation/scale spot-check** on the real model + **mobile GPU perf** on a device — couldn't
+  be eyeballed in this environment; the auto-fit + OrbitControls make it usable regardless, easy to
+  nudge constants in `AnatomyModelConfig` / camera if it loads facing away.
+- **Commercial licence**: CC BY-SA is copyleft — swap to a commercial-friendly / coach-owned model
+  before any paid release. The mapping is model-agnostic, so it's a file swap. (See
+  `public/models/README.md`.)
+- Mapping refinements: a few small muscles (serratus, tibialis, rotator-cuff subtleties) are
+  approximations or left neutral; tighten as the map is reviewed.
 
 ## Next: M4 — Program generator v1
 Pick split/days/equipment → a balanced, non-redundant routine + weekly volume-per-muscle readout.
