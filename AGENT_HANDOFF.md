@@ -40,12 +40,15 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
-**M0 and M1 are COMPLETE.** M0 baseline is committed; M1 (data foundation) is committed.
-Build green (`npm run build`), tests pass (`npm run test` — 11 Vitest tests), lint clean.
-873 exercises import + normalise through `repositoryFactory.ts` behind the repository interfaces.
-Next is **M2 — Exercise browser** (list/search/filter + detail page). See PROGRESS.md -> "Next".
+**M0, M1 and M2 are COMPLETE** (each committed). Build green (`npm run build`), tests pass
+(`npm run test` — 11 Vitest), lint clean (`npm run lint`).
+- M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.
+- M2: routed UI (`react-router-dom`) — exercise browser (search + group/equipment filters + paging)
+  at `/`, detail page at `/exercise/:id`. UI depends on repository *interfaces* via
+  `context/RepositoryContext.ts`; `main.tsx` is the composition root that injects the concrete repos.
+Next is **M3 — Interactive muscle map**. See PROGRESS.md -> "Next".
 
-To run the test suite: `npm run test` (Vitest, added in M1).
+To see it: `npm run dev`, open the printed URL. To run tests: `npm run test`.
 
 ## Decisions taken autonomously in M1 (flagged for your review)
 - **Muscle-level taxonomy, not head-level (yet).** The source is group-level; head-level detail

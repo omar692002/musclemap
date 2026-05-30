@@ -5,8 +5,8 @@
 |---|-----------|-------------|--------|
 | **M0** | Project setup | Vite+React+TS+Tailwind+PWA scaffold, git, SOLID structure, data-layer seam, docs, green build | done |
 | **M1** | Data foundation | Import & normalise free-exercise-db -> our entities; muscle taxonomy; populate `StaticExerciseRepository` (+ tests) | done |
-| **M2** | Exercise browser | List/search/filter by muscle group & equipment; detail page (primary/secondary/stabilizer + media) | next |
-| **M3** | Interactive muscle map | Clickable front/back SVG (head-granular); muscle -> exercises; exercise -> highlighted muscles | todo |
+| **M2** | Exercise browser | List/search/filter by muscle group & equipment; detail page (primary/secondary + media) | done |
+| **M3** | Interactive muscle map | Clickable front/back SVG (head-granular); muscle -> exercises; exercise -> highlighted muscles | next |
 | **M4** | Program generator v1 | Pick split/days/equipment -> balanced, non-redundant routine + weekly volume-per-muscle readout | todo |
 
 ## Evolution (post-MVP)

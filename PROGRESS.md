@@ -79,6 +79,30 @@ Done:
 - **Head-level taxonomy & stabilizers:** muscle-level only for now; per-exercise head detail and
   stabilizer involvements are a hand-curation pass (our value-add).
 
-## Next: M2 — Exercise browser
-List/search/filter by muscle group & equipment; detail page (primary/secondary + media).
-The repositories and enriched entities it needs are now in place behind their interfaces.
+## M2 — Exercise browser (complete)
+**State:** A working, routed UI over the M1 data. Build green, `npm run test` (11) + `npm run lint`
+clean. Run `npm run dev` and open the printed URL.
+
+Done:
+- **Routing** (`react-router-dom` v7): `/` browser, `/exercise/:id` detail, `*` -> redirect.
+  Routes centralised in `config/routes.ts` (`exerciseDetailPath` builder — no hardcoded URLs).
+- **DI in the UI**: `context/RepositoryContext.ts` exposes the repository *interfaces*; the
+  composition root (`main.tsx`) injects the concrete static instances. Components never import
+  the factory — the static -> Supabase swap stays a one-file change.
+- **Browser page** (`features/exercise-browser/`): name search + muscle-group + equipment filters
+  (`useExerciseFilters`, derived via `useMemo`), responsive card grid, "Load more" paging
+  (`UiConfig.browserPageSize = 60`), live result count.
+- **Detail page**: image(s), meta badges (category/level/equipment/mechanic/force), muscles worked
+  grouped by role (Primary/Secondary), numbered instructions.
+- **Shared UI**: `components/Badge.tsx` (tone variants); `config/labels.ts` centralises every
+  enum -> display label + static copy (`UiText`) — no hardcoded display strings.
+
+### Known M2 follow-ups (not blockers)
+- **SPA deep-link fallback for production**: a static host must rewrite unknown paths to
+  `index.html` (else refreshing `/exercise/:id` 404s). Vite dev/preview already handle it; add a
+  Vercel rewrite when we deploy.
+- Bundle still ~1 MB (the dataset) — same note as M1.
+
+## Next: M3 — Interactive muscle map
+Clickable front/back SVG (muscle/head granular): muscle -> exercises, exercise -> highlighted
+muscles. The `IMuscleRepository` + `findByMuscleGroup` seam is ready for it.
