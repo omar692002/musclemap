@@ -150,6 +150,34 @@ Done:
   pass. The figures are stylised/diagrammatic, sized for clarity over anatomical precision.
 - Theme still dark; the light "solar" pass will mostly touch `muscleMap.config.ts` colours.
 
+## M3+ — Rotatable 3D muscle model (prototype, complete)
+**State:** A working 3D muscle model on `/map`, toggleable with the 2D view (3D is the default).
+Promoted to a **PFA must-have** at the user's request. Build green, lint clean, 15 tests pass.
+The 3D code is **code-split into its own lazy chunk** (`Muscle3DView`, ~240 kB gzip) — fetched
+only when the 3D view is shown, so the initial load is unchanged.
+
+Done:
+- **Stack:** `three` + `@react-three/fiber` (v9, React 19) + `@react-three/drei` (OrbitControls,
+  `useCursor`). All under `features/muscle-map/three/`.
+- **`geometry3d.ts`**: the 3D cousin of `bodyGeometry` — a stylised mannequin + every muscle
+  placed as typed primitives (sphere/capsule/box) in a Y-up space, front muscles at +Z and back
+  at −Z so rotation reveals them. `mirrorShape`-style `pair()` keeps left/right authored once.
+  A test asserts the 3D model also covers the full taxonomy.
+- **`Body3DScene`**: lights + mannequin + clickable muscle groups (hover highlight, `onSelect`,
+  pointer cursor) + orbit controls. Same `highlight`/`selected`/`onSelect` contract as the 2D
+  `BodyDiagram`, so it's a drop-in alternate view. Palette in `MuscleMapConfig.model3d`.
+- **`Muscle3DView`** (default export, lazy-loaded): wraps the `<Canvas>`, shows the hovered
+  muscle's name + exercise count beneath. `MuscleMapPage` has a **2D / 3D toggle**; both views
+  navigate a tapped muscle to the pre-filtered browser.
+
+### 3D follow-ups / open decision
+- **Realistic model is the next step.** The current mesh is a *procedural prototype* (proves
+  rotate + click + highlight + mobile perf). The "exact anatomical place" look needs a **segmented
+  anatomy GLTF**, which is an **asset + licensing** decision (free CC-BY-SA models like Z-Anatomy/
+  BodyParts3D are fine for the PFA but copyleft for the commercial tier; a licensed/paid model is
+  the commercial path). It swaps in behind the same `Body3DScene` contract — code, not rewrite.
+- Mobile GPU perf on a real device still to be spot-checked; lazy-load already in place.
+
 ## Next: M4 — Program generator v1
 Pick split/days/equipment → a balanced, non-redundant routine + weekly volume-per-muscle readout.
 `contribution` weights on involvements (M1) and the muscle map (M3) feed the volume math/coverage.

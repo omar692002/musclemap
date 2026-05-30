@@ -2,11 +2,18 @@ import { describe, it, expect } from 'vitest'
 import { MuscleId } from '../../../domain/enums/MuscleId'
 import { MUSCLE_REGIONS } from '../geometry/bodyGeometry'
 import { mirrorShape } from '../geometry/shapes'
+import { MUSCLES_3D } from '../three/geometry3d'
 
 describe('muscle map geometry', () => {
   it('draws a region for every muscle in the taxonomy', () => {
     const drawn = new Set(MUSCLE_REGIONS.map((region) => region.muscleId))
     const missing = Object.values(MuscleId).filter((id) => !drawn.has(id))
+    expect(missing).toEqual([])
+  })
+
+  it('models every muscle in the 3D figure too', () => {
+    const modelled = new Set(MUSCLES_3D.map((segment) => segment.muscleId))
+    const missing = Object.values(MuscleId).filter((id) => !modelled.has(id))
     expect(missing).toEqual([])
   })
 

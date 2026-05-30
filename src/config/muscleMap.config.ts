@@ -18,6 +18,14 @@ export const MuscleMapConfig = {
     regionStroke: '#3f5573',
     selectedStroke: '#38bdf8',
   },
+  /** Palette for the 3D model view (three.js materials). */
+  model3d: {
+    body: '#1f2d42',
+    muscle: '#3b5170',
+    muscleHover: '#6b86ad',
+    selected: '#38bdf8',
+    background: '#0b1220',
+  },
 } as const
 
 /** Fill colour applied to a muscle region by the role it plays (heat scale). */

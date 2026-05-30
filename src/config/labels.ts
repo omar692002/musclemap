@@ -102,4 +102,8 @@ export const UiText = {
   muscleFilterLabel: 'Muscle',
   clearFilter: 'Clear',
   exercisesWord: 'exercises',
+  view2dLabel: '2D',
+  view3dLabel: '3D',
+  map3dHint: 'Drag to rotate · tap a muscle',
+  loading3d: 'Loading 3D model…',
 } as const

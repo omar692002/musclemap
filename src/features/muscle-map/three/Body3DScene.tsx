@@ -1,0 +1,118 @@
+import { useState } from 'react'
+import type { ThreeEvent } from '@react-three/fiber'
+import { OrbitControls, useCursor } from '@react-three/drei'
+import type { MuscleId } from '../../../domain/enums/MuscleId'
+import type { MuscleRole } from '../../../domain/enums/MuscleRole'
+import type { Body3DShape, Vec3 } from './geometry3d'
+import { BODY_3D, MUSCLES_3D } from './geometry3d'
+import { MuscleMapConfig, ROLE_FILL } from '../../../config/muscleMap.config'
+
+interface Body3DSceneProps {
+  readonly highlight?: ReadonlyMap<string, MuscleRole>
+  readonly selected?: string | null
+  readonly onSelect?: (muscleId: MuscleId) => void
+  readonly onHover?: (muscleId: MuscleId | null) => void
+}
+
+const NO_EMISSIVE = '#000000'
+const tuple = (v: Vec3): [number, number, number] => [v[0], v[1], v[2]]
+
+function ShapeMesh({ shape, color, emissive }: { shape: Body3DShape; color: string; emissive: string }) {
+  const material = (
+    <meshStandardMaterial
+      color={color}
+      emissive={emissive}
+      emissiveIntensity={emissive === NO_EMISSIVE ? 0 : 0.5}
+      roughness={0.6}
+      metalness={0.05}
+    />
+  )
+  switch (shape.kind) {
+    case 'sphere':
+      return (
+        <mesh position={tuple(shape.position)} scale={shape.scale ? tuple(shape.scale) : undefined}>
+          <sphereGeometry args={[shape.radius, 24, 24]} />
+          {material}
+        </mesh>
+      )
+    case 'capsule':
+      return (
+        <mesh position={tuple(shape.position)} rotation={shape.rotation ? tuple(shape.rotation) : undefined}>
+          <capsuleGeometry args={[shape.radius, shape.length, 6, 16]} />
+          {material}
+        </mesh>
+      )
+    case 'box':
+      return (
+        <mesh position={tuple(shape.position)} rotation={shape.rotation ? tuple(shape.rotation) : undefined}>
+          <boxGeometry args={tuple(shape.size)} />
+          {material}
+        </mesh>
+      )
+  }
+}
+
+/** The 3D scene: lights, the mannequin, clickable muscle groups, orbit controls. */
+export function Body3DScene({ highlight, selected, onSelect, onHover }: Body3DSceneProps) {
+  const [hovered, setHovered] = useState<MuscleId | null>(null)
+  const colors = MuscleMapConfig.model3d
+  const interactive = Boolean(onSelect)
+  useCursor(hovered !== null && interactive)
+
+  return (
+    <>
+      <ambientLight intensity={0.75} />
+      <directionalLight position={[4, 6, 5]} intensity={1.1} />
+      <directionalLight position={[-4, 2, -5]} intensity={0.45} />
+
+      {BODY_3D.map((shape, index) => (
+        <ShapeMesh key={`body-${index}`} shape={shape} color={colors.body} emissive={NO_EMISSIVE} />
+      ))}
+
+      {MUSCLES_3D.map((segment) => {
+        const role = highlight?.get(segment.muscleId)
+        const isHovered = hovered === segment.muscleId
+        const isSelected = selected === segment.muscleId
+        const color = role ? ROLE_FILL[role] : isHovered ? colors.muscleHover : colors.muscle
+        const emissive = isSelected ? colors.selected : NO_EMISSIVE
+
+        return (
+          <group
+            key={segment.muscleId}
+            onClick={
+              interactive
+                ? (event: ThreeEvent<MouseEvent>) => {
+                    event.stopPropagation()
+                    onSelect?.(segment.muscleId)
+                  }
+                : undefined
+            }
+            onPointerOver={
+              interactive
+                ? (event: ThreeEvent<PointerEvent>) => {
+                    event.stopPropagation()
+                    setHovered(segment.muscleId)
+                    onHover?.(segment.muscleId)
+                  }
+                : undefined
+            }
+            onPointerOut={
+              interactive
+                ? () => {
+                    setHovered((current) => (current === segment.muscleId ? null : current))
+                    onHover?.(null)
+                  }
+                : undefined
+            }
+          >
+            {segment.shapes.map((shape, index) => (
+              <ShapeMesh key={`${segment.muscleId}-${index}`} shape={shape} color={color} emissive={emissive} />
+            ))}
+          </group>
+        )
+      })}
+
+      <OrbitControls enablePan={false} enableDamping minDistance={2.6} maxDistance={6} />
+    </>
+  )
+}

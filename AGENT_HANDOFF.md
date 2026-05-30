@@ -50,6 +50,12 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
   (`BodyDiagram` over `geometry/`), muscle→exercises (click → browser `?muscle=` filter) and
   exercise→highlighted-muscles (read-only `MuscleMapBoard` on the detail page). Geometry/colours
   in `config/muscleMap.config.ts`. Muscle-level only (no heads yet).
+- M3+ **3D model (prototype)**: a rotatable three.js / react-three-fiber muscle model
+  (`features/muscle-map/three/`), default view on `/map` with a 2D/3D toggle. Same
+  `highlight`/`onSelect` contract as the 2D diagram; lazy-loaded (own chunk). Currently a
+  *procedural* mannequin — a realistic segmented anatomy GLTF is the next swap (asset + licensing
+  decision; free CC-BY-SA fine for the PFA, paid/licensed for commercial). Promoted to a
+  **PFA must-have**.
 - **Next is M4 — program generator v1.**
 - A light "solar" theme is still requested but deferred (cosmetic; mostly `muscleMap.config.ts`
   colours + Tailwind classes).
