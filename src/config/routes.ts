@@ -5,6 +5,7 @@
 export const AppRoutes = {
   browser: '/',
   exerciseDetail: '/exercise/:id',
+  muscleMap: '/map',
 } as const
 
 /**
@@ -15,7 +16,15 @@ export const BrowserParam = {
   search: 'q',
   group: 'group',
   equipment: 'equipment',
+  muscle: 'muscle',
 } as const
+
+/** Browser URL pre-filtered to a single muscle (used by the muscle map). */
+export function browserPathForMuscle(muscleId: string): string {
+  const params = new URLSearchParams()
+  params.set(BrowserParam.muscle, muscleId)
+  return `${AppRoutes.browser}?${params.toString()}`
+}
 
 /** Builds the detail URL for an exercise id (ids are URL-encoded). */
 export function exerciseDetailPath(id: string): string {

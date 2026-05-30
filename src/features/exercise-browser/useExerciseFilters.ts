@@ -10,10 +10,13 @@ export interface ExerciseFiltersState {
   readonly search: string
   readonly group: MuscleGroup | null
   readonly equipment: Equipment | null
+  /** A single muscle id (set by the muscle map); null when not filtering by muscle. */
+  readonly muscle: string | null
   readonly results: readonly Exercise[]
   setSearch(value: string): void
   setGroup(value: MuscleGroup | null): void
   setEquipment(value: Equipment | null): void
+  setMuscle(value: string | null): void
 }
 
 /** Reads a raw query value back into an enum member, or null if absent/invalid. */
@@ -37,6 +40,7 @@ export function useExerciseFilters(
   const search = params.get(BrowserParam.search) ?? ''
   const group = readEnum(MuscleGroup, params.get(BrowserParam.group))
   const equipment = readEnum(Equipment, params.get(BrowserParam.equipment))
+  const muscle = params.get(BrowserParam.muscle)
 
   // `replace` so typing/filtering doesn't pile up history entries; empty
   // values are dropped to keep the URL clean.
@@ -67,12 +71,19 @@ export function useExerciseFilters(
     (value: Equipment | null) => setParam(BrowserParam.equipment, value),
     [setParam],
   )
+  const setMuscle = useCallback(
+    (value: string | null) => setParam(BrowserParam.muscle, value),
+    [setParam],
+  )
 
   const results = useMemo(() => {
     const term = search.trim().toLowerCase()
     return exercises.filter((exercise) => {
       if (term && !exercise.name.toLowerCase().includes(term)) return false
       if (equipment && exercise.equipment !== equipment) return false
+      if (muscle && !exercise.muscles.some((involvement) => involvement.muscleId === muscle)) {
+        return false
+      }
       if (
         group &&
         !exercise.muscles.some((involvement) => muscleIndex.get(involvement.muscleId)?.group === group)
@@ -81,7 +92,7 @@ export function useExerciseFilters(
       }
       return true
     })
-  }, [exercises, muscleIndex, search, group, equipment])
+  }, [exercises, muscleIndex, search, group, equipment, muscle])
 
-  return { search, group, equipment, results, setSearch, setGroup, setEquipment }
+  return { search, group, equipment, muscle, results, setSearch, setGroup, setEquipment, setMuscle }
 }

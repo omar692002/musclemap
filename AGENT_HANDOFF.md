@@ -40,17 +40,24 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
-**M0, M1 and M2 are COMPLETE** (each committed), plus a **post-M2 fixes** pass. Build green
-(`npm run build`), tests pass (`npm run test` — 11 Vitest), lint clean (`npm run lint`).
-- Post-M2: filters now persist via URL query params (`useSearchParams`, `BrowserParam` in
+**M0, M1, M2 and M3 are COMPLETE** (each committed), plus a **post-M2 fixes** pass. Build green
+(`npm run build`), tests pass (`npm run test` — 14 Vitest), lint clean (`npm run lint`).
+- Post-M2: filters persist via URL query params (`useSearchParams`, `BrowserParam` in
   `config/routes.ts`); media model is video-ready (`Exercise.media: ExerciseMedia[]`,
   `ExerciseMediaGallery` renders image/file-video/YouTube). Videos not yet populated (manual
-  curation, T1). A light "solar" theme is requested but deferred (cosmetic).
+  curation, T1).
+- M3: interactive muscle map at `/map` (`features/muscle-map/`) — hand-built front/back SVG
+  (`BodyDiagram` over `geometry/`), muscle→exercises (click → browser `?muscle=` filter) and
+  exercise→highlighted-muscles (read-only `MuscleMapBoard` on the detail page). Geometry/colours
+  in `config/muscleMap.config.ts`. Muscle-level only (no heads yet).
+- **Next is M4 — program generator v1.**
+- A light "solar" theme is still requested but deferred (cosmetic; mostly `muscleMap.config.ts`
+  colours + Tailwind classes).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.
 - M2: routed UI (`react-router-dom`) — exercise browser (search + group/equipment filters + paging)
   at `/`, detail page at `/exercise/:id`. UI depends on repository *interfaces* via
   `context/RepositoryContext.ts`; `main.tsx` is the composition root that injects the concrete repos.
-Next is **M3 — Interactive muscle map**. See PROGRESS.md -> "Next".
+Next is **M4 — Program generator v1**. See PROGRESS.md -> "Next".
 
 To see it: `npm run dev`, open the printed URL. To run tests: `npm run test`.
 
@@ -66,5 +73,6 @@ To see it: `npm run dev`, open the printed URL. To run tests: `npm run test`.
   chunk-size warning; lazy-loading is an easy later optimization.
 
 ## Pending decisions for the user
-- Confirm starting **M2**, and the first cut of the browser UX (group-first vs search-first).
-- Whether to author head-level taxonomy + stabilizers now or keep deferring.
+- Confirm starting **M4** (program generator) and its first cut (split presets, days, equipment).
+- Whether to author head-level taxonomy + stabilizers now or keep deferring (affects map detail).
+- The light "solar" theme pass — when to do it (currently deferred as cosmetic).

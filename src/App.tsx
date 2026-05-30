@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from 'react-router-dom'
 import { AppRoutes } from './config/routes'
 import { ExerciseBrowserPage } from './features/exercise-browser/ExerciseBrowserPage'
 import { ExerciseDetailPage } from './features/exercise-browser/ExerciseDetailPage'
+import { MuscleMapPage } from './features/muscle-map/MuscleMapPage'
 
 /**
  * Application shell + routing. The exercise browser (M2) is the landing
@@ -13,6 +14,7 @@ function App() {
     <div className="min-h-dvh bg-slate-900 text-slate-100">
       <Routes>
         <Route path={AppRoutes.browser} element={<ExerciseBrowserPage />} />
+        <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />
         <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
         <Route path="*" element={<Navigate to={AppRoutes.browser} replace />} />
       </Routes>

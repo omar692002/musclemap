@@ -2,6 +2,8 @@ import { Link, useParams } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
 import { ExerciseMediaGallery } from './components/ExerciseMediaGallery'
+import { MuscleMapBoard } from '../muscle-map/MuscleMapBoard'
+import { highlightFromExercise } from '../muscle-map/highlight'
 import { Badge } from '../../components/Badge'
 import { AppRoutes } from '../../config/routes'
 import {
@@ -56,7 +58,10 @@ export function ExerciseDetailPage() {
       <ExerciseMediaGallery media={exercise.media} title={exercise.name} />
 
       <section className="mb-6">
-        <h2 className="mb-2 text-lg font-semibold text-slate-100">{UiText.musclesWorked}</h2>
+        <h2 className="mb-3 text-lg font-semibold text-slate-100">{UiText.musclesWorked}</h2>
+        <div className="mb-4">
+          <MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
+        </div>
         <MuscleInvolvementList exercise={exercise} muscleIndex={muscleIndex} />
       </section>
 

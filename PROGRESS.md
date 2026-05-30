@@ -121,6 +121,35 @@ Two user-requested fixes after the M2 review. Build green, lint clean, 11 tests 
 - **Videos are not populated yet:** the model is ready but no exercise carries a video. Filling
   them is manual curation (no auto exercise→video map) — planned for the coach-content tier (T1).
 
-## Next: M3 — Interactive muscle map
-Clickable front/back SVG (muscle/head granular): muscle -> exercises, exercise -> highlighted
-muscles. The `IMuscleRepository` + `findByMuscleGroup` seam is ready for it.
+## M3 — Interactive muscle map (complete)
+**State:** A clickable front+back body map, reused as a read-only highlight on the detail page.
+Build green, lint clean, `npm run test` now 14 (added geometry-integrity tests). Reachable from
+the browser header ("Muscle map →") at `/map`.
+
+Done:
+- **Hand-built SVG figures** (`features/muscle-map/geometry/`): a stylised body drawn from typed
+  primitives (`BodyShape` = ellipse | rect | poly) with a `mirrorShape` helper, so left/right
+  muscles are authored once and mirrored. `bodyGeometry.ts` maps every `MuscleId` to region(s) on
+  a `BodyView` (Front/Back); a test asserts the map covers the whole taxonomy. No external art /
+  licensing — we own it, and it's easy to restyle for the planned light theme.
+- **`BodyDiagram`** renders silhouette + regions; colours regions by an optional `highlight`
+  (muscleId→role) and fires `onSelect` when interactive (keyboard-accessible: role/button, tab,
+  Enter/Space). Geometry + palette live in `config/muscleMap.config.ts` (no hardcoded numbers/
+  colours) — `ROLE_FILL` gives the primary/secondary heat colours.
+- **`MuscleMapBoard`** composes Front+Back + a `MuscleMapLegend`; reused in two places:
+  - **Map page** (`/map`): interactive; each region tooltip shows the muscle + its exercise count;
+    tapping navigates to the browser pre-filtered to that muscle.
+  - **Exercise detail**: read-only, highlighting that exercise's muscles by role (the
+    "exercise → highlighted muscles" half).
+- **Muscle-level browser filter**: new `muscle` URL param (`BrowserParam.muscle`,
+  `browserPathForMuscle`) filters by exact muscle id; shown as a clearable chip on the browser.
+- `BodyView` enum added to the domain vocabulary; `BODY_VIEW_LABELS` in `config/labels.ts`.
+
+### Known M3 follow-ups (not blockers)
+- **Muscle-level granularity only** (no heads yet) — deliberate; head-level is a later curation
+  pass. The figures are stylised/diagrammatic, sized for clarity over anatomical precision.
+- Theme still dark; the light "solar" pass will mostly touch `muscleMap.config.ts` colours.
+
+## Next: M4 — Program generator v1
+Pick split/days/equipment → a balanced, non-redundant routine + weekly volume-per-muscle readout.
+`contribution` weights on involvements (M1) and the muscle map (M3) feed the volume math/coverage.

@@ -1,15 +1,17 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { useExerciseFilters } from './useExerciseFilters'
 import { FilterBar } from './components/FilterBar'
 import { ExerciseCard } from './components/ExerciseCard'
 import { UiText } from '../../config/labels'
 import { UiConfig } from '../../config/ui.config'
+import { AppRoutes } from '../../config/routes'
 
 /** Landing screen: search/filter the catalog and tap through to detail. */
 export function ExerciseBrowserPage() {
   const { exercises, muscleIndex, loading } = useExerciseData()
-  const { search, group, equipment, results, setSearch, setGroup, setEquipment } =
+  const { search, group, equipment, muscle, results, setSearch, setGroup, setEquipment, setMuscle } =
     useExerciseFilters(exercises, muscleIndex)
   const [visibleCount, setVisibleCount] = useState<number>(UiConfig.browserPageSize)
 
@@ -28,7 +30,12 @@ export function ExerciseBrowserPage() {
     setEquipment(value)
     resetPaging()
   }
+  const clearMuscle = () => {
+    setMuscle(null)
+    resetPaging()
+  }
 
+  const muscleName = muscle ? muscleIndex.get(muscle)?.name ?? null : null
   const visible = results.slice(0, visibleCount)
   const remaining = results.length - visible.length
 
@@ -36,10 +43,12 @@ export function ExerciseBrowserPage() {
     <div className="mx-auto max-w-5xl px-4 py-6">
       <header className="mb-4 flex items-baseline justify-between gap-3">
         <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.appName}</h1>
-        <span className="text-sm text-slate-400">{results.length} exercises</span>
+        <Link to={AppRoutes.muscleMap} className="text-sm text-sky-400 hover:text-sky-300">
+          {UiText.openMap}
+        </Link>
       </header>
 
-      <div className="mb-5">
+      <div className="mb-3">
         <FilterBar
           search={search}
           group={group}
@@ -48,6 +57,25 @@ export function ExerciseBrowserPage() {
           onGroupChange={handleGroupChange}
           onEquipmentChange={handleEquipmentChange}
         />
+      </div>
+
+      <div className="mb-5 flex flex-wrap items-center gap-2">
+        <span className="text-sm text-slate-400">
+          {results.length} {UiText.exercisesWord}
+        </span>
+        {muscleName ? (
+          <button
+            type="button"
+            onClick={clearMuscle}
+            className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-sky-200 transition hover:bg-sky-500/20"
+          >
+            {UiText.muscleFilterLabel}: {muscleName}
+            <span aria-hidden className="text-sky-300">
+              ✕
+            </span>
+            <span className="sr-only">{UiText.clearFilter}</span>
+          </button>
+        ) : null}
       </div>
 
       {loading ? (

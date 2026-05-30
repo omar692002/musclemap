@@ -5,6 +5,7 @@ import { ExerciseLevel } from '../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../domain/enums/ExerciseCategory'
+import { BodyView } from '../domain/enums/BodyView'
 
 /**
  * Human-readable labels for enum values, and static UI copy.
@@ -49,6 +50,11 @@ export const MUSCLE_ROLE_LABELS: Readonly<Record<MuscleRole, string>> = {
   [MuscleRole.Stabilizer]: 'Stabilizer',
 }
 
+export const BODY_VIEW_LABELS: Readonly<Record<BodyView, string>> = {
+  [BodyView.Front]: 'Front',
+  [BodyView.Back]: 'Back',
+}
+
 export const EXERCISE_LEVEL_LABELS: Readonly<Record<ExerciseLevel, string>> = {
   [ExerciseLevel.Beginner]: 'Beginner',
   [ExerciseLevel.Intermediate]: 'Intermediate',
@@ -90,4 +96,10 @@ export const UiText = {
   musclesWorked: 'Muscles worked',
   instructions: 'Instructions',
   noInstructions: 'No instructions provided for this exercise.',
+  openMap: 'Muscle map →',
+  mapTitle: 'Muscle map',
+  mapHelp: 'Tap a muscle to see the exercises that train it.',
+  muscleFilterLabel: 'Muscle',
+  clearFilter: 'Clear',
+  exercisesWord: 'exercises',
 } as const
