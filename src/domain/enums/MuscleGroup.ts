@@ -16,4 +16,8 @@ export enum MuscleGroup {
   Glutes = 'GLUTES',
   Calves = 'CALVES',
   Neck = 'NECK',
+  // Added in M1: the source dataset distinguishes hip abductors/adductors,
+  // which have no anatomically-correct home among the groups above.
+  Adductors = 'ADDUCTORS',
+  Abductors = 'ABDUCTORS',
 }

@@ -46,8 +46,39 @@ In Safari: Share -> **Add to Home Screen** to install it as an app.
 - **PWA icons:** currently one SVG icon. For perfect iOS install polish, add PNG
   `apple-touch-icon` (180x180) + 192/512 PNGs. Cosmetic; deferred.
 
-## Next: M1 — Data foundation
-1. Pull `yuhonas/free-exercise-db` data.
-2. Author the muscle + muscle-head taxonomy (`Muscle` records, ids, groups).
-3. Write a normaliser: their schema -> our `Exercise`/`MuscleInvolvement` (+ role mapping).
-4. Populate `StaticExerciseRepository` and add a tiny test that `getAll()` returns data.
+## M1 — Data foundation (complete)
+**State:** The static data layer is populated and wired end-to-end. Build is green
+(`npm run build`), `npm run test` passes (11 tests, Vitest), `npm run lint` clean.
+The app shell shows a live "873 exercises loaded" badge — proof the pipeline works.
+
+Done:
+- **Imported** `yuhonas/free-exercise-db` (873 exercises) -> `src/data/static/source/exercises.json`.
+- **Authored the muscle taxonomy** (`data/static/taxonomy/muscles.ts`): 17 muscles, each with a
+  `MuscleId` (new enum) and a `MuscleGroup`. Granularity is **muscle-level** for M1 (head-level is a
+  deliberate later pass — see "Pending decisions").
+- **New domain enums** (no magic strings): `MuscleId`, `Equipment`, `ExerciseMechanic`,
+  `ExerciseForce`, `ExerciseCategory`, `ExerciseLevel`. Added `Adductors` + `Abductors` to
+  `MuscleGroup` (the source distinguishes hip ab/adductors; no correct existing home).
+- **Enriched `Exercise`** with `category`, `level`, `equipment?`, `mechanic?`, `force?`,
+  `instructions`, `images` (resolved CDN URLs).
+- **Mapping layer** (`data/static/mapping/sourceMuscleMap.ts`): source vocabulary -> our
+  enums/taxonomy, the single place raw strings are interpreted. `ROLE_DEFAULT_CONTRIBUTION`
+  gives Primary/Secondary/Stabilizer default volume weights.
+- **`ExerciseNormalizer`**: raw record -> immutable `Exercise`; derives primary/secondary
+  involvements; resolves images against `DataSourceConfig.exerciseImageBaseUrl` (jsDelivr CDN —
+  images are *not* bundled). Stabilizers intentionally not fabricated (source has none).
+- **Repositories wired**: `StaticExerciseRepository` (now with `findByMuscleGroup` via a
+  muscleId->group index), new `StaticMuscleRepository` + `IMuscleRepository`. Composition root:
+  `data/static/repositoryFactory.ts` exports `exerciseRepository` / `muscleRepository`.
+- **Tests** (Vitest, added as devDep; `npm run test`): normaliser mapping, taxonomy integrity
+  (every source muscle resolves to a real muscle), repository `getAll/getById/findByMuscleGroup`.
+
+### Known M1 follow-ups (not blockers)
+- **Bundle size:** the dataset is imported into the JS bundle (~1 MB). Fine for now (PWA-cached);
+  lazy-load or pre-build a slimmer JSON if it grows. Build prints the >500 kB chunk warning.
+- **Head-level taxonomy & stabilizers:** muscle-level only for now; per-exercise head detail and
+  stabilizer involvements are a hand-curation pass (our value-add).
+
+## Next: M2 — Exercise browser
+List/search/filter by muscle group & equipment; detail page (primary/secondary + media).
+The repositories and enriched entities it needs are now in place behind their interfaces.

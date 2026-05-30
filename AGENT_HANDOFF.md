@@ -40,10 +40,24 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
-**M0 (project setup) is COMPLETE and the build is green.** Next is **M1 — Data foundation**:
-import `yuhonas/free-exercise-db`, author the muscle + muscle-head taxonomy, write a normaliser
-into our entities, and populate `StaticExerciseRepository` (+ a small test). See PROGRESS.md -> "Next".
+**M0 and M1 are COMPLETE.** M0 baseline is committed; M1 (data foundation) is committed.
+Build green (`npm run build`), tests pass (`npm run test` — 11 Vitest tests), lint clean.
+873 exercises import + normalise through `repositoryFactory.ts` behind the repository interfaces.
+Next is **M2 — Exercise browser** (list/search/filter + detail page). See PROGRESS.md -> "Next".
+
+To run the test suite: `npm run test` (Vitest, added in M1).
+
+## Decisions taken autonomously in M1 (flagged for your review)
+- **Muscle-level taxonomy, not head-level (yet).** The source is group-level; head-level detail
+  and stabilizer involvements are deferred to a hand-curation pass (the project's value-add).
+  -> If you want head-level authored now, say so and it becomes the next sub-task.
+- **Added `Adductors` + `Abductors` to the `MuscleGroup` enum.** The dataset distinguishes hip
+  ab/adductors and there was no anatomically-correct existing group. Easy to fold/rename if you'd
+  rather bucket them elsewhere.
+- **Exercise images are NOT bundled** — served from the free-exercise-db jsDelivr CDN
+  (`DataSourceConfig.exerciseImageBaseUrl`). The dataset JSON *is* bundled (~1 MB) -> build prints a
+  chunk-size warning; lazy-loading is an easy later optimization.
 
 ## Pending decisions for the user
-- First **git commit** of the M0 baseline (not done yet — awaiting OK).
-- Confirm starting M1 (and whether to author head-level taxonomy now or after a group-level pass).
+- Confirm starting **M2**, and the first cut of the browser UX (group-first vs search-first).
+- Whether to author head-level taxonomy + stabilizers now or keep deferring.

@@ -1,0 +1,71 @@
+import { describe, it, expect } from 'vitest'
+import { ExerciseNormalizer } from '../ExerciseNormalizer'
+import type { RawExercise } from '../source/sourceSchema'
+import { MuscleId } from '../../../domain/enums/MuscleId'
+import { MuscleRole } from '../../../domain/enums/MuscleRole'
+import { Equipment } from '../../../domain/enums/Equipment'
+import { ExerciseCategory } from '../../../domain/enums/ExerciseCategory'
+import { ExerciseLevel } from '../../../domain/enums/ExerciseLevel'
+import { ExerciseMechanic } from '../../../domain/enums/ExerciseMechanic'
+import { ExerciseForce } from '../../../domain/enums/ExerciseForce'
+
+const IMAGE_BASE = 'https://cdn.example/'
+
+const sample: RawExercise = {
+  id: '3_4_Sit-Up',
+  name: '3/4 Sit-Up',
+  force: 'pull',
+  level: 'beginner',
+  mechanic: 'compound',
+  equipment: 'body only',
+  primaryMuscles: ['abdominals'],
+  secondaryMuscles: ['lower back'],
+  instructions: ['Lie down.', 'Sit up.'],
+  category: 'strength',
+  images: ['3_4_Sit-Up/0.jpg', '3_4_Sit-Up/1.jpg'],
+}
+
+describe('ExerciseNormalizer', () => {
+  const normalizer = new ExerciseNormalizer(IMAGE_BASE)
+
+  it('maps source muscles to taxonomy ids with role + default contribution', () => {
+    const exercise = normalizer.normalize(sample)
+
+    expect(exercise.muscles).toEqual([
+      { muscleId: MuscleId.RectusAbdominis, role: MuscleRole.Primary, contribution: 1 },
+      { muscleId: MuscleId.ErectorSpinae, role: MuscleRole.Secondary, contribution: 0.5 },
+    ])
+  })
+
+  it('translates source attributes into domain enums', () => {
+    const exercise = normalizer.normalize(sample)
+
+    expect(exercise.category).toBe(ExerciseCategory.Strength)
+    expect(exercise.level).toBe(ExerciseLevel.Beginner)
+    expect(exercise.equipment).toBe(Equipment.Bodyweight)
+    expect(exercise.mechanic).toBe(ExerciseMechanic.Compound)
+    expect(exercise.force).toBe(ExerciseForce.Pull)
+  })
+
+  it('resolves relative image paths against the base url', () => {
+    const exercise = normalizer.normalize(sample)
+
+    expect(exercise.images).toEqual([
+      'https://cdn.example/3_4_Sit-Up/0.jpg',
+      'https://cdn.example/3_4_Sit-Up/1.jpg',
+    ])
+  })
+
+  it('leaves optional attributes undefined when the source omits them', () => {
+    const exercise = normalizer.normalize({
+      ...sample,
+      equipment: null,
+      mechanic: null,
+      force: null,
+    })
+
+    expect(exercise.equipment).toBeUndefined()
+    expect(exercise.mechanic).toBeUndefined()
+    expect(exercise.force).toBeUndefined()
+  })
+})

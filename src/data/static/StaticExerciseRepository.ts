@@ -4,16 +4,16 @@ import type { MuscleGroup } from '../../domain/enums/MuscleGroup'
 
 /**
  * Reads exercises bundled with the app (static, offline-first).
- * M0 stub: returns no data yet — the curated dataset is imported and
- * normalised in M1. Behaviour is correct and side-effect free so the
- * UI can already be wired against the IExerciseRepository contract.
+ * Populated in M1 by normalising the free-exercise-db dataset. Group
+ * filtering is resolved through a muscleId -> group index supplied at
+ * construction (built from the muscle taxonomy), keeping this repository
+ * free of any direct taxonomy dependency.
  */
 export class StaticExerciseRepository implements IExerciseRepository {
-  private readonly exercises: readonly Exercise[]
-
-  constructor(exercises: readonly Exercise[] = []) {
-    this.exercises = exercises
-  }
+  constructor(
+    private readonly exercises: readonly Exercise[] = [],
+    private readonly muscleGroupIndex: ReadonlyMap<string, MuscleGroup> = new Map(),
+  ) {}
 
   async getAll(): Promise<readonly Exercise[]> {
     return this.exercises
@@ -23,8 +23,11 @@ export class StaticExerciseRepository implements IExerciseRepository {
     return this.exercises.find((exercise) => exercise.id === id) ?? null
   }
 
-  async findByMuscleGroup(_group: MuscleGroup): Promise<readonly Exercise[]> {
-    // Muscle→group resolution is added in M1 alongside the Muscle dataset.
-    return []
+  async findByMuscleGroup(group: MuscleGroup): Promise<readonly Exercise[]> {
+    return this.exercises.filter((exercise) =>
+      exercise.muscles.some(
+        (involvement) => this.muscleGroupIndex.get(involvement.muscleId) === group,
+      ),
+    )
   }
 }
