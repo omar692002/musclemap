@@ -17,6 +17,9 @@ const CASES: ReadonlyArray<readonly [string, MuscleId]> = [
   ['latissimus dorsi muscle.r', MuscleId.LatissimusDorsi],
   ['rectus abdominis muscle.l || muscles of abdomen.g', MuscleId.RectusAbdominis],
   ['sternocleidomastoid muscle.l || muscles of neck.g', MuscleId.Neck],
+  // three.js sanitises names on load (spaces → "_", dots dropped) — must still map.
+  ['Long_head_of_biceps_brachiil || Anterior_compartment_of_arm', MuscleId.BicepsBrachii],
+  ['Vastus_lateralis_musclel || Anterior_compartment_of_thigh', MuscleId.Quadriceps],
 ]
 
 describe('anatomy mesh → muscle mapping', () => {

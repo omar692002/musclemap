@@ -21,10 +21,13 @@ export const MuscleMapConfig = {
   /** Palette for the 3D model view (three.js materials). */
   model3d: {
     body: '#1f2d42',
-    muscle: '#3b5170',
-    muscleHover: '#6b86ad',
+    muscle: '#c75d54',
+    muscleHover: '#e8857a',
     selected: '#38bdf8',
     background: '#0b1220',
+    /** Connective tissue / unmapped meshes — drawn as a faint see-through shell. */
+    fascia: '#2a3d59',
+    ghostOpacity: 0.06,
   },
 } as const
 

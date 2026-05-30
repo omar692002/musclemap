@@ -91,10 +91,16 @@ export const ANATOMY_RULES: readonly MeshRule[] = [
   { keyword: 'muscles of neck', muscleId: MuscleId.Neck },
 ]
 
-/** Resolves a mesh's ancestor-chain string to a muscle id (or null if none). */
-export function muscleForChain(chainLower: string): MuscleId | null {
+/**
+ * Resolves a mesh's ancestor-chain string to a muscle id (or null if none).
+ * Normalises separators to spaces first, so it works whether the names come
+ * raw ("Biceps brachii muscle.l") or after three.js sanitises them on load
+ * ("Biceps_brachii_musclel").
+ */
+export function muscleForChain(chain: string): MuscleId | null {
+  const normalized = chain.toLowerCase().replace(/[_.\-/]+/g, ' ')
   for (const rule of ANATOMY_RULES) {
-    if (chainLower.includes(rule.keyword)) return rule.muscleId
+    if (normalized.includes(rule.keyword)) return rule.muscleId
   }
   return null
 }

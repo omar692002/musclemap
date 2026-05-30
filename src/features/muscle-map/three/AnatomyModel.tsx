@@ -24,15 +24,20 @@ interface AnatomyModelProps {
 
 const NO_EMISSIVE = '#000000'
 
-/** Lower-cased "self || parent || …" chain used to resolve a mesh's muscle. */
+/**
+ * "self || parent || …" name chain used to resolve a mesh's muscle. Prefers the
+ * original `userData.name` (three.js sanitises `object.name` on load); the
+ * matcher normalises separators either way.
+ */
 function chainOf(object: Object3D): string {
   const parts: string[] = []
   let node: Object3D | null = object
   while (node) {
-    if (node.name) parts.push(node.name)
+    const raw = (node.userData?.name as string | undefined) || node.name
+    if (raw) parts.push(raw)
     node = node.parent
   }
-  return parts.join(' || ').toLowerCase()
+  return parts.join(' || ')
 }
 
 /** Climbs from a clicked object to the nearest ancestor carrying a muscle id. */
@@ -59,13 +64,25 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
   useCursor(hovered !== null && interactive)
 
   const fitted = useMemo(() => {
+    const colors = MuscleMapConfig.model3d
     const root = scene.clone(true)
     root.traverse((object) => {
       const mesh = object as Mesh
       if (!mesh.isMesh) return
       const muscleId = muscleForChain(chainOf(mesh))
       mesh.userData.muscleId = muscleId
-      mesh.material = new MeshStandardMaterial({ roughness: 0.65, metalness: 0.05 })
+      const material = new MeshStandardMaterial({ roughness: 0.6, metalness: 0.05 })
+      if (!muscleId) {
+        // Connective tissue / unmapped: a faint see-through shell that doesn't
+        // hide or block clicks on the muscles underneath.
+        material.transparent = true
+        material.opacity = colors.ghostOpacity
+        material.depthWrite = false
+        material.color.set(colors.fascia)
+        mesh.renderOrder = -1
+        mesh.raycast = () => {}
+      }
+      mesh.material = material
     })
 
     // Centre at the origin and scale to a consistent height.
@@ -86,14 +103,9 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
     fitted.traverse((object) => {
       const mesh = object as Mesh
       if (!mesh.isMesh) return
-      const material = mesh.material as MeshStandardMaterial
       const muscleId = mesh.userData.muscleId as MuscleId | null
-      if (!muscleId) {
-        material.color.set(colors.body)
-        material.emissive.set(NO_EMISSIVE)
-        material.emissiveIntensity = 0
-        return
-      }
+      if (!muscleId) return // ghosted tissue keeps its faint material
+      const material = mesh.material as MeshStandardMaterial
       const role = highlight?.get(muscleId)
       const isSelected = selected === muscleId
       const isHovered = hovered === muscleId
