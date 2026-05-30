@@ -103,6 +103,24 @@ Done:
   Vercel rewrite when we deploy.
 - Bundle still ~1 MB (the dataset) — same note as M1.
 
+## Post-M2 fixes (complete)
+Two user-requested fixes after the M2 review. Build green, lint clean, 11 tests pass.
+- **Filters persist on back-navigation.** Search/group/equipment now live in the URL query
+  string (`/?q=press&group=CHEST`) via `useSearchParams`, not local state — they survive the back
+  button and the view is shareable/bookmarkable. Param keys centralised in `config/routes.ts`
+  (`BrowserParam`); invalid values are ignored. Root-cause fix, not a sessionStorage band-aid.
+- **Media model made video-ready.** `Exercise.images: string[]` → `Exercise.media: ExerciseMedia[]`
+  (`{ kind: Image|Video, source: File|YouTube, url, thumbnailUrl? }`). New `ExerciseMediaGallery`
+  renders images, file videos, or YouTube embeds by switching on kind/source. The static dataset
+  still yields image-only media today; real videos (curated YouTube mapping, or T1 coach uploads)
+  now drop in as a pure **data change**, zero UI rewrite. `MediaConfig` holds the embed base URL.
+
+### Still open (cosmetic / deferred)
+- **Theme:** user wants a modern **light "solar"** theme (currently dark slate). Cosmetic pass,
+  deferred — copy/colours are already centralised so it's low-risk later.
+- **Videos are not populated yet:** the model is ready but no exercise carries a video. Filling
+  them is manual curation (no auto exercise→video map) — planned for the coach-content tier (T1).
+
 ## Next: M3 — Interactive muscle map
 Clickable front/back SVG (muscle/head granular): muscle -> exercises, exercise -> highlighted
 muscles. The `IMuscleRepository` + `findByMuscleGroup` seam is ready for it.

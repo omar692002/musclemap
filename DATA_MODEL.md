@@ -16,9 +16,14 @@ Region  ->  Muscle group        ->  Muscle             ->  Muscle head
   - `role` is a `MuscleRole` = `Primary | Secondary | Stabilizer`.
   - `contribution` (0..1) feeds weekly-volume math; defaulted by role in M1
     (`ROLE_DEFAULT_CONTRIBUTION`: Primary 1, Secondary 0.5, Stabilizer 0.25).
-- **Exercise** — `{ id, name, muscles, category, level, equipment?, mechanic?, force?, instructions, images }`
+- **Exercise** — `{ id, name, muscles, category, level, equipment?, mechanic?, force?, instructions, media }`
   - `category`/`level` always present; `equipment`/`mechanic`/`force` optional (null in source).
-  - `images` are resolved absolute CDN URLs (not bundled).
+  - `media` is a list of **`ExerciseMedia`** (image-or-video aware), not raw URLs.
+- **ExerciseMedia** — `{ kind: MediaKind, source: MediaSource, url, thumbnailUrl? }`
+  - `kind` = `Image | Video`; `source` = `File | YouTube` (extensible to Vimeo, coach uploads…).
+  - `url` is an absolute URL for `File`, or a video id for `YouTube` (embed URL built in the UI).
+  - The static dataset yields only `Image`/`File` items today; the video paths are wired and
+    dormant so real videos (curated YouTube map, or T1 coach uploads) drop in as a **data swap**.
 
 ## Enums (M1)
 - `MuscleRole` — Primary / Secondary / Stabilizer.

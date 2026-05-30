@@ -1,6 +1,7 @@
 import { Link, useParams } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
+import { ExerciseMediaGallery } from './components/ExerciseMediaGallery'
 import { Badge } from '../../components/Badge'
 import { AppRoutes } from '../../config/routes'
 import {
@@ -52,19 +53,7 @@ export function ExerciseDetailPage() {
         {exercise.force ? <Badge>{EXERCISE_FORCE_LABELS[exercise.force]}</Badge> : null}
       </div>
 
-      {exercise.images.length > 0 ? (
-        <div className="mb-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-          {exercise.images.map((src) => (
-            <img
-              key={src}
-              src={src}
-              alt=""
-              loading="lazy"
-              className="w-full rounded-xl border border-slate-800 bg-slate-900 object-cover"
-            />
-          ))}
-        </div>
-      ) : null}
+      <ExerciseMediaGallery media={exercise.media} title={exercise.name} />
 
       <section className="mb-6">
         <h2 className="mb-2 text-lg font-semibold text-slate-100">{UiText.musclesWorked}</h2>

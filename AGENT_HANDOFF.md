@@ -40,8 +40,12 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
-**M0, M1 and M2 are COMPLETE** (each committed). Build green (`npm run build`), tests pass
-(`npm run test` — 11 Vitest), lint clean (`npm run lint`).
+**M0, M1 and M2 are COMPLETE** (each committed), plus a **post-M2 fixes** pass. Build green
+(`npm run build`), tests pass (`npm run test` — 11 Vitest), lint clean (`npm run lint`).
+- Post-M2: filters now persist via URL query params (`useSearchParams`, `BrowserParam` in
+  `config/routes.ts`); media model is video-ready (`Exercise.media: ExerciseMedia[]`,
+  `ExerciseMediaGallery` renders image/file-video/YouTube). Videos not yet populated (manual
+  curation, T1). A light "solar" theme is requested but deferred (cosmetic).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.
 - M2: routed UI (`react-router-dom`) — exercise browser (search + group/equipment filters + paging)
   at `/`, detail page at `/exercise/:id`. UI depends on repository *interfaces* via

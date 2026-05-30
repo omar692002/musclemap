@@ -1,8 +1,10 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import type { Exercise } from '../../domain/models/Exercise'
 import type { Muscle } from '../../domain/models/Muscle'
-import type { MuscleGroup } from '../../domain/enums/MuscleGroup'
-import type { Equipment } from '../../domain/enums/Equipment'
+import { MuscleGroup } from '../../domain/enums/MuscleGroup'
+import { Equipment } from '../../domain/enums/Equipment'
+import { BrowserParam } from '../../config/routes'
 
 export interface ExerciseFiltersState {
   readonly search: string
@@ -14,19 +16,57 @@ export interface ExerciseFiltersState {
   setEquipment(value: Equipment | null): void
 }
 
+/** Reads a raw query value back into an enum member, or null if absent/invalid. */
+function readEnum<T extends Record<string, string>>(values: T, raw: string | null): T[keyof T] | null {
+  if (!raw) return null
+  return (Object.values(values) as string[]).includes(raw) ? (raw as T[keyof T]) : null
+}
+
 /**
- * Holds the browser's filter state and derives the matching exercises:
- * name search (case-insensitive), muscle-group (via the muscle index), and
- * equipment. Pure/derived via useMemo so filtering is recomputed only when
- * inputs change.
+ * Holds the browser's filter state in the URL query string (so it survives
+ * back-navigation and is shareable) and derives the matching exercises: name
+ * search (case-insensitive), muscle-group (via the muscle index), and
+ * equipment. Filtering is memoised against the resolved inputs.
  */
 export function useExerciseFilters(
   exercises: readonly Exercise[],
   muscleIndex: ReadonlyMap<string, Muscle>,
 ): ExerciseFiltersState {
-  const [search, setSearch] = useState('')
-  const [group, setGroup] = useState<MuscleGroup | null>(null)
-  const [equipment, setEquipment] = useState<Equipment | null>(null)
+  const [params, setParams] = useSearchParams()
+
+  const search = params.get(BrowserParam.search) ?? ''
+  const group = readEnum(MuscleGroup, params.get(BrowserParam.group))
+  const equipment = readEnum(Equipment, params.get(BrowserParam.equipment))
+
+  // `replace` so typing/filtering doesn't pile up history entries; empty
+  // values are dropped to keep the URL clean.
+  const setParam = useCallback(
+    (key: string, value: string | null) => {
+      setParams(
+        (prev) => {
+          const next = new URLSearchParams(prev)
+          if (value) next.set(key, value)
+          else next.delete(key)
+          return next
+        },
+        { replace: true },
+      )
+    },
+    [setParams],
+  )
+
+  const setSearch = useCallback(
+    (value: string) => setParam(BrowserParam.search, value.trim() ? value : null),
+    [setParam],
+  )
+  const setGroup = useCallback(
+    (value: MuscleGroup | null) => setParam(BrowserParam.group, value),
+    [setParam],
+  )
+  const setEquipment = useCallback(
+    (value: Equipment | null) => setParam(BrowserParam.equipment, value),
+    [setParam],
+  )
 
   const results = useMemo(() => {
     const term = search.trim().toLowerCase()

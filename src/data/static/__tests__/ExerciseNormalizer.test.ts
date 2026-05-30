@@ -8,6 +8,8 @@ import { ExerciseCategory } from '../../../domain/enums/ExerciseCategory'
 import { ExerciseLevel } from '../../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../../../domain/enums/ExerciseForce'
+import { MediaKind } from '../../../domain/enums/MediaKind'
+import { MediaSource } from '../../../domain/enums/MediaSource'
 
 const IMAGE_BASE = 'https://cdn.example/'
 
@@ -47,12 +49,12 @@ describe('ExerciseNormalizer', () => {
     expect(exercise.force).toBe(ExerciseForce.Pull)
   })
 
-  it('resolves relative image paths against the base url', () => {
+  it('wraps source images as File image media resolved against the base url', () => {
     const exercise = normalizer.normalize(sample)
 
-    expect(exercise.images).toEqual([
-      'https://cdn.example/3_4_Sit-Up/0.jpg',
-      'https://cdn.example/3_4_Sit-Up/1.jpg',
+    expect(exercise.media).toEqual([
+      { kind: MediaKind.Image, source: MediaSource.File, url: 'https://cdn.example/3_4_Sit-Up/0.jpg' },
+      { kind: MediaKind.Image, source: MediaSource.File, url: 'https://cdn.example/3_4_Sit-Up/1.jpg' },
     ])
   })
 

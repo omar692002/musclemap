@@ -4,6 +4,7 @@ import type { Muscle } from '../../../domain/models/Muscle'
 import { Badge } from '../../../components/Badge'
 import { MUSCLE_GROUP_LABELS, EQUIPMENT_LABELS } from '../../../config/labels'
 import { primaryGroupsOf } from '../exerciseMuscles'
+import { coverImageOf } from '../media'
 import { exerciseDetailPath } from '../../../config/routes'
 
 interface ExerciseCardProps {
@@ -14,6 +15,7 @@ interface ExerciseCardProps {
 /** A tappable summary card linking to the exercise detail page. */
 export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
   const primaryGroups = primaryGroupsOf(exercise, muscleIndex)
+  const cover = coverImageOf(exercise)
 
   return (
     <Link
@@ -21,9 +23,9 @@ export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
       className="group flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-800/40 transition hover:border-slate-600 hover:bg-slate-800"
     >
       <div className="aspect-video overflow-hidden bg-slate-900">
-        {exercise.images.length > 0 ? (
+        {cover ? (
           <img
-            src={exercise.images[0]}
+            src={cover}
             alt=""
             loading="lazy"
             className="h-full w-full object-cover transition group-hover:scale-105"

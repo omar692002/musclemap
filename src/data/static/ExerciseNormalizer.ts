@@ -1,6 +1,9 @@
 import type { Exercise, MuscleInvolvement } from '../../domain/models/Exercise'
+import type { ExerciseMedia } from '../../domain/models/ExerciseMedia'
 import type { RawExercise, SourceMuscleName } from './source/sourceSchema'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
+import { MediaKind } from '../../domain/enums/MediaKind'
+import { MediaSource } from '../../domain/enums/MediaSource'
 import {
   SOURCE_MUSCLE_TO_ID,
   SOURCE_EQUIPMENT_TO_ENUM,
@@ -39,7 +42,7 @@ export class ExerciseNormalizer {
       mechanic: raw.mechanic ? SOURCE_MECHANIC_TO_ENUM[raw.mechanic] : undefined,
       force: raw.force ? SOURCE_FORCE_TO_ENUM[raw.force] : undefined,
       instructions: raw.instructions,
-      images: raw.images.map((path) => this.resolveImageUrl(path)),
+      media: raw.images.map((path) => this.imageMedia(path)),
     }
   }
 
@@ -55,6 +58,15 @@ export class ExerciseNormalizer {
       muscleId: SOURCE_MUSCLE_TO_ID[source],
       role,
       contribution: ROLE_DEFAULT_CONTRIBUTION[role],
+    }
+  }
+
+  /** Wraps a source image path as a directly-addressable image media item. */
+  private imageMedia(path: string): ExerciseMedia {
+    return {
+      kind: MediaKind.Image,
+      source: MediaSource.File,
+      url: this.resolveImageUrl(path),
     }
   }
 

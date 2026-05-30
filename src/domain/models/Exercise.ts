@@ -4,6 +4,7 @@ import type { ExerciseMechanic } from '../enums/ExerciseMechanic'
 import type { ExerciseForce } from '../enums/ExerciseForce'
 import type { ExerciseCategory } from '../enums/ExerciseCategory'
 import type { ExerciseLevel } from '../enums/ExerciseLevel'
+import type { ExerciseMedia } from './ExerciseMedia'
 
 /**
  * Links an exercise to one muscle with the role that muscle plays.
@@ -32,6 +33,9 @@ export interface Exercise {
   readonly mechanic?: ExerciseMechanic
   readonly force?: ExerciseForce
   readonly instructions: readonly string[]
-  /** Absolute (CDN) image URLs, resolved at normalisation time. */
-  readonly images: readonly string[]
+  /**
+   * Images and/or videos for the movement, resolved at normalisation time.
+   * Image-or-video aware so future videos are a data swap, not a UI change.
+   */
+  readonly media: readonly ExerciseMedia[]
 }

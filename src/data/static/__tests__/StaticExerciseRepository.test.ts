@@ -14,7 +14,7 @@ describe('static repositories (normalised dataset)', () => {
     expect(exercise).not.toBeNull()
     expect(exercise?.name).toBe('3/4 Sit-Up')
     expect(exercise?.muscles.length).toBeGreaterThan(0)
-    expect(exercise?.images[0]).toContain('https://')
+    expect(exercise?.media[0]?.url).toContain('https://')
   })
 
   it('findByMuscleGroup resolves involvements through the taxonomy', async () => {
