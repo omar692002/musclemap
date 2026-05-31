@@ -1,3 +1,4 @@
+import { lazy, Suspense, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
@@ -6,6 +7,10 @@ import { MuscleMapBoard } from '../muscle-map/MuscleMapBoard'
 import { highlightFromExercise } from '../muscle-map/highlight'
 import { Badge } from '../../components/Badge'
 import { AppRoutes } from '../../config/routes'
+
+// Reuse the rotatable 3D model (read-only, worked muscles highlighted). Lazy so
+// three.js loads only when a detail page is opened.
+const Muscle3DView = lazy(() => import('../muscle-map/three/Muscle3DView'))
 import {
   UiText,
   EQUIPMENT_LABELS,
@@ -23,6 +28,7 @@ export function ExerciseDetailPage() {
   const id = params.id ? decodeURIComponent(params.id) : ''
   const { exercises, muscleIndex, loading } = useExerciseData()
   const exercise = exercises.find((candidate) => candidate.id === id)
+  const [show3d, setShow3d] = useState(true)
 
   if (loading) {
     return <p className="mx-auto max-w-3xl px-4 py-6 text-slate-400">{UiText.loading}</p>
@@ -58,9 +64,39 @@ export function ExerciseDetailPage() {
       <ExerciseMediaGallery media={exercise.media} title={exercise.name} />
 
       <section className="mb-6">
-        <h2 className="mb-3 text-lg font-semibold text-slate-100">{UiText.musclesWorked}</h2>
+        <div className="mb-3 flex items-center justify-between gap-2">
+          <h2 className="text-lg font-semibold text-slate-100">{UiText.musclesWorked}</h2>
+          <div className="inline-flex rounded-lg border border-slate-700 bg-slate-800 p-0.5" role="group">
+            <button
+              type="button"
+              onClick={() => setShow3d(true)}
+              aria-pressed={show3d}
+              className={`rounded-md px-3 py-1 text-sm font-medium transition ${
+                show3d ? 'bg-sky-500 text-white' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              {UiText.view3dLabel}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShow3d(false)}
+              aria-pressed={!show3d}
+              className={`rounded-md px-3 py-1 text-sm font-medium transition ${
+                !show3d ? 'bg-sky-500 text-white' : 'text-slate-300 hover:text-white'
+              }`}
+            >
+              {UiText.view2dLabel}
+            </button>
+          </div>
+        </div>
         <div className="mb-4">
-          <MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
+          {show3d ? (
+            <Suspense fallback={<MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />}>
+              <Muscle3DView muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
+            </Suspense>
+          ) : (
+            <MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
+          )}
         </div>
         <MuscleInvolvementList exercise={exercise} muscleIndex={muscleIndex} />
       </section>

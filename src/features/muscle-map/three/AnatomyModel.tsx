@@ -115,6 +115,9 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
 
   useEffect(() => {
     const colors = MuscleMapConfig.model3d
+    // In highlight mode (e.g. an exercise's worked muscles) everything that
+    // isn't targeted is dimmed so only the relevant muscles stand out.
+    const highlightActive = Boolean(highlight && highlight.size > 0)
     fitted.traverse((object) => {
       const mesh = object as Mesh
       if (!mesh.isMesh) return
@@ -125,7 +128,14 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
       const role = highlight?.get(muscleId)
       const isSelected = selected === muscleId
       const isHovered = region ? hovered === region.key : false
-      material.color.set(role ? ROLE_FILL[role] : isHovered ? colors.muscleHover : colors.muscle)
+      const color = role
+        ? ROLE_FILL[role]
+        : highlightActive
+          ? colors.inactive
+          : isHovered
+            ? colors.muscleHover
+            : colors.muscle
+      material.color.set(color)
       material.emissive.set(isSelected ? colors.selected : NO_EMISSIVE)
       material.emissiveIntensity = isSelected ? 0.5 : 0
     })

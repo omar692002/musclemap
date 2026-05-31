@@ -7,6 +7,8 @@ import type { RegionRef } from '../region'
 import { ProceduralBody } from './Body3DScene'
 import { AnatomyModel } from './AnatomyModel'
 import { ModelErrorBoundary } from './ModelErrorBoundary'
+import { MuscleMapLegend } from '../MuscleMapLegend'
+import { rolesInHighlight } from '../highlight'
 import { MuscleMapConfig } from '../../../config/muscleMap.config'
 import { AnatomyModelConfig } from '../../../config/anatomyModel.config'
 import { UiText } from '../../../config/labels'
@@ -27,9 +29,12 @@ interface Muscle3DViewProps {
  */
 export default function Muscle3DView({ muscleIndex, highlight, selected, onSelect, countFor }: Muscle3DViewProps) {
   const [hovered, setHovered] = useState<RegionRef | null>(null)
+  const interactive = Boolean(onSelect)
   const caption = hovered
     ? `${hovered.label}${countFor ? ` · ${countFor(hovered.key)} ${UiText.exercisesWord}` : ''}`
-    : UiText.map3dHint
+    : interactive
+      ? UiText.map3dHint
+      : UiText.rotateHint
 
   const bodyProps = { muscleIndex, highlight, selected, onSelect, onHover: setHovered }
   const procedural = <ProceduralBody {...bodyProps} />
@@ -53,6 +58,7 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
         </Canvas>
       </div>
       <p className="h-5 text-center text-sm text-slate-400">{caption}</p>
+      {highlight ? <MuscleMapLegend roles={rolesInHighlight(highlight)} /> : null}
       <p className="text-center text-[11px] text-slate-600">{AnatomyModelConfig.attribution}</p>
     </div>
   )

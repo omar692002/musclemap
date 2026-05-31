@@ -112,6 +112,7 @@ export const UiText = {
   view2dLabel: '2D',
   view3dLabel: '3D',
   map3dHint: 'Drag to rotate · tap a muscle',
+  rotateHint: 'Drag to rotate',
   loading3d: 'Loading 3D model…',
   openProgram: 'Program →',
   programTitle: 'Program generator',
