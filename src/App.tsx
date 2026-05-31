@@ -12,7 +12,7 @@ import { ProgramGeneratorPage } from './features/program-generator/ProgramGenera
  */
 function App() {
   return (
-    <div className="min-h-dvh bg-slate-900 text-slate-100">
+    <div className="min-h-dvh bg-gradient-to-b from-amber-50 via-orange-50 to-orange-100 text-slate-100">
       <Routes>
         <Route path={AppRoutes.browser} element={<ExerciseBrowserPage />} />
         <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />

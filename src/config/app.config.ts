@@ -7,8 +7,8 @@ export const AppConfig = {
   shortName: 'MuscleMap',
   description:
     'Visual muscle anatomy and a balanced, non-redundant workout program generator.',
-  themeColor: '#0f172a',
-  backgroundColor: '#0f172a',
+  themeColor: '#fff7ed',
+  backgroundColor: '#fff7ed',
   startUrl: '/',
 } as const;
 

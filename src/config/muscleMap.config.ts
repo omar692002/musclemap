@@ -13,24 +13,24 @@ export const MuscleMapConfig = {
   strokeWidth: 1,
   selectedStrokeWidth: 2.5,
   colors: {
-    silhouette: '#162133',
-    region: '#27384f',
-    regionStroke: '#3f5573',
-    selectedStroke: '#38bdf8',
+    silhouette: '#e7d6bd',
+    region: '#f2e6d2',
+    regionStroke: '#c9ad84',
+    selectedStroke: '#ea580c',
   },
   /** Palette for the 3D model view (three.js materials). */
   model3d: {
-    body: '#1f2d42',
+    body: '#e7d6bd',
     muscle: '#c75d54',
     muscleHover: '#e8857a',
-    selected: '#38bdf8',
-    background: '#0b1220',
-    /** Unmapped body parts (head/feet/hands, deep muscles) — neutral, so the
-     *  figure looks complete rather than "cut off". */
-    inactive: '#47566d',
+    selected: '#f59e0b',
+    background: '#fff7ed',
+    /** Unmapped body parts (head/feet/hands, deep muscles) — neutral warm grey so
+     *  the figure looks complete and dimmed muscles recede on the light theme. */
+    inactive: '#c8bba6',
     /** Pure connective tissue (fascia/tendon/…) — a faint see-through shell so
      *  it never hides the muscles. */
-    fascia: '#2a3d59',
+    fascia: '#d9c2a0',
     fasciaOpacity: 0.05,
   },
 } as const

@@ -1,8 +1,36 @@
 @import "tailwindcss";
 
-/* Mobile-first base. Theme tokens live here so colours are not hardcoded in components. */
+/*
+ * Light "solar" theme. Rather than re-tag every component, the neutral (slate)
+ * and accent (sky) scales the UI already uses are remapped here to warm, light
+ * values: the app consistently uses high slate numbers for surfaces and low
+ * numbers for text, so inverting the scale's lightness flips it to a light
+ * theme in one place. The accent becomes a warm "solar" orange. Component-level
+ * colours (3D model / SVG board) live in config/muscleMap.config.ts.
+ */
+@theme {
+  /* Warm neutrals — surfaces are light/white, text is warm near-black. */
+  --color-slate-900: #f3e8d8; /* image / placeholder fills */
+  --color-slate-800: #ffffff; /* cards, inputs (over /40 = frosted) */
+  --color-slate-700: #e9d9c2; /* borders, hover-from */
+  --color-slate-600: #d8c1a0; /* stronger hover border */
+  --color-slate-500: #8d765a; /* faintest text / placeholders */
+  --color-slate-400: #6f5b43; /* muted text */
+  --color-slate-300: #574736; /* body text */
+  --color-slate-200: #463829; /* strong body text */
+  --color-slate-100: #34281c; /* headings */
+
+  /* Solar accent — warm orange, darker at the low end for readable links. */
+  --color-sky-500: #ea580c; /* solid accent, rings, borders, bars */
+  --color-sky-400: #c2540a; /* links */
+  --color-sky-300: #9a4408; /* link hover / strong accent text */
+  --color-sky-200: #92400e; /* text on a light accent tint */
+  --color-sky-100: #7c3a06; /* darkest text on accent tint */
+}
+
+/* Mobile-first base. Light scheme so native controls (selects) render light. */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html,
@@ -13,6 +41,7 @@ body,
 
 body {
   margin: 0;
+  background: #fff7ed; /* warm base behind the app gradient / safe areas */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

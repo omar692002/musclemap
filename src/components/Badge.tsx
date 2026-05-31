@@ -3,11 +3,12 @@ import type { ReactNode } from 'react'
 /** Visual tones for a Badge. Class strings centralised, never inlined ad hoc. */
 export type BadgeTone = 'neutral' | 'primary' | 'secondary' | 'accent'
 
+// Tints stay translucent; text uses a dark shade so each reads on the light theme.
 const TONE_CLASSES: Readonly<Record<BadgeTone, string>> = {
   neutral: 'bg-slate-700/60 text-slate-200',
   primary: 'bg-sky-500/15 text-sky-300',
-  secondary: 'bg-violet-500/15 text-violet-300',
-  accent: 'bg-emerald-500/15 text-emerald-300',
+  secondary: 'bg-violet-500/15 text-violet-700',
+  accent: 'bg-emerald-500/15 text-emerald-700',
 }
 
 interface BadgeProps {

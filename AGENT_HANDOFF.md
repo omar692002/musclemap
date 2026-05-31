@@ -41,7 +41,7 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 
 ## Current status
 **M0–M4 are COMPLETE** (the Tier-0 MVP), plus a **post-M2 fixes** pass and the 3D/head-level work.
-Build green (`npm run build`), tests pass (`npm run test` — 67 Vitest), lint clean (`npm run lint`).
+Build green (`npm run build`), tests pass (`npm run test` — 72 Vitest), lint clean (`npm run lint`).
 - M4: program generator at `/program` (`features/program-generator/`) — pick split/days/equipment
   → balanced, non-repeating week + weekly effective-sets-per-group readout. Pure generator in
   `programGenerator.ts`; splits in `config/program.config.ts`.
@@ -66,15 +66,19 @@ Build green (`npm run build`), tests pass (`npm run test` — 67 Vitest), lint c
   infers which head an exercise trains (the curation seam; source data is only group-level). 2D map
   stays muscle-level. **Open:** commercial-licence model swap (CC BY-SA copyleft), mobile-perf +
   optional model compression, refine head attribution toward hand-labelling.
-- **MVP (M0–M4) complete.** Next candidates: polish (light "solar" theme, 26 MB model compression),
-  generator depth (accessories/rep-ranges/progression, shuffle), or post-MVP tiers (P1, T1).
-- A light "solar" theme is still requested but deferred (cosmetic; mostly `muscleMap.config.ts`
-  colours + Tailwind classes).
+- **MVP (M0–M4) complete + a post-MVP polish pass** (see PROGRESS.md → "Post-MVP polish pass"):
+  exercise-detail 3D is now **head-level**; the generator gained a **training-goal** selector
+  (sets/rep-ranges) + a **Regenerate** seed; and the **light "solar" theme** shipped. 72 tests.
+- **Light "solar" theme is DONE.** Implemented centrally by remapping the slate/sky scales in
+  `src/index.css` `@theme` (warm light surfaces, solar-orange accent) + an amber→orange app gradient
+  + warmed `muscleMap.config.ts` palettes. To restyle, edit only those two places.
+- Remaining candidates: 26 MB model compression, deeper generator (accessories/progression/warmups),
+  refine head attribution, or post-MVP tiers (P1, T1).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.
 - M2: routed UI (`react-router-dom`) — exercise browser (search + group/equipment filters + paging)
   at `/`, detail page at `/exercise/:id`. UI depends on repository *interfaces* via
   `context/RepositoryContext.ts`; `main.tsx` is the composition root that injects the concrete repos.
-Next is **M4 — Program generator v1**. See PROGRESS.md -> "Next".
+The MVP (M0–M4) + a post-MVP polish pass are done. See PROGRESS.md for the latest state.
 
 To see it: `npm run dev`, open the printed URL. To run tests: `npm run test`.
 

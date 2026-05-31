@@ -116,8 +116,7 @@ Two user-requested fixes after the M2 review. Build green, lint clean, 11 tests 
   now drop in as a pure **data change**, zero UI rewrite. `MediaConfig` holds the embed base URL.
 
 ### Still open (cosmetic / deferred)
-- **Theme:** user wants a modern **light "solar"** theme (currently dark slate). Cosmetic pass,
-  deferred — copy/colours are already centralised so it's low-risk later.
+- **Theme:** ✅ done — light "solar" theme shipped in the post-MVP polish pass (see bottom of file).
 - **Videos are not populated yet:** the model is ready but no exercise carries a video. Filling
   them is manual curation (no auto exercise→video map) — planned for the coach-content tier (T1).
 
@@ -246,5 +245,30 @@ Done:
 
 ## MVP (M0–M4) complete
 The Tier-0 MVP is functionally done: data → browser → muscle map (2D + head-split 3D) → program
-generator. Next candidates: polish (light "solar" theme, model compression), or post-MVP tiers
-(P1 depth, T1 Supabase + coach content). See ROADMAP.
+generator. Next candidates: model compression, or post-MVP tiers (P1 depth, T1 Supabase + coach
+content). See ROADMAP.
+
+## Post-MVP polish pass (complete)
+Three follow-ups done together. Build green, lint clean, **72 tests** (5 new). Each committed
+separately.
+- **Exercise-detail 3D is head-level.** `highlightHeadsFromExercise` keys headed muscles by the
+  specific head an exercise emphasises (via `headAttribution`), so e.g. a lateral raise lights only
+  the side delt on the detail-page 3D model. `AnatomyModel` resolves a role by `region.key` (head)
+  first, falling back to the whole-muscle id — so the muscle-level map still lights the whole muscle.
+  The 2D board/toggle stays whole-muscle. (`highlight.test.ts`, 3 cases.)
+- **Deeper generator.** New `TrainingGoal` (Strength/Hypertrophy/Endurance) drives per-exercise
+  **sets + rep ranges** via `GOAL_SCHEMES` (compound vs isolation); `ProgramExercise` carries `reps`,
+  day cards show "N × range". A variety **seed** keeps generation deterministic per inputs, and a
+  **Regenerate** button bumps it to rotate picks (compound-first kept, FNV-1a seeded tiebreak).
+  (`programGenerator.test.ts` updated + extended, 6 cases.)
+- **Light "solar" theme.** Done centrally: the slate/sky scales the UI already uses are remapped to
+  warm light tones in `src/index.css` `@theme` (surfaces light/white, text warm near-black, accent =
+  solar orange) — so no per-component re-tagging. App shell wears an amber→orange gradient;
+  `color-scheme: light`; PWA `theme_color`/`background_color` + `<meta theme-color>` now `#fff7ed`;
+  3D-model + 2D-board palettes warmed in `muscleMap.config.ts`; `Badge` violet/emerald tints use
+  dark text for contrast. To restyle further, edit only `index.css` `@theme` + that config.
+
+### Still open (not blockers)
+- Model compression (26 MB → ~5 MB Draco/meshopt) for mobile.
+- Generator: warmups, accessory slots, multi-exercise groups, progression across weeks.
+- Refine head attribution toward hand-labelling; commercial-licence model swap (CC BY-SA copyleft).
