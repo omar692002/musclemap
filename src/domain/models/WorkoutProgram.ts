@@ -1,5 +1,6 @@
 import type { Exercise } from './Exercise'
 import type { MuscleGroup } from '../enums/MuscleGroup'
+import type { DayFocus } from '../enums/DayFocus'
 
 /** One exercise slotted into a workout, with its prescribed sets and rep range. */
 export interface ProgramExercise {
@@ -9,10 +10,10 @@ export interface ProgramExercise {
   readonly reps: string
 }
 
-/** A single training day: a focus label and its chosen exercises. */
+/** A single training day: its number, focus (translation key), and exercises. */
 export interface WorkoutDay {
-  readonly label: string
-  readonly focus: string
+  readonly index: number
+  readonly focus: DayFocus
   readonly exercises: readonly ProgramExercise[]
 }
 

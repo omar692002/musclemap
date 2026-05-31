@@ -1,0 +1,146 @@
+import type { Translation } from './types'
+import { MuscleGroup } from '../../domain/enums/MuscleGroup'
+import { Equipment } from '../../domain/enums/Equipment'
+import { MuscleRole } from '../../domain/enums/MuscleRole'
+import { BodyView } from '../../domain/enums/BodyView'
+import { SplitType } from '../../domain/enums/SplitType'
+import { TrainingGoal } from '../../domain/enums/TrainingGoal'
+import { DayFocus } from '../../domain/enums/DayFocus'
+import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
+import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
+import { ExerciseForce } from '../../domain/enums/ExerciseForce'
+import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+
+/** French. */
+export const fr: Translation = {
+  ui: {
+    appName: 'MuscleMap',
+    searchPlaceholder: 'Rechercher un exercice…',
+    allGroups: 'Tous les groupes',
+    allEquipment: 'Tout le matériel',
+    loading: 'Chargement des exercices…',
+    noResults: 'Aucun exercice ne correspond.',
+    loadMore: 'Voir plus',
+    backToBrowser: '← Tous les exercices',
+    notFound: 'Exercice introuvable.',
+    musclesWorked: 'Muscles sollicités',
+    instructions: 'Instructions',
+    noInstructions: 'Aucune instruction pour cet exercice.',
+    openMap: 'Carte musculaire →',
+    mapTitle: 'Carte musculaire',
+    mapHelp: 'Touchez un muscle pour voir les exercices qui le travaillent.',
+    muscleFilterLabel: 'Muscle',
+    clearFilter: 'Effacer',
+    exercisesWord: 'exercices',
+    view2dLabel: '2D',
+    view3dLabel: '3D',
+    map3dHint: 'Glisser pour tourner · toucher un muscle',
+    rotateHint: 'Glisser pour tourner',
+    loading3d: 'Chargement du modèle 3D…',
+    openProgram: 'Programme →',
+    programTitle: 'Générateur de programme',
+    programHelp: 'Choisissez un split, des jours par semaine et votre matériel — une semaine équilibrée.',
+    splitLabel: 'Split',
+    daysLabel: 'Jours / semaine',
+    goalLabel: 'Objectif',
+    equipmentLabel: 'Matériel',
+    allEquipmentShort: 'Tout',
+    setsWord: 'séries',
+    repsWord: 'reps',
+    regenerate: '↻ Régénérer',
+    weeklyVolume: 'Volume hebdo (séries effectives / muscle)',
+    emptyDay: 'Aucun exercice — activez plus de matériel.',
+    dayWord: 'Jour',
+    warmupTitle: 'Échauffement',
+    languageLabel: 'Langue',
+  },
+  muscleGroup: {
+    [MuscleGroup.Chest]: 'Pectoraux',
+    [MuscleGroup.Back]: 'Dos',
+    [MuscleGroup.Shoulders]: 'Épaules',
+    [MuscleGroup.Biceps]: 'Biceps',
+    [MuscleGroup.Triceps]: 'Triceps',
+    [MuscleGroup.Forearms]: 'Avant-bras',
+    [MuscleGroup.Core]: 'Tronc',
+    [MuscleGroup.Quadriceps]: 'Quadriceps',
+    [MuscleGroup.Hamstrings]: 'Ischio-jambiers',
+    [MuscleGroup.Glutes]: 'Fessiers',
+    [MuscleGroup.Calves]: 'Mollets',
+    [MuscleGroup.Neck]: 'Cou',
+    [MuscleGroup.Adductors]: 'Adducteurs',
+    [MuscleGroup.Abductors]: 'Abducteurs',
+  },
+  equipment: {
+    [Equipment.Bands]: 'Élastiques',
+    [Equipment.Barbell]: 'Barre',
+    [Equipment.Bodyweight]: 'Poids du corps',
+    [Equipment.Cable]: 'Poulie',
+    [Equipment.Dumbbell]: 'Haltère',
+    [Equipment.EzCurlBar]: 'Barre EZ',
+    [Equipment.ExerciseBall]: 'Ballon de gym',
+    [Equipment.FoamRoll]: 'Rouleau en mousse',
+    [Equipment.Kettlebell]: 'Kettlebell',
+    [Equipment.Machine]: 'Machine',
+    [Equipment.MedicineBall]: 'Médecine-ball',
+    [Equipment.Other]: 'Autre',
+  },
+  role: {
+    [MuscleRole.Primary]: 'Principal',
+    [MuscleRole.Secondary]: 'Secondaire',
+    [MuscleRole.Stabilizer]: 'Stabilisateur',
+  },
+  bodyView: {
+    [BodyView.Front]: 'Face',
+    [BodyView.Back]: 'Dos',
+  },
+  split: {
+    [SplitType.FullBody]: 'Corps entier',
+    [SplitType.UpperLower]: 'Haut / Bas',
+    [SplitType.PushPullLegs]: 'Poussé / Tiré / Jambes',
+    [SplitType.BodyPart]: 'Split par groupe',
+  },
+  goal: {
+    [TrainingGoal.Strength]: 'Force',
+    [TrainingGoal.Hypertrophy]: 'Hypertrophie',
+    [TrainingGoal.Endurance]: 'Endurance',
+  },
+  dayFocus: {
+    [DayFocus.Push]: 'Poussé',
+    [DayFocus.Pull]: 'Tiré',
+    [DayFocus.Legs]: 'Jambes',
+    [DayFocus.Upper]: 'Haut du corps',
+    [DayFocus.Lower]: 'Bas du corps',
+    [DayFocus.FullBody]: 'Corps entier',
+    [DayFocus.ChestTriceps]: 'Pectoraux & Triceps',
+    [DayFocus.BackBiceps]: 'Dos & Biceps',
+    [DayFocus.ShouldersCore]: 'Épaules & Tronc',
+  },
+  level: {
+    [ExerciseLevel.Beginner]: 'Débutant',
+    [ExerciseLevel.Intermediate]: 'Intermédiaire',
+    [ExerciseLevel.Expert]: 'Expert',
+  },
+  mechanic: {
+    [ExerciseMechanic.Compound]: 'Polyarticulaire',
+    [ExerciseMechanic.Isolation]: 'Isolation',
+  },
+  force: {
+    [ExerciseForce.Push]: 'Poussée',
+    [ExerciseForce.Pull]: 'Tirage',
+    [ExerciseForce.Static]: 'Statique',
+  },
+  category: {
+    [ExerciseCategory.Cardio]: 'Cardio',
+    [ExerciseCategory.OlympicWeightlifting]: 'Haltérophilie',
+    [ExerciseCategory.Plyometrics]: 'Pliométrie',
+    [ExerciseCategory.Powerlifting]: 'Force athlétique',
+    [ExerciseCategory.Strength]: 'Musculation',
+    [ExerciseCategory.Stretching]: 'Étirement',
+    [ExerciseCategory.Strongman]: 'Strongman',
+  },
+  warmup: [
+    '5–10 min de tapis / cardio léger',
+    'Mobilité dynamique des articulations ciblées',
+    "1–2 séries d'approche légères sur le premier exercice",
+  ],
+}

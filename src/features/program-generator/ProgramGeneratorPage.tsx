@@ -75,7 +75,7 @@ export function ProgramGeneratorPage() {
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {program.days.map((day) => (
-              <ProgramDayCard key={day.label} day={day} />
+              <ProgramDayCard key={day.index} day={day} />
             ))}
           </div>
           <VolumeReadout volumeByGroup={program.volumeByGroup} />

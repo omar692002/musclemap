@@ -41,7 +41,7 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 
 ## Current status
 **M0–M4 are COMPLETE** (the Tier-0 MVP), plus a **post-M2 fixes** pass and the 3D/head-level work.
-Build green (`npm run build`), tests pass (`npm run test` — 72 Vitest), lint clean (`npm run lint`).
+Build green (`npm run build`), tests pass (`npm run test` — 73 Vitest), lint clean (`npm run lint`).
 - M4: program generator at `/program` (`features/program-generator/`) — pick split/days/equipment
   → balanced, non-repeating week + weekly effective-sets-per-group readout. Pure generator in
   `programGenerator.ts`; splits in `config/program.config.ts`.
@@ -72,8 +72,16 @@ Build green (`npm run build`), tests pass (`npm run test` — 72 Vitest), lint c
 - **Light "solar" theme is DONE.** Implemented centrally by remapping the slate/sky scales in
   `src/index.css` `@theme` (warm light surfaces, solar-orange accent) + an amber→orange app gradient
   + warmed `muscleMap.config.ts` palettes. To restyle, edit only those two places.
-- Remaining candidates: 26 MB model compression, deeper generator (accessories/progression/warmups),
-  refine head attribution, or post-MVP tiers (P1, T1).
+- **i18n (EN/FR/AR + RTL) is DONE.** Custom layer in `src/config/i18n/` (`en/fr/ar.ts` packs);
+  `labels.ts` re-exports the active pack under the same names, so components are unchanged and
+  switching language (floating 🌐 `LanguageSwitcher`) persists + reloads. `<html lang/dir>` is set in
+  `main.tsx`. Add a new string by extending `UiStrings`/`Translation` (TS forces all 3 languages).
+  **Exercise names/instructions stay English** (dataset is English-only; per-exercise translation is
+  a T1 data task).
+- **Program splits:** added a **body-part split** (`SplitType.BodyPart`) + a per-day **warm-up**
+  checklist; day focuses are now a `DayFocus` enum and `WorkoutDay = { index, focus, exercises }`.
+- Remaining candidates: 26 MB model compression, deeper generator (accessories/progression),
+  fuller Arabic RTL polish, refine head attribution, or post-MVP tiers (P1, T1).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.
 - M2: routed UI (`react-router-dom`) — exercise browser (search + group/equipment filters + paging)
   at `/`, detail page at `/exercise/:id`. UI depends on repository *interfaces* via

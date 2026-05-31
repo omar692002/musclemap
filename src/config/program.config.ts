@@ -1,29 +1,39 @@
 import { SplitType } from '../domain/enums/SplitType'
 import { MuscleGroup } from '../domain/enums/MuscleGroup'
 import { TrainingGoal } from '../domain/enums/TrainingGoal'
+import { DayFocus } from '../domain/enums/DayFocus'
 
-/** A day template: a focus label and the muscle groups it targets. */
+/** A day template: a focus (translation key) and the muscle groups it targets. */
 export interface DayTemplate {
-  readonly label: string
+  readonly focus: DayFocus
   readonly groups: readonly MuscleGroup[]
 }
 
-const PUSH: DayTemplate = { label: 'Push', groups: [MuscleGroup.Chest, MuscleGroup.Shoulders, MuscleGroup.Triceps] }
-const PULL: DayTemplate = { label: 'Pull', groups: [MuscleGroup.Back, MuscleGroup.Biceps, MuscleGroup.Forearms] }
+const PUSH: DayTemplate = { focus: DayFocus.Push, groups: [MuscleGroup.Chest, MuscleGroup.Shoulders, MuscleGroup.Triceps] }
+const PULL: DayTemplate = { focus: DayFocus.Pull, groups: [MuscleGroup.Back, MuscleGroup.Biceps, MuscleGroup.Forearms] }
 const LEGS: DayTemplate = {
-  label: 'Legs',
+  focus: DayFocus.Legs,
   groups: [MuscleGroup.Quadriceps, MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Calves],
 }
+const CHEST_TRICEPS: DayTemplate = { focus: DayFocus.ChestTriceps, groups: [MuscleGroup.Chest, MuscleGroup.Triceps] }
+const BACK_BICEPS: DayTemplate = {
+  focus: DayFocus.BackBiceps,
+  groups: [MuscleGroup.Back, MuscleGroup.Biceps, MuscleGroup.Forearms],
+}
+const SHOULDERS_CORE: DayTemplate = {
+  focus: DayFocus.ShouldersCore,
+  groups: [MuscleGroup.Shoulders, MuscleGroup.Core],
+}
 const UPPER: DayTemplate = {
-  label: 'Upper',
+  focus: DayFocus.Upper,
   groups: [MuscleGroup.Chest, MuscleGroup.Back, MuscleGroup.Shoulders, MuscleGroup.Biceps, MuscleGroup.Triceps],
 }
 const LOWER: DayTemplate = {
-  label: 'Lower',
+  focus: DayFocus.Lower,
   groups: [MuscleGroup.Quadriceps, MuscleGroup.Hamstrings, MuscleGroup.Glutes, MuscleGroup.Calves],
 }
 const FULL_BODY: DayTemplate = {
-  label: 'Full body',
+  focus: DayFocus.FullBody,
   groups: [
     MuscleGroup.Chest,
     MuscleGroup.Back,
@@ -39,6 +49,7 @@ export const SPLIT_PATTERNS: Readonly<Record<SplitType, readonly DayTemplate[]>>
   [SplitType.FullBody]: [FULL_BODY],
   [SplitType.UpperLower]: [UPPER, LOWER],
   [SplitType.PushPullLegs]: [PUSH, PULL, LEGS],
+  [SplitType.BodyPart]: [CHEST_TRICEPS, BACK_BICEPS, LEGS, SHOULDERS_CORE],
 }
 
 /** A prescription: how many sets and what rep range for one exercise. */

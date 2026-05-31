@@ -5,4 +5,5 @@
 export enum StorageKey {
   SavedPrograms = 'musclemap.savedPrograms',
   UserPreferences = 'musclemap.userPreferences',
+  Language = 'musclemap.language',
 }

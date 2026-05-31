@@ -100,7 +100,7 @@ export function generateProgram(
         picked += 1
       }
     }
-    days.push({ label: `Day ${i + 1}`, focus: template.label, exercises: chosen })
+    days.push({ index: i + 1, focus: template.focus, exercises: chosen })
   }
 
   const volumeByGroup = new Map<MuscleGroup, number>()

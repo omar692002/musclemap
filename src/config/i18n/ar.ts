@@ -1,0 +1,146 @@
+import type { Translation } from './types'
+import { MuscleGroup } from '../../domain/enums/MuscleGroup'
+import { Equipment } from '../../domain/enums/Equipment'
+import { MuscleRole } from '../../domain/enums/MuscleRole'
+import { BodyView } from '../../domain/enums/BodyView'
+import { SplitType } from '../../domain/enums/SplitType'
+import { TrainingGoal } from '../../domain/enums/TrainingGoal'
+import { DayFocus } from '../../domain/enums/DayFocus'
+import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
+import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
+import { ExerciseForce } from '../../domain/enums/ExerciseForce'
+import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+
+/** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
+export const ar: Translation = {
+  ui: {
+    appName: 'MuscleMap',
+    searchPlaceholder: 'ابحث عن تمرين…',
+    allGroups: 'كل المجموعات العضلية',
+    allEquipment: 'كل المعدّات',
+    loading: 'جارٍ تحميل التمارين…',
+    noResults: 'لا توجد تمارين مطابقة.',
+    loadMore: 'تحميل المزيد',
+    backToBrowser: '← كل التمارين',
+    notFound: 'التمرين غير موجود.',
+    musclesWorked: 'العضلات المستهدفة',
+    instructions: 'الخطوات',
+    noInstructions: 'لا توجد خطوات لهذا التمرين.',
+    openMap: 'خريطة العضلات →',
+    mapTitle: 'خريطة العضلات',
+    mapHelp: 'اضغط على عضلة لعرض التمارين التي تدرّبها.',
+    muscleFilterLabel: 'العضلة',
+    clearFilter: 'مسح',
+    exercisesWord: 'تمارين',
+    view2dLabel: '2D',
+    view3dLabel: '3D',
+    map3dHint: 'اسحب للتدوير · اضغط على عضلة',
+    rotateHint: 'اسحب للتدوير',
+    loading3d: 'جارٍ تحميل النموذج ثلاثي الأبعاد…',
+    openProgram: 'البرنامج →',
+    programTitle: 'مولّد البرنامج',
+    programHelp: 'اختر التقسيم وعدد الأيام والمعدّات لتحصل على أسبوع متوازن.',
+    splitLabel: 'التقسيم',
+    daysLabel: 'الأيام / الأسبوع',
+    goalLabel: 'الهدف',
+    equipmentLabel: 'المعدّات',
+    allEquipmentShort: 'الكل',
+    setsWord: 'مجموعات',
+    repsWord: 'تكرارات',
+    regenerate: '↻ إعادة التوليد',
+    weeklyVolume: 'الحجم الأسبوعي (مجموعات فعّالة / عضلة)',
+    emptyDay: 'لا توجد تمارين مطابقة — فعّل المزيد من المعدّات.',
+    dayWord: 'اليوم',
+    warmupTitle: 'الإحماء',
+    languageLabel: 'اللغة',
+  },
+  muscleGroup: {
+    [MuscleGroup.Chest]: 'الصدر',
+    [MuscleGroup.Back]: 'الظهر',
+    [MuscleGroup.Shoulders]: 'الأكتاف',
+    [MuscleGroup.Biceps]: 'العضلة ذات الرأسين',
+    [MuscleGroup.Triceps]: 'العضلة ثلاثية الرؤوس',
+    [MuscleGroup.Forearms]: 'الساعدان',
+    [MuscleGroup.Core]: 'عضلات الوسط',
+    [MuscleGroup.Quadriceps]: 'أمامية الفخذ',
+    [MuscleGroup.Hamstrings]: 'خلفية الفخذ',
+    [MuscleGroup.Glutes]: 'الألوية',
+    [MuscleGroup.Calves]: 'السمانة',
+    [MuscleGroup.Neck]: 'الرقبة',
+    [MuscleGroup.Adductors]: 'المقرّبات',
+    [MuscleGroup.Abductors]: 'المبعّدات',
+  },
+  equipment: {
+    [Equipment.Bands]: 'أشرطة مطاطية',
+    [Equipment.Barbell]: 'بار حديدي',
+    [Equipment.Bodyweight]: 'وزن الجسم',
+    [Equipment.Cable]: 'كابل',
+    [Equipment.Dumbbell]: 'دمبل',
+    [Equipment.EzCurlBar]: 'بار متعرّج',
+    [Equipment.ExerciseBall]: 'كرة تمارين',
+    [Equipment.FoamRoll]: 'أسطوانة رغوية',
+    [Equipment.Kettlebell]: 'كيتل بل',
+    [Equipment.Machine]: 'جهاز',
+    [Equipment.MedicineBall]: 'كرة طبية',
+    [Equipment.Other]: 'أخرى',
+  },
+  role: {
+    [MuscleRole.Primary]: 'أساسية',
+    [MuscleRole.Secondary]: 'ثانوية',
+    [MuscleRole.Stabilizer]: 'مثبّتة',
+  },
+  bodyView: {
+    [BodyView.Front]: 'أمامي',
+    [BodyView.Back]: 'خلفي',
+  },
+  split: {
+    [SplitType.FullBody]: 'الجسم كامل',
+    [SplitType.UpperLower]: 'علوي / سفلي',
+    [SplitType.PushPullLegs]: 'دفع / سحب / أرجل',
+    [SplitType.BodyPart]: 'تقسيم حسب العضلات',
+  },
+  goal: {
+    [TrainingGoal.Strength]: 'القوة',
+    [TrainingGoal.Hypertrophy]: 'التضخيم',
+    [TrainingGoal.Endurance]: 'التحمّل',
+  },
+  dayFocus: {
+    [DayFocus.Push]: 'دفع',
+    [DayFocus.Pull]: 'سحب',
+    [DayFocus.Legs]: 'أرجل',
+    [DayFocus.Upper]: 'الجزء العلوي',
+    [DayFocus.Lower]: 'الجزء السفلي',
+    [DayFocus.FullBody]: 'الجسم كامل',
+    [DayFocus.ChestTriceps]: 'صدر وثلاثية الرؤوس',
+    [DayFocus.BackBiceps]: 'ظهر وذات الرأسين',
+    [DayFocus.ShouldersCore]: 'أكتاف وعضلات الوسط',
+  },
+  level: {
+    [ExerciseLevel.Beginner]: 'مبتدئ',
+    [ExerciseLevel.Intermediate]: 'متوسط',
+    [ExerciseLevel.Expert]: 'متقدّم',
+  },
+  mechanic: {
+    [ExerciseMechanic.Compound]: 'مركّب',
+    [ExerciseMechanic.Isolation]: 'معزول',
+  },
+  force: {
+    [ExerciseForce.Push]: 'دفع',
+    [ExerciseForce.Pull]: 'سحب',
+    [ExerciseForce.Static]: 'ثابت',
+  },
+  category: {
+    [ExerciseCategory.Cardio]: 'كارديو',
+    [ExerciseCategory.OlympicWeightlifting]: 'رفع أثقال أولمبي',
+    [ExerciseCategory.Plyometrics]: 'تمارين بليومترية',
+    [ExerciseCategory.Powerlifting]: 'رفع القوة',
+    [ExerciseCategory.Strength]: 'قوة',
+    [ExerciseCategory.Stretching]: 'إطالة',
+    [ExerciseCategory.Strongman]: 'الرجل القوي',
+  },
+  warmup: [
+    '5–10 دقائق على المشاية / كارديو خفيف',
+    'إطالة ديناميكية للمفاصل المستهدفة',
+    'مجموعة أو مجموعتان خفيفتان على أول تمرين',
+  ],
+}

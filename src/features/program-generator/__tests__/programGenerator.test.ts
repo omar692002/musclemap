@@ -10,6 +10,7 @@ import { ExerciseLevel } from '../../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../../domain/enums/ExerciseMechanic'
 import { SplitType } from '../../../domain/enums/SplitType'
 import { TrainingGoal } from '../../../domain/enums/TrainingGoal'
+import { DayFocus } from '../../../domain/enums/DayFocus'
 import { generateProgram } from '../programGenerator'
 import { GOAL_SCHEMES } from '../../../config/program.config'
 
@@ -59,7 +60,21 @@ describe('generateProgram', () => {
       MUSCLE_INDEX,
     )
     expect(program.days).toHaveLength(3)
-    expect(program.days.map((d) => d.focus)).toEqual(['Push', 'Pull', 'Legs'])
+    expect(program.days.map((d) => d.focus)).toEqual([DayFocus.Push, DayFocus.Pull, DayFocus.Legs])
+  })
+
+  it('supports the body-part split (Chest+Tri, Back+Bi, Legs, Shoulders+Core)', () => {
+    const program = generateProgram(
+      { split: SplitType.BodyPart, days: 4, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    expect(program.days.map((d) => d.focus)).toEqual([
+      DayFocus.ChestTriceps,
+      DayFocus.BackBiceps,
+      DayFocus.Legs,
+      DayFocus.ShouldersCore,
+    ])
   })
 
   it('never repeats an exercise across the week', () => {

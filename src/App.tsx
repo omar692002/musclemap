@@ -4,6 +4,7 @@ import { ExerciseBrowserPage } from './features/exercise-browser/ExerciseBrowser
 import { ExerciseDetailPage } from './features/exercise-browser/ExerciseDetailPage'
 import { MuscleMapPage } from './features/muscle-map/MuscleMapPage'
 import { ProgramGeneratorPage } from './features/program-generator/ProgramGeneratorPage'
+import { LanguageSwitcher } from './components/LanguageSwitcher'
 
 /**
  * Application shell + routing. The exercise browser (M2) is the landing
@@ -20,6 +21,7 @@ function App() {
         <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
         <Route path="*" element={<Navigate to={AppRoutes.browser} replace />} />
       </Routes>
+      <LanguageSwitcher />
     </div>
   )
 }

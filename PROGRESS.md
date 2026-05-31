@@ -270,5 +270,25 @@ separately.
 
 ### Still open (not blockers)
 - Model compression (26 MB → ~5 MB Draco/meshopt) for mobile.
-- Generator: warmups, accessory slots, multi-exercise groups, progression across weeks.
+- Generator: accessory slots, multi-exercise groups, progression across weeks.
 - Refine head attribution toward hand-labelling; commercial-licence model swap (CC BY-SA copyleft).
+
+## Splits + warm-up + i18n pass (complete)
+Three more user requests. Build green, lint clean, **73 tests** (1 new). One commit.
+- **Body-part ("bro") split.** New `SplitType.BodyPart` → Chest+Triceps, Back+Biceps, Legs,
+  Shoulders+Core (cycled to the chosen day count). Day focuses are now a `DayFocus` enum (a
+  translation key), and `WorkoutDay` carries `{ index, focus }` instead of pre-baked label strings,
+  so the card renders translated "Day N · <focus>".
+- **Warm-up / cardio per session.** A standard checklist (`WARMUP_STEPS`: treadmill/cardio, dynamic
+  mobility, ramp-up sets) renders atop each non-empty day in `ProgramDayCard`. It's presentation
+  (config-driven, translatable) — the domain/generator stay unchanged.
+- **Full i18n — English / French / Arabic, with RTL.** Custom lightweight layer under
+  `src/config/i18n/` (`types.ts` + `en/fr/ar.ts` packs + `index.ts`). `Language` enum;
+  `getActiveLanguage()` (localStorage → browser → English); `setActiveLanguage()` persists + reloads;
+  `applyDocumentLanguage()` sets `<html lang/dir>` (Arabic = `rtl`) at startup in `main.tsx`. A
+  floating `LanguageSwitcher` (🌐, in `App`) changes it. `labels.ts` now just re-exports the active
+  pack under the **same names**, so no component import changed. TS `Record<Enum,string>` makes a
+  missing translation a **compile error**. **Scope:** UI chrome + all enum labels (muscle groups,
+  equipment, splits, goals, roles, levels, …) are translated; **exercise names/instructions stay
+  English** (the source dataset is English-only — a per-exercise translation table is a T1 data task).
+  RTL is functional (logical `ps-*` used on the warm-up list); a fuller RTL polish pass is a follow-up.

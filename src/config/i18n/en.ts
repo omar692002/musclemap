@@ -1,0 +1,146 @@
+import type { Translation } from './types'
+import { MuscleGroup } from '../../domain/enums/MuscleGroup'
+import { Equipment } from '../../domain/enums/Equipment'
+import { MuscleRole } from '../../domain/enums/MuscleRole'
+import { BodyView } from '../../domain/enums/BodyView'
+import { SplitType } from '../../domain/enums/SplitType'
+import { TrainingGoal } from '../../domain/enums/TrainingGoal'
+import { DayFocus } from '../../domain/enums/DayFocus'
+import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
+import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
+import { ExerciseForce } from '../../domain/enums/ExerciseForce'
+import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+
+/** English — the canonical pack other languages mirror. */
+export const en: Translation = {
+  ui: {
+    appName: 'MuscleMap',
+    searchPlaceholder: 'Search exercises…',
+    allGroups: 'All muscle groups',
+    allEquipment: 'All equipment',
+    loading: 'Loading exercises…',
+    noResults: 'No exercises match your filters.',
+    loadMore: 'Load more',
+    backToBrowser: '← All exercises',
+    notFound: 'Exercise not found.',
+    musclesWorked: 'Muscles worked',
+    instructions: 'Instructions',
+    noInstructions: 'No instructions provided for this exercise.',
+    openMap: 'Muscle map →',
+    mapTitle: 'Muscle map',
+    mapHelp: 'Tap a muscle to see the exercises that train it.',
+    muscleFilterLabel: 'Muscle',
+    clearFilter: 'Clear',
+    exercisesWord: 'exercises',
+    view2dLabel: '2D',
+    view3dLabel: '3D',
+    map3dHint: 'Drag to rotate · tap a muscle',
+    rotateHint: 'Drag to rotate',
+    loading3d: 'Loading 3D model…',
+    openProgram: 'Program →',
+    programTitle: 'Program generator',
+    programHelp: 'Pick a split, days per week, and your equipment — get a balanced week.',
+    splitLabel: 'Split',
+    daysLabel: 'Days / week',
+    goalLabel: 'Goal',
+    equipmentLabel: 'Equipment',
+    allEquipmentShort: 'All',
+    setsWord: 'sets',
+    repsWord: 'reps',
+    regenerate: '↻ Regenerate',
+    weeklyVolume: 'Weekly volume (effective sets / muscle)',
+    emptyDay: 'No matching exercises — try enabling more equipment.',
+    dayWord: 'Day',
+    warmupTitle: 'Warm-up',
+    languageLabel: 'Language',
+  },
+  muscleGroup: {
+    [MuscleGroup.Chest]: 'Chest',
+    [MuscleGroup.Back]: 'Back',
+    [MuscleGroup.Shoulders]: 'Shoulders',
+    [MuscleGroup.Biceps]: 'Biceps',
+    [MuscleGroup.Triceps]: 'Triceps',
+    [MuscleGroup.Forearms]: 'Forearms',
+    [MuscleGroup.Core]: 'Core',
+    [MuscleGroup.Quadriceps]: 'Quadriceps',
+    [MuscleGroup.Hamstrings]: 'Hamstrings',
+    [MuscleGroup.Glutes]: 'Glutes',
+    [MuscleGroup.Calves]: 'Calves',
+    [MuscleGroup.Neck]: 'Neck',
+    [MuscleGroup.Adductors]: 'Adductors',
+    [MuscleGroup.Abductors]: 'Abductors',
+  },
+  equipment: {
+    [Equipment.Bands]: 'Bands',
+    [Equipment.Barbell]: 'Barbell',
+    [Equipment.Bodyweight]: 'Bodyweight',
+    [Equipment.Cable]: 'Cable',
+    [Equipment.Dumbbell]: 'Dumbbell',
+    [Equipment.EzCurlBar]: 'EZ Curl Bar',
+    [Equipment.ExerciseBall]: 'Exercise Ball',
+    [Equipment.FoamRoll]: 'Foam Roll',
+    [Equipment.Kettlebell]: 'Kettlebell',
+    [Equipment.Machine]: 'Machine',
+    [Equipment.MedicineBall]: 'Medicine Ball',
+    [Equipment.Other]: 'Other',
+  },
+  role: {
+    [MuscleRole.Primary]: 'Primary',
+    [MuscleRole.Secondary]: 'Secondary',
+    [MuscleRole.Stabilizer]: 'Stabilizer',
+  },
+  bodyView: {
+    [BodyView.Front]: 'Front',
+    [BodyView.Back]: 'Back',
+  },
+  split: {
+    [SplitType.FullBody]: 'Full body',
+    [SplitType.UpperLower]: 'Upper / Lower',
+    [SplitType.PushPullLegs]: 'Push / Pull / Legs',
+    [SplitType.BodyPart]: 'Body-part split',
+  },
+  goal: {
+    [TrainingGoal.Strength]: 'Strength',
+    [TrainingGoal.Hypertrophy]: 'Hypertrophy',
+    [TrainingGoal.Endurance]: 'Endurance',
+  },
+  dayFocus: {
+    [DayFocus.Push]: 'Push',
+    [DayFocus.Pull]: 'Pull',
+    [DayFocus.Legs]: 'Legs',
+    [DayFocus.Upper]: 'Upper',
+    [DayFocus.Lower]: 'Lower',
+    [DayFocus.FullBody]: 'Full body',
+    [DayFocus.ChestTriceps]: 'Chest & Triceps',
+    [DayFocus.BackBiceps]: 'Back & Biceps',
+    [DayFocus.ShouldersCore]: 'Shoulders & Core',
+  },
+  level: {
+    [ExerciseLevel.Beginner]: 'Beginner',
+    [ExerciseLevel.Intermediate]: 'Intermediate',
+    [ExerciseLevel.Expert]: 'Expert',
+  },
+  mechanic: {
+    [ExerciseMechanic.Compound]: 'Compound',
+    [ExerciseMechanic.Isolation]: 'Isolation',
+  },
+  force: {
+    [ExerciseForce.Push]: 'Push',
+    [ExerciseForce.Pull]: 'Pull',
+    [ExerciseForce.Static]: 'Static',
+  },
+  category: {
+    [ExerciseCategory.Cardio]: 'Cardio',
+    [ExerciseCategory.OlympicWeightlifting]: 'Olympic Weightlifting',
+    [ExerciseCategory.Plyometrics]: 'Plyometrics',
+    [ExerciseCategory.Powerlifting]: 'Powerlifting',
+    [ExerciseCategory.Strength]: 'Strength',
+    [ExerciseCategory.Stretching]: 'Stretching',
+    [ExerciseCategory.Strongman]: 'Strongman',
+  },
+  warmup: [
+    '5–10 min treadmill / light cardio',
+    'Dynamic mobility for the target joints',
+    '1–2 light ramp-up sets on the first lift',
+  ],
+}
