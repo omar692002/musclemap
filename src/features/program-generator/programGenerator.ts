@@ -34,9 +34,21 @@ function seededRank(id: string, seed: number): number {
 }
 
 /** The set/rep prescription for an exercise under the chosen goal. */
-function schemeFor(exercise: Exercise, goal: TrainingGoal) {
+export function schemeFor(exercise: Exercise, goal: TrainingGoal) {
   const schemes = GOAL_SCHEMES[goal]
   return exercise.mechanic === ExerciseMechanic.Compound ? schemes.compound : schemes.isolation
+}
+
+/** Compares two exercises compound-first, then by a seeded order (for variety). */
+export function compoundFirstSeeded(a: Exercise, b: Exercise, seed: number): number {
+  const compoundA = a.mechanic === ExerciseMechanic.Compound ? 0 : 1
+  const compoundB = b.mechanic === ExerciseMechanic.Compound ? 0 : 1
+  return compoundA - compoundB || seededRank(a.id, seed) - seededRank(b.id, seed)
+}
+
+/** True when the exercise's equipment is allowed (empty set = no restriction). */
+export function exerciseAllowed(exercise: Exercise, allowed: ReadonlySet<Equipment>): boolean {
+  return allowsEquipment(exercise, allowed)
 }
 
 /** True when the exercise trains `group` as a primary mover. */
@@ -47,7 +59,7 @@ function isPrimaryFor(exercise: Exercise, group: MuscleGroup, muscleIndex: Reado
 }
 
 /** Candidate exercises per group, compound-first then seeded (for variety). */
-function candidatesByGroup(
+export function candidatesByGroup(
   exercises: readonly Exercise[],
   allowed: ReadonlySet<Equipment>,
   muscleIndex: ReadonlyMap<string, Muscle>,
@@ -57,15 +69,38 @@ function candidatesByGroup(
   for (const group of Object.values(MuscleGroup)) {
     const list = exercises
       .filter((exercise) => allowsEquipment(exercise, allowed) && isPrimaryFor(exercise, group, muscleIndex))
-      .sort((a, b) => {
-        const compoundA = a.mechanic === ExerciseMechanic.Compound ? 0 : 1
-        const compoundB = b.mechanic === ExerciseMechanic.Compound ? 0 : 1
-        // Compound-first, then a seeded order so "regenerate" rotates picks.
-        return compoundA - compoundB || seededRank(a.id, seed) - seededRank(b.id, seed)
-      })
+      .sort((a, b) => compoundFirstSeeded(a, b, seed))
     byGroup.set(group, list)
   }
   return byGroup
+}
+
+/**
+ * Picks up to `perGroup` exercises for each group from the prepared candidates,
+ * skipping any already in `used` (so a week never repeats a lift). Each pick is
+ * prescribed sets/reps from the goal. Shared by the planner and quick sessions.
+ */
+export function pickExercises(
+  groups: readonly MuscleGroup[],
+  candidates: ReadonlyMap<MuscleGroup, readonly Exercise[]>,
+  goal: TrainingGoal,
+  perGroup: number,
+  used: Set<string>,
+): ProgramExercise[] {
+  const chosen: ProgramExercise[] = []
+  for (const group of groups) {
+    const pool = candidates.get(group) ?? []
+    let picked = 0
+    for (const exercise of pool) {
+      if (picked >= perGroup) break
+      if (used.has(exercise.id)) continue
+      used.add(exercise.id)
+      const scheme = schemeFor(exercise, goal)
+      chosen.push({ exercise, sets: scheme.sets, reps: scheme.repRange })
+      picked += 1
+    }
+  }
+  return chosen
 }
 
 /**
@@ -87,19 +122,7 @@ export function generateProgram(
 
   for (let i = 0; i < params.days; i += 1) {
     const template = pattern[i % pattern.length]
-    const chosen: ProgramExercise[] = []
-    for (const group of template.groups) {
-      const pool = candidates.get(group) ?? []
-      let picked = 0
-      for (const exercise of pool) {
-        if (picked >= ProgramConfig.exercisesPerGroup) break
-        if (used.has(exercise.id)) continue
-        used.add(exercise.id)
-        const scheme = schemeFor(exercise, params.goal)
-        chosen.push({ exercise, sets: scheme.sets, reps: scheme.repRange })
-        picked += 1
-      }
-    }
+    const chosen = pickExercises(template.groups, candidates, params.goal, ProgramConfig.exercisesPerGroup, used)
     days.push({ index: i + 1, focus: template.focus, exercises: chosen })
   }
 

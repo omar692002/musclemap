@@ -1,12 +1,10 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { useExerciseFilters } from './useExerciseFilters'
 import { FilterBar } from './components/FilterBar'
 import { ExerciseCard } from './components/ExerciseCard'
 import { UiText } from '../../config/labels'
 import { UiConfig } from '../../config/ui.config'
-import { AppRoutes } from '../../config/routes'
 import { MUSCLE_HEAD_BY_ID } from '../../data/static/taxonomy/muscleHeads'
 import type { MuscleHeadId } from '../../domain/enums/MuscleHeadId'
 
@@ -65,16 +63,8 @@ export function ExerciseBrowserPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
-      <header className="mb-4 flex items-baseline justify-between gap-3">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.appName}</h1>
-        <nav className="flex gap-4 text-sm">
-          <Link to={AppRoutes.muscleMap} className="text-sky-400 hover:text-sky-300">
-            {UiText.openMap}
-          </Link>
-          <Link to={AppRoutes.program} className="text-sky-400 hover:text-sky-300">
-            {UiText.openProgram}
-          </Link>
-        </nav>
+      <header className="mb-4">
+        <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.navExercises}</h1>
       </header>
 
       <div className="mb-3">

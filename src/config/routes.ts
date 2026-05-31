@@ -3,8 +3,10 @@
  * Centralised so no route string is hardcoded across the UI.
  */
 export const AppRoutes = {
-  browser: '/',
+  home: '/',
+  browser: '/exercises',
   exerciseDetail: '/exercise/:id',
+  session: '/session/:id',
   muscleMap: '/map',
   program: '/program',
 } as const
@@ -38,4 +40,9 @@ export function browserPathForHead(headId: string): string {
 /** Builds the detail URL for an exercise id (ids are URL-encoded). */
 export function exerciseDetailPath(id: string): string {
   return `/exercise/${encodeURIComponent(id)}`
+}
+
+/** Builds the workout-session URL for a session id (a DayFocus value or "cardio"). */
+export function sessionPath(id: string): string {
+  return `/session/${encodeURIComponent(id)}`
 }

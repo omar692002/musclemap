@@ -51,6 +51,22 @@ export interface UiStrings {
   readonly dayWord: string
   readonly warmupTitle: string
   readonly languageLabel: string
+  // Mobile shell + workout-first home.
+  readonly navHome: string
+  readonly navExercises: string
+  readonly navBody: string
+  readonly navPlan: string
+  readonly homeGreeting: string
+  readonly homePickSession: string
+  readonly startWorkout: string
+  readonly buildYourOwn: string
+  readonly buildYourOwnHint: string
+  readonly exercisesHeading: string
+  readonly back: string
+  readonly cardioTitle: string
+  readonly cardioSubtitle: string
+  readonly cardioDuration: string
+  readonly browseAll: string
 }
 
 /**

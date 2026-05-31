@@ -52,6 +52,19 @@ export const SPLIT_PATTERNS: Readonly<Record<SplitType, readonly DayTemplate[]>>
   [SplitType.BodyPart]: [CHEST_TRICEPS, BACK_BICEPS, LEGS, SHOULDERS_CORE],
 }
 
+/** Muscle groups trained by each day focus (the quick-session launcher uses this). */
+export const TEMPLATE_BY_FOCUS: Readonly<Record<DayFocus, DayTemplate>> = {
+  [DayFocus.Push]: PUSH,
+  [DayFocus.Pull]: PULL,
+  [DayFocus.Legs]: LEGS,
+  [DayFocus.Upper]: UPPER,
+  [DayFocus.Lower]: LOWER,
+  [DayFocus.FullBody]: FULL_BODY,
+  [DayFocus.ChestTriceps]: CHEST_TRICEPS,
+  [DayFocus.BackBiceps]: BACK_BICEPS,
+  [DayFocus.ShouldersCore]: SHOULDERS_CORE,
+}
+
 /** A prescription: how many sets and what rep range for one exercise. */
 export interface SetScheme {
   readonly sets: number

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
 import { ExerciseMediaGallery } from './components/ExerciseMediaGallery'
@@ -25,6 +25,7 @@ const BACK_LINK_CLASS = 'inline-block text-sm text-sky-400 hover:text-sky-300'
 /** Full exercise view: media, muscles worked (by role), and instructions. */
 export function ExerciseDetailPage() {
   const params = useParams()
+  const navigate = useNavigate()
   const id = params.id ? decodeURIComponent(params.id) : ''
   const { exercises, muscleIndex, loading } = useExerciseData()
   const exercise = exercises.find((candidate) => candidate.id === id)
@@ -47,9 +48,9 @@ export function ExerciseDetailPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <Link to={AppRoutes.browser} className={`${BACK_LINK_CLASS} mb-4`}>
-        {UiText.backToBrowser}
-      </Link>
+      <button type="button" onClick={() => navigate(-1)} className={`${BACK_LINK_CLASS} mb-4`}>
+        ← {UiText.back}
+      </button>
 
       <h1 className="mb-3 text-2xl font-bold tracking-tight text-slate-100">{exercise.name}</h1>
 

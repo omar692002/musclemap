@@ -1,5 +1,5 @@
 import { lazy, Suspense, useMemo, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import type { Muscle } from '../../domain/models/Muscle'
 import type { MuscleId } from '../../domain/enums/MuscleId'
 import type { RegionRef } from './region'
@@ -7,7 +7,7 @@ import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { MuscleMapBoard } from './MuscleMapBoard'
 import { headsOf } from './headAttribution'
 import { isHeadedMuscle } from '../../data/static/taxonomy/muscleHeads'
-import { AppRoutes, browserPathForMuscle, browserPathForHead } from '../../config/routes'
+import { browserPathForMuscle, browserPathForHead } from '../../config/routes'
 import { UiText } from '../../config/labels'
 
 // three.js is heavy — only fetched when the 3D view is actually shown.
@@ -52,11 +52,8 @@ export function MuscleMapPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <header className="mb-4 flex items-baseline justify-between gap-3">
+      <header className="mb-4">
         <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.mapTitle}</h1>
-        <Link to={AppRoutes.browser} className="text-sm text-sky-400 hover:text-sky-300">
-          {UiText.backToBrowser}
-        </Link>
       </header>
 
       <div className="mb-5 flex items-center justify-between gap-3">

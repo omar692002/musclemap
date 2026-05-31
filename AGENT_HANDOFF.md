@@ -80,6 +80,12 @@ Build green (`npm run build`), tests pass (`npm run test` — 73 Vitest), lint c
   a T1 data task).
 - **Program splits:** added a **body-part split** (`SplitType.BodyPart`) + a per-day **warm-up**
   checklist; day focuses are now a `DayFocus` enum and `WorkoutDay = { index, focus, exercises }`.
+- **UX redesign (workout-first):** the app is now a mobile-style shell — sticky `TopBar` + `BottomNav`
+  tabs (Home / Exercises / Body / Plan). **Home (`/`)** is a session launcher (`features/workouts/`):
+  tappable cards for Chest+Triceps, Back+Biceps, Shoulders+Core, Legs, Cardio → **`/session/:id`**
+  (warm-up + exercises, Regenerate). Browser moved to `/exercises`. Sessions in
+  `config/sessions.config.ts`; `sessionPlan.ts` reuses exported generator internals
+  (`candidatesByGroup`/`pickExercises`/`schemeFor`/`compoundFirstSeeded`).
 - Remaining candidates: 26 MB model compression, deeper generator (accessories/progression),
   fuller Arabic RTL polish, refine head attribution, or post-MVP tiers (P1, T1).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.

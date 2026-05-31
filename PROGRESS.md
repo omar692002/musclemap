@@ -273,6 +273,31 @@ separately.
 - Generator: accessory slots, multi-exercise groups, progression across weeks.
 - Refine head attribution toward hand-labelling; commercial-licence model swap (CC BY-SA copyleft).
 
+## UX redesign — workout-first, app-like shell (complete)
+User feedback: the app felt like an exercise *database*, not a gym app — "as a user I want to open
+it and easily train Chest+Triceps, Back+Biceps, Shoulders+Abs, Legs, Cardio." Restructured the whole
+experience around that. Build green, lint clean, 73 tests.
+- **Mobile app shell** (`App.tsx`): a sticky **TopBar** (brand + language) and a sticky **BottomNav**
+  tab bar (Home / Exercises / Body / Plan, `NavLink` active states) wrap the routed screens — the
+  app now navigates like a native mobile app, not via in-page header links.
+- **Workout-first Home** (`features/workouts/HomePage`): the landing screen (`/`) is now a session
+  launcher — big tappable **SessionCard**s for **Chest & Triceps, Back & Biceps, Shoulders & Core,
+  Legs, and Cardio** (each with an icon + accent), plus "Build your own week" → `/program` and
+  "Browse all" → `/exercises`. Sessions are config (`config/sessions.config.ts`); cardio is the
+  `ExerciseCategory.Cardio` set.
+- **Session screen** (`/session/:id`, `SessionPage`): tap a card → warm-up + a ready exercise list
+  (2 per muscle group, sets×reps from the goal; cardio = 4 moves × duration), with **Regenerate** for
+  variety and a back button. Reuses the generator's internals: `programGenerator` now exports
+  `candidatesByGroup` / `pickExercises` / `schemeFor` / `compoundFirstSeeded`, consumed by
+  `features/workouts/sessionPlan.ts`.
+- **Routing reshaped** (`config/routes.ts`): `/` = Home, browser moved to `/exercises`, new
+  `/session/:id`; `sessionPath()` added; muscle/head map links still target the browser. Page headers
+  slimmed (no redundant brand/nav/back); detail "Back" now `navigate(-1)`.
+- **Shared components**: `BottomNav`, `TopBar`, `WarmupBlock`, `WorkoutExerciseRow` (the row renders
+  `N × reps`, or just the value for single-set/cardio). `ProgramDayCard` refactored onto them.
+- **Still open:** richer Home (greeting by time, last/next session memory, streaks); a true
+  "start workout" runner (per-set checkmarks, rest timer); fuller Arabic RTL polish.
+
 ## Splits + warm-up + i18n pass (complete)
 Three more user requests. Build green, lint clean, **73 tests** (1 new). One commit.
 - **Body-part ("bro") split.** New `SplitType.BodyPart` → Chest+Triceps, Back+Biceps, Legs,

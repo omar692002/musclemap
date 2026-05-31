@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { Equipment } from '../../domain/enums/Equipment'
 import { SplitType } from '../../domain/enums/SplitType'
 import { TrainingGoal } from '../../domain/enums/TrainingGoal'
@@ -9,7 +8,6 @@ import { ProgramControls } from './components/ProgramControls'
 import { ProgramDayCard } from './components/ProgramDayCard'
 import { VolumeReadout } from './components/VolumeReadout'
 import { ProgramConfig } from '../../config/program.config'
-import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 
 /** M4: pick a split / days / equipment → a balanced week + volume readout. */
@@ -38,11 +36,8 @@ export function ProgramGeneratorPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <header className="mb-4 flex items-baseline justify-between gap-3">
+      <header className="mb-4">
         <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.programTitle}</h1>
-        <Link to={AppRoutes.browser} className="text-sm text-sky-400 hover:text-sky-300">
-          {UiText.backToBrowser}
-        </Link>
       </header>
       <p className="mb-5 text-sm text-slate-400">{UiText.programHelp}</p>
 

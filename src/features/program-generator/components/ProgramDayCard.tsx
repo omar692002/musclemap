@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom'
 import type { WorkoutDay } from '../../../domain/models/WorkoutProgram'
-import { exerciseDetailPath } from '../../../config/routes'
-import { UiText, DAY_FOCUS_LABELS, WARMUP_STEPS } from '../../../config/labels'
+import { UiText, DAY_FOCUS_LABELS } from '../../../config/labels'
+import { WarmupBlock } from '../../../components/WarmupBlock'
+import { WorkoutExerciseRow } from '../../../components/WorkoutExerciseRow'
 
 interface ProgramDayCardProps {
   readonly day: WorkoutDay
@@ -20,34 +20,18 @@ export function ProgramDayCard({ day }: ProgramDayCardProps) {
       </div>
 
       {hasExercises ? (
-        <div className="mb-3 rounded-lg border border-slate-700/60 bg-slate-800/60 p-2.5">
-          <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-sky-300">{UiText.warmupTitle}</p>
-          <ul className="flex list-disc flex-col gap-0.5 ps-4 text-xs text-slate-400">
-            {WARMUP_STEPS.map((step) => (
-              <li key={step}>{step}</li>
+        <>
+          <div className="mb-3">
+            <WarmupBlock />
+          </div>
+          <ul className="flex flex-col divide-y divide-slate-800">
+            {day.exercises.map((item) => (
+              <WorkoutExerciseRow key={item.exercise.id} item={item} />
             ))}
           </ul>
-        </div>
-      ) : null}
-
-      {!hasExercises ? (
-        <p className="text-sm text-slate-500">{UiText.emptyDay}</p>
+        </>
       ) : (
-        <ul className="flex flex-col divide-y divide-slate-800">
-          {day.exercises.map(({ exercise, sets, reps }) => (
-            <li key={exercise.id} className="flex items-center justify-between gap-3 py-2">
-              <Link
-                to={exerciseDetailPath(exercise.id)}
-                className="text-sm text-slate-200 hover:text-sky-300"
-              >
-                {exercise.name}
-              </Link>
-              <span className="shrink-0 text-xs tabular-nums text-slate-400">
-                {sets} × {reps}
-              </span>
-            </li>
-          ))}
-        </ul>
+        <p className="text-sm text-slate-500">{UiText.emptyDay}</p>
       )}
     </div>
   )
