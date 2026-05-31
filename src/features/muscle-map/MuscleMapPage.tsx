@@ -2,9 +2,12 @@ import { lazy, Suspense, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import type { Muscle } from '../../domain/models/Muscle'
 import type { MuscleId } from '../../domain/enums/MuscleId'
+import type { RegionRef } from './region'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { MuscleMapBoard } from './MuscleMapBoard'
-import { AppRoutes, browserPathForMuscle } from '../../config/routes'
+import { headsOf } from './headAttribution'
+import { isHeadedMuscle } from '../../data/static/taxonomy/muscleHeads'
+import { AppRoutes, browserPathForMuscle, browserPathForHead } from '../../config/routes'
 import { UiText } from '../../config/labels'
 
 // three.js is heavy — only fetched when the 3D view is actually shown.
@@ -17,29 +20,35 @@ const DIMENSION_LABELS: Readonly<Record<Dimension, string>> = {
   '2D': UiText.view2dLabel,
 }
 
-/** Interactive muscle map (2D or rotatable 3D): tap a muscle for its exercises. */
+/** Interactive muscle map (2D or rotatable, head-split 3D): tap for exercises. */
 export function MuscleMapPage() {
   const navigate = useNavigate()
   const { exercises, muscleIndex, loading } = useExerciseData()
   const [dimension, setDimension] = useState<Dimension>('3D')
 
-  // How many exercises train each muscle — shown in each region's tooltip.
-  const countByMuscle = useMemo(() => {
-    const counts = new Map<string, number>()
+  // Exercise counts per whole muscle (2D) and per region/head (3D tooltips).
+  const { countByMuscle, countByRegion } = useMemo(() => {
+    const byMuscle = new Map<string, number>()
+    const byRegion = new Map<string, number>()
     for (const exercise of exercises) {
-      const seen = new Set<string>()
-      for (const involvement of exercise.muscles) {
-        if (seen.has(involvement.muscleId)) continue
-        seen.add(involvement.muscleId)
-        counts.set(involvement.muscleId, (counts.get(involvement.muscleId) ?? 0) + 1)
-      }
+      const muscles = new Set<string>()
+      for (const involvement of exercise.muscles) muscles.add(involvement.muscleId)
+      for (const muscleId of muscles) byMuscle.set(muscleId, (byMuscle.get(muscleId) ?? 0) + 1)
+
+      const regions = new Set<string>()
+      for (const headId of headsOf(exercise).keys()) regions.add(headId)
+      for (const muscleId of muscles) if (!isHeadedMuscle(muscleId as MuscleId)) regions.add(muscleId)
+      for (const key of regions) byRegion.set(key, (byRegion.get(key) ?? 0) + 1)
     }
-    return counts
+    return { countByMuscle: byMuscle, countByRegion: byRegion }
   }, [exercises])
 
   const describe = (muscle: Muscle) =>
     `${muscle.name} · ${countByMuscle.get(muscle.id) ?? 0} ${UiText.exercisesWord}`
-  const handleSelect = (muscleId: MuscleId) => navigate(browserPathForMuscle(muscleId))
+  const countFor = (regionKey: string) => countByRegion.get(regionKey) ?? 0
+  const handleMuscle = (muscleId: MuscleId) => navigate(browserPathForMuscle(muscleId))
+  const handleRegion = (region: RegionRef) =>
+    navigate(region.headId ? browserPathForHead(region.headId) : browserPathForMuscle(region.muscleId))
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
@@ -73,10 +82,10 @@ export function MuscleMapPage() {
         <p className="text-slate-400">{UiText.loading}</p>
       ) : dimension === '3D' ? (
         <Suspense fallback={<p className="text-slate-400">{UiText.loading3d}</p>}>
-          <Muscle3DView muscleIndex={muscleIndex} onSelect={handleSelect} describe={describe} />
+          <Muscle3DView muscleIndex={muscleIndex} onSelect={handleRegion} countFor={countFor} />
         </Suspense>
       ) : (
-        <MuscleMapBoard muscleIndex={muscleIndex} onSelect={handleSelect} describe={describe} />
+        <MuscleMapBoard muscleIndex={muscleIndex} onSelect={handleMuscle} describe={describe} />
       )}
     </div>
   )

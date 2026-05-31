@@ -1,34 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useGLTF, useCursor } from '@react-three/drei'
 import type { ThreeEvent } from '@react-three/fiber'
-import {
-  Box3,
-  Group,
-  Mesh,
-  MeshStandardMaterial,
-  Object3D,
-  Vector3,
-} from 'three'
+import { Box3, Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from 'three'
+import type { Muscle } from '../../../domain/models/Muscle'
 import type { MuscleId } from '../../../domain/enums/MuscleId'
 import type { MuscleRole } from '../../../domain/enums/MuscleRole'
+import type { RegionRef } from '../region'
 import { muscleForChain } from './anatomyMuscleMap'
+import { headForChain } from './anatomyHeadMap'
+import { MUSCLE_HEAD_BY_ID } from '../../../data/static/taxonomy/muscleHeads'
 import { AnatomyModelConfig } from '../../../config/anatomyModel.config'
 import { MuscleMapConfig, ROLE_FILL } from '../../../config/muscleMap.config'
 
 interface AnatomyModelProps {
+  readonly muscleIndex: ReadonlyMap<string, Muscle>
   readonly highlight?: ReadonlyMap<string, MuscleRole>
   readonly selected?: string | null
-  readonly onSelect?: (muscleId: MuscleId) => void
-  readonly onHover?: (muscleId: MuscleId | null) => void
+  readonly onSelect?: (region: RegionRef) => void
+  readonly onHover?: (region: RegionRef | null) => void
 }
 
 const NO_EMISSIVE = '#000000'
 
-/**
- * "self || parent || …" name chain used to resolve a mesh's muscle. Prefers the
- * original `userData.name` (three.js sanitises `object.name` on load); the
- * matcher normalises separators either way.
- */
+/** Original-name "self || parent || …" chain (three.js sanitises object.name). */
 function chainOf(object: Object3D): string {
   const parts: string[] = []
   let node: Object3D | null = object
@@ -40,26 +34,26 @@ function chainOf(object: Object3D): string {
   return parts.join(' || ')
 }
 
-/** Climbs from a clicked object to the nearest ancestor carrying a muscle id. */
-function pickMuscle(object: Object3D): MuscleId | null {
+/** Climbs from a hit object to the nearest ancestor carrying a region. */
+function pickRegion(object: Object3D): RegionRef | null {
   let node: Object3D | null = object
   while (node) {
-    const id = node.userData?.muscleId as MuscleId | null | undefined
-    if (id) return id
+    const region = node.userData?.region as RegionRef | undefined
+    if (region) return region
     node = node.parent
   }
   return null
 }
 
 /**
- * The realistic anatomy model (GLTF). Each mesh is tagged with the muscle id it
- * belongs to (via `anatomyMuscleMap`), gets its own material so it can be
- * recoloured by role/hover/selection, and the whole model is auto-fitted
- * (centred + scaled) to the scene. Same contract as the procedural body.
+ * The realistic anatomy model (GLTF). Each mesh is resolved to a muscle *head*
+ * where the muscle is split (else the whole muscle), tagged with that region,
+ * and given its own material so it can be recoloured by role/hover. Connective
+ * tissue is ghosted and ignored by raycasts. Auto-fitted (centre + scale).
  */
-export function AnatomyModel({ highlight, selected, onSelect, onHover }: AnatomyModelProps) {
+export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHover }: AnatomyModelProps) {
   const { scene } = useGLTF(AnatomyModelConfig.url)
-  const [hovered, setHovered] = useState<MuscleId | null>(null)
+  const [hovered, setHovered] = useState<string | null>(null)
   const interactive = Boolean(onSelect)
   useCursor(hovered !== null && interactive)
 
@@ -69,12 +63,23 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
     root.traverse((object) => {
       const mesh = object as Mesh
       if (!mesh.isMesh) return
-      const muscleId = muscleForChain(chainOf(mesh))
+      const chain = chainOf(mesh)
+      const headId = headForChain(chain)
+      const head = headId ? MUSCLE_HEAD_BY_ID.get(headId) : undefined
+      const muscleId = head ? head.parent : muscleForChain(chain)
       mesh.userData.muscleId = muscleId
+
       const material = new MeshStandardMaterial({ roughness: 0.6, metalness: 0.05 })
-      if (!muscleId) {
-        // Connective tissue / unmapped: a faint see-through shell that doesn't
-        // hide or block clicks on the muscles underneath.
+      if (muscleId) {
+        const region: RegionRef = {
+          key: headId ?? muscleId,
+          label: head ? head.name : muscleIndex.get(muscleId)?.name ?? muscleId,
+          muscleId,
+          headId: headId ?? undefined,
+        }
+        mesh.userData.region = region
+      } else {
+        // Connective tissue / unmapped: faint see-through shell, not pickable.
         material.transparent = true
         material.opacity = colors.ghostOpacity
         material.depthWrite = false
@@ -85,7 +90,6 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
       mesh.material = material
     })
 
-    // Centre at the origin and scale to a consistent height.
     const box = new Box3().setFromObject(root)
     const size = new Vector3()
     const center = new Vector3()
@@ -96,7 +100,7 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
     group.add(root)
     group.scale.setScalar(AnatomyModelConfig.targetHeight / Math.max(size.y, 0.0001))
     return group
-  }, [scene])
+  }, [scene, muscleIndex])
 
   useEffect(() => {
     const colors = MuscleMapConfig.model3d
@@ -105,10 +109,11 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
       if (!mesh.isMesh) return
       const muscleId = mesh.userData.muscleId as MuscleId | null
       if (!muscleId) return // ghosted tissue keeps its faint material
+      const region = mesh.userData.region as RegionRef | undefined
       const material = mesh.material as MeshStandardMaterial
       const role = highlight?.get(muscleId)
       const isSelected = selected === muscleId
-      const isHovered = hovered === muscleId
+      const isHovered = region ? hovered === region.key : false
       material.color.set(role ? ROLE_FILL[role] : isHovered ? colors.muscleHover : colors.muscle)
       material.emissive.set(isSelected ? colors.selected : NO_EMISSIVE)
       material.emissiveIntensity = isSelected ? 0.5 : 0
@@ -122,9 +127,9 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
         interactive
           ? (event: ThreeEvent<PointerEvent>) => {
               event.stopPropagation()
-              const id = pickMuscle(event.object)
-              setHovered(id)
-              onHover?.(id)
+              const region = pickRegion(event.object)
+              setHovered(region?.key ?? null)
+              onHover?.(region ?? null)
             }
           : undefined
       }
@@ -140,8 +145,8 @@ export function AnatomyModel({ highlight, selected, onSelect, onHover }: Anatomy
         interactive
           ? (event: ThreeEvent<MouseEvent>) => {
               event.stopPropagation()
-              const id = pickMuscle(event.object)
-              if (id) onSelect?.(id)
+              const region = pickRegion(event.object)
+              if (region) onSelect?.(region)
             }
           : undefined
       }

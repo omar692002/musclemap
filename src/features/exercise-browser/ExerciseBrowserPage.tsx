@@ -7,11 +7,30 @@ import { ExerciseCard } from './components/ExerciseCard'
 import { UiText } from '../../config/labels'
 import { UiConfig } from '../../config/ui.config'
 import { AppRoutes } from '../../config/routes'
+import { MUSCLE_HEAD_BY_ID } from '../../data/static/taxonomy/muscleHeads'
+import type { MuscleHeadId } from '../../domain/enums/MuscleHeadId'
+
+/** A removable "filtering by …" pill. */
+function ActiveFilterChip({ label, onClear }: { label: string; onClear: () => void }) {
+  return (
+    <button
+      type="button"
+      onClick={onClear}
+      className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-sky-200 transition hover:bg-sky-500/20"
+    >
+      {UiText.muscleFilterLabel}: {label}
+      <span aria-hidden className="text-sky-300">
+        ✕
+      </span>
+      <span className="sr-only">{UiText.clearFilter}</span>
+    </button>
+  )
+}
 
 /** Landing screen: search/filter the catalog and tap through to detail. */
 export function ExerciseBrowserPage() {
   const { exercises, muscleIndex, loading } = useExerciseData()
-  const { search, group, equipment, muscle, results, setSearch, setGroup, setEquipment, setMuscle } =
+  const { search, group, equipment, muscle, head, results, setSearch, setGroup, setEquipment, setMuscle, setHead } =
     useExerciseFilters(exercises, muscleIndex)
   const [visibleCount, setVisibleCount] = useState<number>(UiConfig.browserPageSize)
 
@@ -34,8 +53,13 @@ export function ExerciseBrowserPage() {
     setMuscle(null)
     resetPaging()
   }
+  const clearHead = () => {
+    setHead(null)
+    resetPaging()
+  }
 
   const muscleName = muscle ? muscleIndex.get(muscle)?.name ?? null : null
+  const headName = head ? MUSCLE_HEAD_BY_ID.get(head as MuscleHeadId)?.name ?? null : null
   const visible = results.slice(0, visibleCount)
   const remaining = results.length - visible.length
 
@@ -63,19 +87,8 @@ export function ExerciseBrowserPage() {
         <span className="text-sm text-slate-400">
           {results.length} {UiText.exercisesWord}
         </span>
-        {muscleName ? (
-          <button
-            type="button"
-            onClick={clearMuscle}
-            className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-sky-200 transition hover:bg-sky-500/20"
-          >
-            {UiText.muscleFilterLabel}: {muscleName}
-            <span aria-hidden className="text-sky-300">
-              ✕
-            </span>
-            <span className="sr-only">{UiText.clearFilter}</span>
-          </button>
-        ) : null}
+        {headName ? <ActiveFilterChip label={headName} onClear={clearHead} /> : null}
+        {muscleName ? <ActiveFilterChip label={muscleName} onClear={clearMuscle} /> : null}
       </div>
 
       {loading ? (

@@ -17,12 +17,20 @@ export const BrowserParam = {
   group: 'group',
   equipment: 'equipment',
   muscle: 'muscle',
+  head: 'head',
 } as const
 
 /** Browser URL pre-filtered to a single muscle (used by the muscle map). */
 export function browserPathForMuscle(muscleId: string): string {
   const params = new URLSearchParams()
   params.set(BrowserParam.muscle, muscleId)
+  return `${AppRoutes.browser}?${params.toString()}`
+}
+
+/** Browser URL pre-filtered to a single muscle head (used by the 3D map). */
+export function browserPathForHead(headId: string): string {
+  const params = new URLSearchParams()
+  params.set(BrowserParam.head, headId)
   return `${AppRoutes.browser}?${params.toString()}`
 }
 

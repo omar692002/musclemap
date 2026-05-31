@@ -188,10 +188,31 @@ muscular-system model** (`public/models/muscles.glb`, ~6.6 MB, BodyParts3D / Z-A
   runtime-cached CacheFirst on first view, so install stays light but the model works offline after.
 - **CC BY-SA attribution** shown under the model (`AnatomyModelConfig.attribution`).
 
+### Head-level granularity (complete)
+The 3D model is split into **muscle heads** (front/side/rear delt, the 3 triceps heads, biceps
+2 heads, upper/mid/lower chest & traps, gastrocnemius vs soleus, the quad & hamstring heads — 23
+heads across 8 muscles). Other muscles stay whole.
+- **Taxonomy:** `MuscleHeadId` enum + `data/static/taxonomy/muscleHeads.ts` (head → parent muscle +
+  name, `HEADS_BY_MUSCLE`, `isHeadedMuscle`).
+- **Mesh → head:** `three/anatomyHeadMap.ts` resolves the model's part names ("Clavicular part of
+  deltoid" → anterior delt). `AnatomyModel` tags each mesh with a `RegionRef` (head or whole
+  muscle); hover/click operate on that region (so hovering isolates just the front delt, etc.).
+- **Per-head exercises (curation layer):** `headAttribution.ts` infers which head(s) an exercise
+  trains from its name (lateral raise → side delt, incline press → upper chest, seated calf raise →
+  soleus…), since the source data is group-level. Heuristic rules per muscle with a full-set
+  fallback; quads/hams map to all heads (not name-distinguishable). Memoised per exercise. This is
+  the documented seam to refine with hand-labelling.
+- **Wiring:** clicking a head → browser filtered by `?head=` (`BrowserParam.head`,
+  `browserPathForHead`, `exerciseInvolvesHead`), shown as a clearable chip; the 3D hover tooltip
+  shows the head name + its exercise count. 2D map stays muscle-level. Tests (31 new) cover the
+  head mesh-map (all 23 heads), the attribution rules, and head coverage.
+
 ### 3D open items (not blockers)
-- **Orientation/scale spot-check** on the real model + **mobile GPU perf** on a device — couldn't
-  be eyeballed in this environment; the auto-fit + OrbitControls make it usable regardless, easy to
-  nudge constants in `AnatomyModelConfig` / camera if it loads facing away.
+- **Mobile GPU perf** on a device + optional model compression (26 MB → ~5 MB via Draco/meshopt).
+- Head exercise attribution is heuristic (name-based) — refine toward hand-curation over time; this
+  is the project's value-add and a strong PFA talking point (rule-based vs the generic dataset).
+- The head framing/scale fix (model was scaled a hair taller than the frame, clipping head/feet):
+  `AnatomyModelConfig.targetHeight` 2.8 + camera pulled to z=4.7.
 - **Commercial licence**: CC BY-SA is copyleft — swap to a commercial-friendly / coach-owned model
   before any paid release. The mapping is model-agnostic, so it's a file swap. (See
   `public/models/README.md`.)

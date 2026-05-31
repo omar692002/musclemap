@@ -55,9 +55,14 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
   The default body is a **real segmented anatomy model** (`public/models/muscles.glb`, BodyParts3D /
   Z-Anatomy, CC BY-SA) loaded via `AnatomyModel.tsx`; meshes map to our taxonomy through
   `anatomyMuscleMap.ts` (ancestor-chain keyword rules). The procedural mannequin is the
-  Suspense/error fallback. PWA runtime-caches the `.glb` (not precached). **Open:** commercial
-  licence swap (CC BY-SA is copyleft), orientation/mobile-perf spot-check, mapping refinements.
-  Promoted to a **PFA must-have**.
+  Suspense/error fallback. PWA runtime-caches the `.glb` (not precached). Promoted to a
+  **PFA must-have**.
+- **Head-level** (M3+): the 3D model is split into 23 muscle heads (`MuscleHeadId`,
+  `data/static/taxonomy/muscleHeads.ts`; mesh→head in `three/anatomyHeadMap.ts`). Clicking a head
+  filters the browser by `?head=` via `headAttribution.ts` — a heuristic name-based engine that
+  infers which head an exercise trains (the curation seam; source data is only group-level). 2D map
+  stays muscle-level. **Open:** commercial-licence model swap (CC BY-SA copyleft), mobile-perf +
+  optional model compression, refine head attribution toward hand-labelling.
 - **Next is M4 — program generator v1.**
 - A light "solar" theme is still requested but deferred (cosmetic; mostly `muscleMap.config.ts`
   colours + Tailwind classes).

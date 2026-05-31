@@ -1,17 +1,20 @@
 import { useState } from 'react'
 import type { ThreeEvent } from '@react-three/fiber'
 import { useCursor } from '@react-three/drei'
+import type { Muscle } from '../../../domain/models/Muscle'
 import type { MuscleId } from '../../../domain/enums/MuscleId'
 import type { MuscleRole } from '../../../domain/enums/MuscleRole'
+import type { RegionRef } from '../region'
 import type { Body3DShape, Vec3 } from './geometry3d'
 import { BODY_3D, MUSCLES_3D } from './geometry3d'
 import { MuscleMapConfig, ROLE_FILL } from '../../../config/muscleMap.config'
 
 interface ProceduralBodyProps {
+  readonly muscleIndex: ReadonlyMap<string, Muscle>
   readonly highlight?: ReadonlyMap<string, MuscleRole>
   readonly selected?: string | null
-  readonly onSelect?: (muscleId: MuscleId) => void
-  readonly onHover?: (muscleId: MuscleId | null) => void
+  readonly onSelect?: (region: RegionRef) => void
+  readonly onHover?: (region: RegionRef | null) => void
 }
 
 const NO_EMISSIVE = '#000000'
@@ -57,11 +60,18 @@ function ShapeMesh({ shape, color, emissive }: { shape: Body3DShape; color: stri
  * the instant fallback while the realistic anatomy model loads (and if it fails
  * to load). Lights/controls live in the parent so both bodies share them.
  */
-export function ProceduralBody({ highlight, selected, onSelect, onHover }: ProceduralBodyProps) {
+export function ProceduralBody({ muscleIndex, highlight, selected, onSelect, onHover }: ProceduralBodyProps) {
   const [hovered, setHovered] = useState<MuscleId | null>(null)
   const colors = MuscleMapConfig.model3d
   const interactive = Boolean(onSelect)
   useCursor(hovered !== null && interactive)
+
+  // The mannequin is muscle-level (no heads); a region is the whole muscle.
+  const regionOf = (muscleId: MuscleId): RegionRef => ({
+    key: muscleId,
+    label: muscleIndex.get(muscleId)?.name ?? muscleId,
+    muscleId,
+  })
 
   return (
     <>
@@ -83,7 +93,7 @@ export function ProceduralBody({ highlight, selected, onSelect, onHover }: Proce
               interactive
                 ? (event: ThreeEvent<MouseEvent>) => {
                     event.stopPropagation()
-                    onSelect?.(segment.muscleId)
+                    onSelect?.(regionOf(segment.muscleId))
                   }
                 : undefined
             }
@@ -92,7 +102,7 @@ export function ProceduralBody({ highlight, selected, onSelect, onHover }: Proce
                 ? (event: ThreeEvent<PointerEvent>) => {
                     event.stopPropagation()
                     setHovered(segment.muscleId)
-                    onHover?.(segment.muscleId)
+                    onHover?.(regionOf(segment.muscleId))
                   }
                 : undefined
             }

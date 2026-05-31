@@ -2,8 +2,8 @@ import { Suspense, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import type { Muscle } from '../../../domain/models/Muscle'
-import type { MuscleId } from '../../../domain/enums/MuscleId'
 import type { MuscleRole } from '../../../domain/enums/MuscleRole'
+import type { RegionRef } from '../region'
 import { ProceduralBody } from './Body3DScene'
 import { AnatomyModel } from './AnatomyModel'
 import { ModelErrorBoundary } from './ModelErrorBoundary'
@@ -15,25 +15,23 @@ interface Muscle3DViewProps {
   readonly muscleIndex: ReadonlyMap<string, Muscle>
   readonly highlight?: ReadonlyMap<string, MuscleRole>
   readonly selected?: string | null
-  readonly onSelect?: (muscleId: MuscleId) => void
-  readonly describe?: (muscle: Muscle) => string
+  readonly onSelect?: (region: RegionRef) => void
+  /** Exercise count for a region key (muscle or head), shown on hover. */
+  readonly countFor?: (regionKey: string) => number
 }
 
 /**
- * Rotatable 3D muscle view. Renders the realistic anatomy model, with the
- * procedural body as the instant fallback while it loads (and if it errors).
- * Heavy (three.js) — loaded lazily by callers. Default-exported for React.lazy.
+ * Rotatable 3D muscle view. Renders the realistic anatomy model (split into
+ * muscle heads), with the procedural body as the instant fallback while it
+ * loads (and if it errors). Heavy (three.js) — loaded lazily by callers.
  */
-export default function Muscle3DView({ muscleIndex, highlight, selected, onSelect, describe }: Muscle3DViewProps) {
-  const [hovered, setHovered] = useState<MuscleId | null>(null)
-  const hoveredMuscle = hovered ? muscleIndex.get(hovered) : undefined
-  const caption = hoveredMuscle
-    ? describe
-      ? describe(hoveredMuscle)
-      : hoveredMuscle.name
+export default function Muscle3DView({ muscleIndex, highlight, selected, onSelect, countFor }: Muscle3DViewProps) {
+  const [hovered, setHovered] = useState<RegionRef | null>(null)
+  const caption = hovered
+    ? `${hovered.label}${countFor ? ` · ${countFor(hovered.key)} ${UiText.exercisesWord}` : ''}`
     : UiText.map3dHint
 
-  const bodyProps = { highlight, selected, onSelect, onHover: setHovered }
+  const bodyProps = { muscleIndex, highlight, selected, onSelect, onHover: setHovered }
   const procedural = <ProceduralBody {...bodyProps} />
 
   return (
@@ -42,7 +40,7 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
         className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-slate-800"
         style={{ background: MuscleMapConfig.model3d.background }}
       >
-        <Canvas camera={{ position: [0, 0.1, 4.4], fov: 42 }} dpr={[1, 2]}>
+        <Canvas camera={{ position: [0, 0, 4.7], fov: 42 }} dpr={[1, 2]}>
           <ambientLight intensity={0.75} />
           <directionalLight position={[4, 6, 5]} intensity={1.1} />
           <directionalLight position={[-4, 2, -5]} intensity={0.45} />

@@ -5,6 +5,7 @@ import type { Muscle } from '../../domain/models/Muscle'
 import { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import { Equipment } from '../../domain/enums/Equipment'
 import { BrowserParam } from '../../config/routes'
+import { exerciseInvolvesHead } from '../muscle-map/headAttribution'
 
 export interface ExerciseFiltersState {
   readonly search: string
@@ -12,11 +13,14 @@ export interface ExerciseFiltersState {
   readonly equipment: Equipment | null
   /** A single muscle id (set by the muscle map); null when not filtering by muscle. */
   readonly muscle: string | null
+  /** A single muscle head id (set by the 3D map); null when not filtering by head. */
+  readonly head: string | null
   readonly results: readonly Exercise[]
   setSearch(value: string): void
   setGroup(value: MuscleGroup | null): void
   setEquipment(value: Equipment | null): void
   setMuscle(value: string | null): void
+  setHead(value: string | null): void
 }
 
 /** Reads a raw query value back into an enum member, or null if absent/invalid. */
@@ -41,6 +45,7 @@ export function useExerciseFilters(
   const group = readEnum(MuscleGroup, params.get(BrowserParam.group))
   const equipment = readEnum(Equipment, params.get(BrowserParam.equipment))
   const muscle = params.get(BrowserParam.muscle)
+  const head = params.get(BrowserParam.head)
 
   // `replace` so typing/filtering doesn't pile up history entries; empty
   // values are dropped to keep the URL clean.
@@ -75,12 +80,17 @@ export function useExerciseFilters(
     (value: string | null) => setParam(BrowserParam.muscle, value),
     [setParam],
   )
+  const setHead = useCallback(
+    (value: string | null) => setParam(BrowserParam.head, value),
+    [setParam],
+  )
 
   const results = useMemo(() => {
     const term = search.trim().toLowerCase()
     return exercises.filter((exercise) => {
       if (term && !exercise.name.toLowerCase().includes(term)) return false
       if (equipment && exercise.equipment !== equipment) return false
+      if (head && !exerciseInvolvesHead(exercise, head)) return false
       if (muscle && !exercise.muscles.some((involvement) => involvement.muscleId === muscle)) {
         return false
       }
@@ -92,7 +102,19 @@ export function useExerciseFilters(
       }
       return true
     })
-  }, [exercises, muscleIndex, search, group, equipment, muscle])
+  }, [exercises, muscleIndex, search, group, equipment, muscle, head])
 
-  return { search, group, equipment, muscle, results, setSearch, setGroup, setEquipment, setMuscle }
+  return {
+    search,
+    group,
+    equipment,
+    muscle,
+    head,
+    results,
+    setSearch,
+    setGroup,
+    setEquipment,
+    setMuscle,
+    setHead,
+  }
 }
