@@ -40,8 +40,11 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
-**M0, M1, M2 and M3 are COMPLETE** (each committed), plus a **post-M2 fixes** pass. Build green
-(`npm run build`), tests pass (`npm run test` — 14 Vitest), lint clean (`npm run lint`).
+**M0–M4 are COMPLETE** (the Tier-0 MVP), plus a **post-M2 fixes** pass and the 3D/head-level work.
+Build green (`npm run build`), tests pass (`npm run test` — 67 Vitest), lint clean (`npm run lint`).
+- M4: program generator at `/program` (`features/program-generator/`) — pick split/days/equipment
+  → balanced, non-repeating week + weekly effective-sets-per-group readout. Pure generator in
+  `programGenerator.ts`; splits in `config/program.config.ts`.
 - Post-M2: filters persist via URL query params (`useSearchParams`, `BrowserParam` in
   `config/routes.ts`); media model is video-ready (`Exercise.media: ExerciseMedia[]`,
   `ExerciseMediaGallery` renders image/file-video/YouTube). Videos not yet populated (manual
@@ -63,7 +66,8 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
   infers which head an exercise trains (the curation seam; source data is only group-level). 2D map
   stays muscle-level. **Open:** commercial-licence model swap (CC BY-SA copyleft), mobile-perf +
   optional model compression, refine head attribution toward hand-labelling.
-- **Next is M4 — program generator v1.**
+- **MVP (M0–M4) complete.** Next candidates: polish (light "solar" theme, 26 MB model compression),
+  generator depth (accessories/rep-ranges/progression, shuffle), or post-MVP tiers (P1, T1).
 - A light "solar" theme is still requested but deferred (cosmetic; mostly `muscleMap.config.ts`
   colours + Tailwind classes).
 - M1: 873 exercises import + normalise through `repositoryFactory.ts` behind the repo interfaces.

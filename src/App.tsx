@@ -3,6 +3,7 @@ import { AppRoutes } from './config/routes'
 import { ExerciseBrowserPage } from './features/exercise-browser/ExerciseBrowserPage'
 import { ExerciseDetailPage } from './features/exercise-browser/ExerciseDetailPage'
 import { MuscleMapPage } from './features/muscle-map/MuscleMapPage'
+import { ProgramGeneratorPage } from './features/program-generator/ProgramGeneratorPage'
 
 /**
  * Application shell + routing. The exercise browser (M2) is the landing
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path={AppRoutes.browser} element={<ExerciseBrowserPage />} />
         <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />
+        <Route path={AppRoutes.program} element={<ProgramGeneratorPage />} />
         <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
         <Route path="*" element={<Navigate to={AppRoutes.browser} replace />} />
       </Routes>

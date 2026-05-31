@@ -219,6 +219,32 @@ heads across 8 muscles). Other muscles stay whole.
 - Mapping refinements: a few small muscles (serratus, tibialis, rotator-cuff subtleties) are
   approximations or left neutral; tighten as the map is reviewed.
 
-## Next: M4 — Program generator v1
-Pick split/days/equipment → a balanced, non-redundant routine + weekly volume-per-muscle readout.
-`contribution` weights on involvements (M1) and the muscle map (M3) feed the volume math/coverage.
+## M4 — Program generator v1 (complete)
+**State:** A working generator at `/program` (linked from the browser header). Build green, lint
+clean, 67 tests (4 new). Pick a split + days/week + equipment → a balanced week + volume readout.
+
+Done:
+- **Domain:** `SplitType` enum; `WorkoutProgram` / `WorkoutDay` / `ProgramExercise` models.
+- **Config:** `program.config.ts` — split day-templates (Push/Pull/Legs, Upper/Lower, Full body as
+  `MuscleGroup` sets), sets-per-exercise, exercises-per-group, day options. `SPLIT_LABELS` in
+  `config/labels.ts`. No hardcoded strings in the UI.
+- **Generator** (`programGenerator.ts`, pure + deterministic): cycles the split's day templates to
+  the chosen day count; per target group picks compound-first exercises that fit the equipment,
+  **not repeating any exercise across the week**; then sums **effective weekly sets per muscle
+  group** (sets × each involvement's `contribution`) for the readout. Tested (day count, no repeats,
+  equipment filter, volume math).
+- **UI** (`features/program-generator/`): `ProgramControls` (split/days selects + equipment toggle
+  chips, "All" = unrestricted), `ProgramDayCard` (exercises link to detail + set counts),
+  `VolumeReadout` (per-group effective-sets bars). Live-updates via `useMemo` as options change.
+- **Routing:** `/program` route; browser header now has both "Muscle map →" and "Program →".
+
+### Known M4 follow-ups (not blockers)
+- 1 exercise per group/day (config) → thin full-body days; could scale per group / add accessory
+  slots, rep ranges, warmups, progression.
+- Selection is deterministic (compound-first, alphabetical) — add a "regenerate"/shuffle for variety.
+- Volume targets vs evidence-based landmarks (highlight under/over-served groups) — a P3 analytic.
+
+## MVP (M0–M4) complete
+The Tier-0 MVP is functionally done: data → browser → muscle map (2D + head-split 3D) → program
+generator. Next candidates: polish (light "solar" theme, model compression), or post-MVP tiers
+(P1 depth, T1 Supabase + coach content). See ROADMAP.

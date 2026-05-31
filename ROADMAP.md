@@ -7,7 +7,7 @@
 | **M1** | Data foundation | Import & normalise free-exercise-db -> our entities; muscle taxonomy; populate `StaticExerciseRepository` (+ tests) | done |
 | **M2** | Exercise browser | List/search/filter by muscle group & equipment; detail page (primary/secondary + media) | done |
 | **M3** | Interactive muscle map | Clickable front/back SVG (muscle-level); muscle -> exercises; exercise -> highlighted muscles | done |
-| **M4** | Program generator v1 | Pick split/days/equipment -> balanced, non-redundant routine + weekly volume-per-muscle readout | next |
+| **M4** | Program generator v1 | Pick split/days/equipment -> balanced, non-redundant routine + weekly volume-per-muscle readout | done |
 
 ## Evolution (post-MVP)
 - **P1 Depth:** richer media, exercise variations, full head granularity.

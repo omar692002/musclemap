@@ -6,6 +6,7 @@ import { ExerciseMechanic } from '../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../domain/enums/ExerciseCategory'
 import { BodyView } from '../domain/enums/BodyView'
+import { SplitType } from '../domain/enums/SplitType'
 
 /**
  * Human-readable labels for enum values, and static UI copy.
@@ -53,6 +54,12 @@ export const MUSCLE_ROLE_LABELS: Readonly<Record<MuscleRole, string>> = {
 export const BODY_VIEW_LABELS: Readonly<Record<BodyView, string>> = {
   [BodyView.Front]: 'Front',
   [BodyView.Back]: 'Back',
+}
+
+export const SPLIT_LABELS: Readonly<Record<SplitType, string>> = {
+  [SplitType.FullBody]: 'Full body',
+  [SplitType.UpperLower]: 'Upper / Lower',
+  [SplitType.PushPullLegs]: 'Push / Pull / Legs',
 }
 
 export const EXERCISE_LEVEL_LABELS: Readonly<Record<ExerciseLevel, string>> = {
@@ -106,4 +113,14 @@ export const UiText = {
   view3dLabel: '3D',
   map3dHint: 'Drag to rotate · tap a muscle',
   loading3d: 'Loading 3D model…',
+  openProgram: 'Program →',
+  programTitle: 'Program generator',
+  programHelp: 'Pick a split, days per week, and your equipment — get a balanced week.',
+  splitLabel: 'Split',
+  daysLabel: 'Days / week',
+  equipmentLabel: 'Equipment',
+  allEquipmentShort: 'All',
+  setsWord: 'sets',
+  weeklyVolume: 'Weekly volume (effective sets / muscle)',
+  emptyDay: 'No matching exercises — try enabling more equipment.',
 } as const

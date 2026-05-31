@@ -6,6 +6,7 @@ export const AppRoutes = {
   browser: '/',
   exerciseDetail: '/exercise/:id',
   muscleMap: '/map',
+  program: '/program',
 } as const
 
 /**
