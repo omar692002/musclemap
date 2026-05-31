@@ -22,7 +22,8 @@ interface AnatomyModelProps {
 
 const NO_EMISSIVE = '#000000'
 // Pure connective tissue — hidden to a faint shell so it never veils muscles.
-const CONNECTIVE = /fascia|aponeuros|retinacul|septum|sheath|bursa|ligament|tendon|trochlea|raphe|membrane/i
+// (Aponeuroses are kept visible: the galea aponeurotica forms the scalp dome.)
+const CONNECTIVE = /fascia|retinacul|septum|sheath|bursa|ligament|tendon|trochlea|raphe|membrane/i
 // Pointer travel (px) above which a press counts as an orbit drag, not a click.
 const DRAG_PX = 6
 
