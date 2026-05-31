@@ -4,7 +4,7 @@ import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
 import { ExerciseMediaGallery } from './components/ExerciseMediaGallery'
 import { MuscleMapBoard } from '../muscle-map/MuscleMapBoard'
-import { highlightFromExercise } from '../muscle-map/highlight'
+import { highlightFromExercise, highlightHeadsFromExercise } from '../muscle-map/highlight'
 import { Badge } from '../../components/Badge'
 import { AppRoutes } from '../../config/routes'
 
@@ -91,8 +91,10 @@ export function ExerciseDetailPage() {
         </div>
         <div className="mb-4">
           {show3d ? (
+            // 3D is head-level (e.g. a lateral raise lights only the side delt);
+            // the 2D fallback/board stays whole-muscle.
             <Suspense fallback={<MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />}>
-              <Muscle3DView muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
+              <Muscle3DView muscleIndex={muscleIndex} highlight={highlightHeadsFromExercise(exercise)} />
             </Suspense>
           ) : (
             <MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />

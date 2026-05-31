@@ -125,7 +125,9 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
       if (!muscleId) return // ghosted tissue keeps its faint material
       const region = mesh.userData.region as RegionRef | undefined
       const material = mesh.material as MeshStandardMaterial
-      const role = highlight?.get(muscleId)
+      // Head-keyed highlights match by region.key (headId); a muscle-keyed
+      // highlight falls through to the whole-muscle id so it still lights up.
+      const role = (region ? highlight?.get(region.key) : undefined) ?? highlight?.get(muscleId)
       const isSelected = selected === muscleId
       const isHovered = region ? hovered === region.key : false
       const color = role
