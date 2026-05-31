@@ -40,7 +40,7 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
         className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-slate-800"
         style={{ background: MuscleMapConfig.model3d.background }}
       >
-        <Canvas camera={{ position: [0, 0, 4.7], fov: 42 }} dpr={[1, 2]}>
+        <Canvas camera={{ position: [0, 0, 5.0], fov: 40 }} dpr={[1, 2]}>
           <ambientLight intensity={0.75} />
           <directionalLight position={[4, 6, 5]} intensity={1.1} />
           <directionalLight position={[-4, 2, -5]} intensity={0.45} />
