@@ -4,6 +4,8 @@ import type { RawExercise, SourceMuscleName } from './source/sourceSchema'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
 import { MediaKind } from '../../domain/enums/MediaKind'
 import { MediaSource } from '../../domain/enums/MediaSource'
+import { EXERCISE_VIDEO_IDS } from './exerciseVideos'
+import { youTubeThumbnailUrl } from '../../config/media.config'
 import {
   SOURCE_MUSCLE_TO_ID,
   SOURCE_EQUIPMENT_TO_ENUM,
@@ -42,7 +44,24 @@ export class ExerciseNormalizer {
       mechanic: raw.mechanic ? SOURCE_MECHANIC_TO_ENUM[raw.mechanic] : undefined,
       force: raw.force ? SOURCE_FORCE_TO_ENUM[raw.force] : undefined,
       instructions: raw.instructions,
-      media: raw.images.map((path) => this.imageMedia(path)),
+      media: this.toMedia(raw),
+    }
+  }
+
+  /** A curated demo video (if any) first, then the source images. */
+  private toMedia(raw: RawExercise): readonly ExerciseMedia[] {
+    const images = raw.images.map((path) => this.imageMedia(path))
+    const videoId = EXERCISE_VIDEO_IDS[raw.id]
+    return videoId ? [this.youTubeMedia(videoId), ...images] : images
+  }
+
+  /** Wraps a YouTube video id as a video media item (with a still thumbnail). */
+  private youTubeMedia(videoId: string): ExerciseMedia {
+    return {
+      kind: MediaKind.Video,
+      source: MediaSource.YouTube,
+      url: videoId,
+      thumbnailUrl: youTubeThumbnailUrl(videoId),
     }
   }
 

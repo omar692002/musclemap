@@ -18,3 +18,8 @@ export function coverImageOf(exercise: Exercise): string | undefined {
 export function youTubeEmbedUrl(videoId: string): string {
   return `${MediaConfig.youTubeEmbedBaseUrl}${encodeURIComponent(videoId)}`
 }
+
+/** Whether the exercise has a demo video (used to flag cards with a play badge). */
+export function hasVideo(exercise: Exercise): boolean {
+  return exercise.media.some((item) => item.kind === MediaKind.Video)
+}

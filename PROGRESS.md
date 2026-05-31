@@ -117,8 +117,12 @@ Two user-requested fixes after the M2 review. Build green, lint clean, 11 tests 
 
 ### Still open (cosmetic / deferred)
 - **Theme:** ✅ done — light "solar" theme shipped in the post-MVP polish pass (see bottom of file).
-- **Videos are not populated yet:** the model is ready but no exercise carries a video. Filling
-  them is manual curation (no auto exercise→video map) — planned for the coach-content tier (T1).
+- **Videos:** ✅ seeded — a curated `EXERCISE_VIDEO_IDS` map (`data/static/exerciseVideos.ts`) now
+  attaches real **DeltaBolic** form-guide YouTube Shorts to ~16 exercises (bench/DB press, lateral
+  raises, rear-delt flies, pulldowns, pushdowns, dips, curls, face pull). The `ExerciseNormalizer`
+  prepends a YouTube media item (with a still thumbnail) so the video shows first on the detail page
+  and the card gets a ▶ badge. Adding a row = adding a video (no UI change). Full coverage / coach
+  uploads remain a T1 data task. A test guards every key against a real exercise id + YouTube-id shape.
 
 ## M3 — Interactive muscle map (complete)
 **State:** A clickable front+back body map, reused as a read-only highlight on the detail page.

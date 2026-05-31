@@ -4,7 +4,7 @@ import type { Muscle } from '../../../domain/models/Muscle'
 import { Badge } from '../../../components/Badge'
 import { MUSCLE_GROUP_LABELS, EQUIPMENT_LABELS } from '../../../config/labels'
 import { primaryGroupsOf } from '../exerciseMuscles'
-import { coverImageOf } from '../media'
+import { coverImageOf, hasVideo } from '../media'
 import { exerciseDetailPath } from '../../../config/routes'
 
 interface ExerciseCardProps {
@@ -16,13 +16,14 @@ interface ExerciseCardProps {
 export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
   const primaryGroups = primaryGroupsOf(exercise, muscleIndex)
   const cover = coverImageOf(exercise)
+  const video = hasVideo(exercise)
 
   return (
     <Link
       to={exerciseDetailPath(exercise.id)}
       className="group flex flex-col overflow-hidden rounded-xl border border-slate-800 bg-slate-800/40 transition hover:border-slate-600 hover:bg-slate-800"
     >
-      <div className="aspect-video overflow-hidden bg-slate-900">
+      <div className="relative aspect-video overflow-hidden bg-slate-900">
         {cover ? (
           <img
             src={cover}
@@ -30,6 +31,14 @@ export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
             loading="lazy"
             className="h-full w-full object-cover transition group-hover:scale-105"
           />
+        ) : null}
+        {video ? (
+          <span
+            aria-hidden
+            className="absolute bottom-1.5 end-1.5 grid h-6 w-6 place-items-center rounded-full bg-black/60 text-[10px] text-white"
+          >
+            ▶
+          </span>
         ) : null}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-3">
