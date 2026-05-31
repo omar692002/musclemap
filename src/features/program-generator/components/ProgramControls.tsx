@@ -1,14 +1,17 @@
 import { SplitType } from '../../../domain/enums/SplitType'
 import { Equipment } from '../../../domain/enums/Equipment'
+import { TrainingGoal } from '../../../domain/enums/TrainingGoal'
 import { ProgramConfig } from '../../../config/program.config'
-import { SPLIT_LABELS, EQUIPMENT_LABELS, UiText } from '../../../config/labels'
+import { SPLIT_LABELS, GOAL_LABELS, EQUIPMENT_LABELS, UiText } from '../../../config/labels'
 
 interface ProgramControlsProps {
   readonly split: SplitType
   readonly days: number
+  readonly goal: TrainingGoal
   readonly equipment: ReadonlySet<Equipment>
   onSplitChange(value: SplitType): void
   onDaysChange(value: number): void
+  onGoalChange(value: TrainingGoal): void
   onToggleEquipment(value: Equipment): void
   onClearEquipment(): void
 }
@@ -29,15 +32,17 @@ function chipClass(active: boolean): string {
 export function ProgramControls({
   split,
   days,
+  goal,
   equipment,
   onSplitChange,
   onDaysChange,
+  onGoalChange,
   onToggleEquipment,
   onClearEquipment,
 }: ProgramControlsProps) {
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <label className="flex flex-col gap-1 text-sm text-slate-400">
           {UiText.splitLabel}
           <select
@@ -48,6 +53,21 @@ export function ProgramControls({
             {Object.values(SplitType).map((value) => (
               <option key={value} value={value}>
                 {SPLIT_LABELS[value]}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <label className="flex flex-col gap-1 text-sm text-slate-400">
+          {UiText.goalLabel}
+          <select
+            value={goal}
+            onChange={(event) => onGoalChange(event.target.value as TrainingGoal)}
+            className={FIELD_CLASS}
+          >
+            {Object.values(TrainingGoal).map((value) => (
+              <option key={value} value={value}>
+                {GOAL_LABELS[value]}
               </option>
             ))}
           </select>

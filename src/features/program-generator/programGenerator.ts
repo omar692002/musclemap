@@ -6,18 +6,37 @@ import { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
 import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
 import { SplitType } from '../../domain/enums/SplitType'
-import { SPLIT_PATTERNS, ProgramConfig } from '../../config/program.config'
+import { TrainingGoal } from '../../domain/enums/TrainingGoal'
+import { SPLIT_PATTERNS, ProgramConfig, GOAL_SCHEMES } from '../../config/program.config'
 
 export interface ProgramParams {
   readonly split: SplitType
   readonly days: number
   /** Allowed equipment; an empty set means "no restriction". */
   readonly equipment: ReadonlySet<Equipment>
+  readonly goal: TrainingGoal
+  /** Variety seed: same inputs + seed → same week; bump it to "regenerate". */
+  readonly seed: number
 }
 
 function allowsEquipment(exercise: Exercise, allowed: ReadonlySet<Equipment>): boolean {
   if (allowed.size === 0) return true
   return exercise.equipment != null && allowed.has(exercise.equipment)
+}
+
+/** Deterministic per-exercise hash (FNV-1a over id + seed) for seeded ordering. */
+function seededRank(id: string, seed: number): number {
+  let hash = (seed ^ 0x811c9dc5) >>> 0
+  for (let i = 0; i < id.length; i += 1) {
+    hash = Math.imul(hash ^ id.charCodeAt(i), 0x01000193) >>> 0
+  }
+  return hash
+}
+
+/** The set/rep prescription for an exercise under the chosen goal. */
+function schemeFor(exercise: Exercise, goal: TrainingGoal) {
+  const schemes = GOAL_SCHEMES[goal]
+  return exercise.mechanic === ExerciseMechanic.Compound ? schemes.compound : schemes.isolation
 }
 
 /** True when the exercise trains `group` as a primary mover. */
@@ -27,11 +46,12 @@ function isPrimaryFor(exercise: Exercise, group: MuscleGroup, muscleIndex: Reado
   )
 }
 
-/** Candidate exercises per group, compound-first then alphabetical (stable). */
+/** Candidate exercises per group, compound-first then seeded (for variety). */
 function candidatesByGroup(
   exercises: readonly Exercise[],
   allowed: ReadonlySet<Equipment>,
   muscleIndex: ReadonlyMap<string, Muscle>,
+  seed: number,
 ): Map<MuscleGroup, Exercise[]> {
   const byGroup = new Map<MuscleGroup, Exercise[]>()
   for (const group of Object.values(MuscleGroup)) {
@@ -40,7 +60,8 @@ function candidatesByGroup(
       .sort((a, b) => {
         const compoundA = a.mechanic === ExerciseMechanic.Compound ? 0 : 1
         const compoundB = b.mechanic === ExerciseMechanic.Compound ? 0 : 1
-        return compoundA - compoundB || a.name.localeCompare(b.name)
+        // Compound-first, then a seeded order so "regenerate" rotates picks.
+        return compoundA - compoundB || seededRank(a.id, seed) - seededRank(b.id, seed)
       })
     byGroup.set(group, list)
   }
@@ -60,7 +81,7 @@ export function generateProgram(
   muscleIndex: ReadonlyMap<string, Muscle>,
 ): WorkoutProgram {
   const pattern = SPLIT_PATTERNS[params.split]
-  const candidates = candidatesByGroup(exercises, params.equipment, muscleIndex)
+  const candidates = candidatesByGroup(exercises, params.equipment, muscleIndex, params.seed)
   const used = new Set<string>()
   const days: WorkoutDay[] = []
 
@@ -74,7 +95,8 @@ export function generateProgram(
         if (picked >= ProgramConfig.exercisesPerGroup) break
         if (used.has(exercise.id)) continue
         used.add(exercise.id)
-        chosen.push({ exercise, sets: ProgramConfig.setsPerExercise })
+        const scheme = schemeFor(exercise, params.goal)
+        chosen.push({ exercise, sets: scheme.sets, reps: scheme.repRange })
         picked += 1
       }
     }

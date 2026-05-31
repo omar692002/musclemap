@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Equipment } from '../../domain/enums/Equipment'
 import { SplitType } from '../../domain/enums/SplitType'
+import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { generateProgram } from './programGenerator'
 import { ProgramControls } from './components/ProgramControls'
@@ -16,7 +17,10 @@ export function ProgramGeneratorPage() {
   const { exercises, muscleIndex, loading } = useExerciseData()
   const [split, setSplit] = useState<SplitType>(ProgramConfig.defaultSplit)
   const [days, setDays] = useState<number>(ProgramConfig.defaultDays)
+  const [goal, setGoal] = useState<TrainingGoal>(ProgramConfig.defaultGoal)
   const [equipment, setEquipment] = useState<ReadonlySet<Equipment>>(new Set())
+  // Bumped by "Regenerate" to rotate exercise picks without changing inputs.
+  const [seed, setSeed] = useState<number>(0)
 
   const toggleEquipment = (value: Equipment) => {
     setEquipment((current) => {
@@ -28,8 +32,8 @@ export function ProgramGeneratorPage() {
   }
 
   const program = useMemo(
-    () => generateProgram({ split, days, equipment }, exercises, muscleIndex),
-    [split, days, equipment, exercises, muscleIndex],
+    () => generateProgram({ split, days, goal, equipment, seed }, exercises, muscleIndex),
+    [split, days, goal, equipment, seed, exercises, muscleIndex],
   )
 
   return (
@@ -46,12 +50,23 @@ export function ProgramGeneratorPage() {
         <ProgramControls
           split={split}
           days={days}
+          goal={goal}
           equipment={equipment}
           onSplitChange={setSplit}
           onDaysChange={setDays}
+          onGoalChange={setGoal}
           onToggleEquipment={toggleEquipment}
           onClearEquipment={() => setEquipment(new Set())}
         />
+        <div className="mt-3 flex justify-end">
+          <button
+            type="button"
+            onClick={() => setSeed((value) => value + 1)}
+            className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-slate-500 hover:bg-slate-700"
+          >
+            {UiText.regenerate}
+          </button>
+        </div>
       </div>
 
       {loading ? (

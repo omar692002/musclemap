@@ -9,7 +9,9 @@ import { ExerciseCategory } from '../../../domain/enums/ExerciseCategory'
 import { ExerciseLevel } from '../../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../../domain/enums/ExerciseMechanic'
 import { SplitType } from '../../../domain/enums/SplitType'
+import { TrainingGoal } from '../../../domain/enums/TrainingGoal'
 import { generateProgram } from '../programGenerator'
+import { GOAL_SCHEMES } from '../../../config/program.config'
 
 const MUSCLE_INDEX: ReadonlyMap<string, Muscle> = new Map([
   [MuscleId.PectoralisMajor, { id: MuscleId.PectoralisMajor, name: 'Chest', group: MuscleGroup.Chest }],
@@ -52,7 +54,7 @@ const EXERCISES: readonly Exercise[] = [
 describe('generateProgram', () => {
   it('produces the requested number of days', () => {
     const program = generateProgram(
-      { split: SplitType.PushPullLegs, days: 3, equipment: new Set() },
+      { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
       EXERCISES,
       MUSCLE_INDEX,
     )
@@ -62,7 +64,7 @@ describe('generateProgram', () => {
 
   it('never repeats an exercise across the week', () => {
     const program = generateProgram(
-      { split: SplitType.FullBody, days: 4, equipment: new Set() },
+      { split: SplitType.FullBody, days: 4, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
       EXERCISES,
       MUSCLE_INDEX,
     )
@@ -72,7 +74,13 @@ describe('generateProgram', () => {
 
   it('respects the equipment filter', () => {
     const program = generateProgram(
-      { split: SplitType.FullBody, days: 1, equipment: new Set([Equipment.Bodyweight]) },
+      {
+        split: SplitType.FullBody,
+        days: 1,
+        goal: TrainingGoal.Hypertrophy,
+        equipment: new Set([Equipment.Bodyweight]),
+        seed: 0,
+      },
       EXERCISES,
       MUSCLE_INDEX,
     )
@@ -82,13 +90,36 @@ describe('generateProgram', () => {
 
   it('accumulates effective weekly volume per group', () => {
     const program = generateProgram(
-      { split: SplitType.PushPullLegs, days: 1, equipment: new Set() },
+      { split: SplitType.PushPullLegs, days: 1, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
       EXERCISES,
       MUSCLE_INDEX,
     )
-    // Push day picks one chest + one shoulder primary (each 3 sets); triceps is a
-    // secondary (0.5) on both → 3 sets × 0.5 × 2 exercises = 3 effective sets.
-    expect(program.volumeByGroup.get(MuscleGroup.Triceps)).toBe(3)
-    expect(program.volumeByGroup.get(MuscleGroup.Chest)).toBe(3)
+    // Push day picks one chest + one shoulder primary; both are compounds → 4
+    // sets each under Hypertrophy. Triceps is a secondary (0.5) on both → 4 × 0.5
+    // × 2 = 4 effective sets; chest primary (1.0) on its one exercise → 4.
+    const sets = GOAL_SCHEMES[TrainingGoal.Hypertrophy].compound.sets
+    expect(program.volumeByGroup.get(MuscleGroup.Triceps)).toBe(sets)
+    expect(program.volumeByGroup.get(MuscleGroup.Chest)).toBe(sets)
+  })
+
+  it('prescribes sets and a rep range from the goal scheme', () => {
+    const program = generateProgram(
+      { split: SplitType.PushPullLegs, days: 1, goal: TrainingGoal.Strength, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    const compoundScheme = GOAL_SCHEMES[TrainingGoal.Strength].compound
+    for (const { sets, reps } of program.days[0].exercises) {
+      expect(sets).toBe(compoundScheme.sets)
+      expect(reps).toBe(compoundScheme.repRange)
+    }
+  })
+
+  it('is deterministic for a given seed', () => {
+    const params = { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set<Equipment>(), seed: 7 }
+    const a = generateProgram(params, EXERCISES, MUSCLE_INDEX)
+    const b = generateProgram(params, EXERCISES, MUSCLE_INDEX)
+    const ids = (p: typeof a) => p.days.flatMap((d) => d.exercises.map((e) => e.exercise.id))
+    expect(ids(a)).toEqual(ids(b))
   })
 })

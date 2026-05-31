@@ -20,7 +20,7 @@ export function ProgramDayCard({ day }: ProgramDayCardProps) {
         <p className="text-sm text-slate-500">{UiText.emptyDay}</p>
       ) : (
         <ul className="flex flex-col divide-y divide-slate-800">
-          {day.exercises.map(({ exercise, sets }) => (
+          {day.exercises.map(({ exercise, sets, reps }) => (
             <li key={exercise.id} className="flex items-center justify-between gap-3 py-2">
               <Link
                 to={exerciseDetailPath(exercise.id)}
@@ -28,8 +28,8 @@ export function ProgramDayCard({ day }: ProgramDayCardProps) {
               >
                 {exercise.name}
               </Link>
-              <span className="shrink-0 text-xs text-slate-400">
-                {sets} {UiText.setsWord}
+              <span className="shrink-0 text-xs tabular-nums text-slate-400">
+                {sets} × {reps}
               </span>
             </li>
           ))}

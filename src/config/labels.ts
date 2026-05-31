@@ -7,6 +7,7 @@ import { ExerciseForce } from '../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../domain/enums/ExerciseCategory'
 import { BodyView } from '../domain/enums/BodyView'
 import { SplitType } from '../domain/enums/SplitType'
+import { TrainingGoal } from '../domain/enums/TrainingGoal'
 
 /**
  * Human-readable labels for enum values, and static UI copy.
@@ -60,6 +61,12 @@ export const SPLIT_LABELS: Readonly<Record<SplitType, string>> = {
   [SplitType.FullBody]: 'Full body',
   [SplitType.UpperLower]: 'Upper / Lower',
   [SplitType.PushPullLegs]: 'Push / Pull / Legs',
+}
+
+export const GOAL_LABELS: Readonly<Record<TrainingGoal, string>> = {
+  [TrainingGoal.Strength]: 'Strength',
+  [TrainingGoal.Hypertrophy]: 'Hypertrophy',
+  [TrainingGoal.Endurance]: 'Endurance',
 }
 
 export const EXERCISE_LEVEL_LABELS: Readonly<Record<ExerciseLevel, string>> = {
@@ -119,9 +126,12 @@ export const UiText = {
   programHelp: 'Pick a split, days per week, and your equipment — get a balanced week.',
   splitLabel: 'Split',
   daysLabel: 'Days / week',
+  goalLabel: 'Goal',
   equipmentLabel: 'Equipment',
   allEquipmentShort: 'All',
   setsWord: 'sets',
+  repsWord: 'reps',
+  regenerate: '↻ Regenerate',
   weeklyVolume: 'Weekly volume (effective sets / muscle)',
   emptyDay: 'No matching exercises — try enabling more equipment.',
 } as const
