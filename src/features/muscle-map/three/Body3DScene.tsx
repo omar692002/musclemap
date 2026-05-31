@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ThreeEvent } from '@react-three/fiber'
 import { useCursor } from '@react-three/drei'
 import type { Muscle } from '../../../domain/models/Muscle'
@@ -60,8 +60,11 @@ function ShapeMesh({ shape, color, emissive }: { shape: Body3DShape; color: stri
  * the instant fallback while the realistic anatomy model loads (and if it fails
  * to load). Lights/controls live in the parent so both bodies share them.
  */
+const DRAG_PX = 6
+
 export function ProceduralBody({ muscleIndex, highlight, selected, onSelect, onHover }: ProceduralBodyProps) {
   const [hovered, setHovered] = useState<MuscleId | null>(null)
+  const pressStart = useRef<{ x: number; y: number } | null>(null)
   const colors = MuscleMapConfig.model3d
   const interactive = Boolean(onSelect)
   useCursor(hovered !== null && interactive)
@@ -89,10 +92,22 @@ export function ProceduralBody({ muscleIndex, highlight, selected, onSelect, onH
         return (
           <group
             key={segment.muscleId}
+            onPointerDown={
+              interactive
+                ? (event: ThreeEvent<PointerEvent>) => {
+                    pressStart.current = { x: event.nativeEvent.clientX, y: event.nativeEvent.clientY }
+                  }
+                : undefined
+            }
             onClick={
               interactive
                 ? (event: ThreeEvent<MouseEvent>) => {
                     event.stopPropagation()
+                    const start = pressStart.current
+                    pressStart.current = null
+                    if (start && Math.hypot(event.nativeEvent.clientX - start.x, event.nativeEvent.clientY - start.y) > DRAG_PX) {
+                      return
+                    }
                     onSelect?.(regionOf(segment.muscleId))
                   }
                 : undefined

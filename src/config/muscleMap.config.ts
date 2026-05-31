@@ -25,9 +25,13 @@ export const MuscleMapConfig = {
     muscleHover: '#e8857a',
     selected: '#38bdf8',
     background: '#0b1220',
-    /** Connective tissue / unmapped meshes — drawn as a faint see-through shell. */
+    /** Unmapped body parts (head/feet/hands, deep muscles) — neutral, so the
+     *  figure looks complete rather than "cut off". */
+    inactive: '#47566d',
+    /** Pure connective tissue (fascia/tendon/…) — a faint see-through shell so
+     *  it never hides the muscles. */
     fascia: '#2a3d59',
-    ghostOpacity: 0.06,
+    fasciaOpacity: 0.05,
   },
 } as const
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useGLTF, useCursor } from '@react-three/drei'
 import type { ThreeEvent } from '@react-three/fiber'
 import { Box3, Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from 'three'
@@ -21,6 +21,10 @@ interface AnatomyModelProps {
 }
 
 const NO_EMISSIVE = '#000000'
+// Pure connective tissue — hidden to a faint shell so it never veils muscles.
+const CONNECTIVE = /fascia|aponeuros|retinacul|septum|sheath|bursa|ligament|tendon|trochlea|raphe|membrane/i
+// Pointer travel (px) above which a press counts as an orbit drag, not a click.
+const DRAG_PX = 6
 
 /** Original-name "self || parent || …" chain (three.js sanitises object.name). */
 function chainOf(object: Object3D): string {
@@ -54,6 +58,7 @@ function pickRegion(object: Object3D): RegionRef | null {
 export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHover }: AnatomyModelProps) {
   const { scene } = useGLTF(AnatomyModelConfig.url)
   const [hovered, setHovered] = useState<string | null>(null)
+  const pressStart = useRef<{ x: number; y: number } | null>(null)
   const interactive = Boolean(onSelect)
   useCursor(hovered !== null && interactive)
 
@@ -78,13 +83,18 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
           headId: headId ?? undefined,
         }
         mesh.userData.region = region
-      } else {
-        // Connective tissue / unmapped: faint see-through shell, not pickable.
+      } else if (CONNECTIVE.test(chain)) {
+        // Fascia/tendon/etc.: faint see-through shell that never veils muscles.
         material.transparent = true
-        material.opacity = colors.ghostOpacity
+        material.opacity = colors.fasciaOpacity
         material.depthWrite = false
         material.color.set(colors.fascia)
         mesh.renderOrder = -1
+        mesh.raycast = () => {}
+      } else {
+        // Unmapped body part (head/feet/hands, deep muscles): solid neutral so
+        // the figure looks complete; not clickable.
+        material.color.set(colors.inactive)
         mesh.raycast = () => {}
       }
       mesh.material = material
@@ -141,10 +151,23 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
             }
           : undefined
       }
+      onPointerDown={
+        interactive
+          ? (event: ThreeEvent<PointerEvent>) => {
+              pressStart.current = { x: event.nativeEvent.clientX, y: event.nativeEvent.clientY }
+            }
+          : undefined
+      }
       onClick={
         interactive
           ? (event: ThreeEvent<MouseEvent>) => {
               event.stopPropagation()
+              const start = pressStart.current
+              pressStart.current = null
+              // Ignore the click that ends an orbit drag (pointer moved a lot).
+              if (start && Math.hypot(event.nativeEvent.clientX - start.x, event.nativeEvent.clientY - start.y) > DRAG_PX) {
+                return
+              }
               const region = pickRegion(event.object)
               if (region) onSelect?.(region)
             }
