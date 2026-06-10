@@ -25,3 +25,7 @@ dist-ssr
 
 # Local visual-smoke output (scripts/screenshot.mjs)
 screenshots
+
+# Google OAuth credential downloads — never commit
+client_secret_*.json
+.env.local

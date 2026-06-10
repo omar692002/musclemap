@@ -369,3 +369,15 @@ Done:
   (`auth.config.ts`); all auth UI hidden when unset. CI passes the repo *variable*
   `VITE_GOOGLE_CLIENT_ID` (see deploy.yml). i18n +4 strings (todaysPick, allSessions,
   signIn, signOut).
+
+## Round 3: full video coverage push + video-first detail (2026-06-10)
+- **Harvest tooling:** scripts/harvest-shorts.mjs scroll-harvests the entire DeltaBolic shorts
+  tab via headless Edge (911 shorts -> scripts/shorts-list.txt as "videoId | title").
+- **Bug found & fixed:** the earlier regex scrape paired each videoId with the NEXT video's
+  title (off-by-one), so most round-2 additions pointed at wrong videos. The map was rebuilt
+  from the DOM harvest (authoritative pairs): exerciseVideos.ts now has ~160 exercise entries
+  covering chest/back/shoulder/arm/leg/core/forearm movements, machines, cables, Smith,
+  bodyweight. Spot-verified live (Barbell_Squat -> "The PERFECT Barbell Squat").
+- **Video-first detail:** ExerciseMediaGallery shows the curated video as the primary view
+  with a "Video guide | Demo" segmented toggle (animated two-frame demo kept as the
+  alternative); demo-only exercises render the animation directly.
