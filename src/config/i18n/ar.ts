@@ -71,6 +71,10 @@ export const ar: Translation = {
     demoLabel: 'عرض الحركة',
     videoGuideLabel: 'فيديو توضيحي',
     playPauseDemo: 'تشغيل / إيقاف العرض',
+    todaysPick: 'تمرين اليوم',
+    allSessions: 'كل الحصص',
+    signIn: 'تسجيل الدخول',
+    signOut: 'تسجيل الخروج',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',

@@ -71,6 +71,12 @@ export interface UiStrings {
   readonly demoLabel: string
   readonly videoGuideLabel: string
   readonly playPauseDemo: string
+  // Home structure.
+  readonly todaysPick: string
+  readonly allSessions: string
+  // Auth.
+  readonly signIn: string
+  readonly signOut: string
 }
 
 /**

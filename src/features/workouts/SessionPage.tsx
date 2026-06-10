@@ -3,7 +3,7 @@ import { Navigate, useParams } from 'react-router-dom'
 import { RefreshCw } from 'lucide-react'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { sessionExercises, sessionTitle, sessionSubtitle } from './sessionPlan'
-import { SESSION_BY_ID } from '../../config/sessions.config'
+import { SESSION_BY_ID, SESSION_HERO_GRADIENT } from '../../config/sessions.config'
 import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { BackButton } from '../../components/BackButton'
@@ -33,7 +33,7 @@ export function SessionPage() {
 
       {/* Gradient session banner. */}
       <header
-        className={`relative mb-4 flex items-center gap-4 overflow-hidden rounded-3xl bg-gradient-to-br p-5 text-white shadow-lg shadow-zinc-900/5 ${session.gradient}`}
+        className={`relative mb-4 flex items-center gap-4 overflow-hidden rounded-3xl bg-gradient-to-br p-5 text-white shadow-lg shadow-orange-600/20 ${SESSION_HERO_GRADIENT}`}
       >
         <span
           aria-hidden

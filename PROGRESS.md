@@ -352,3 +352,20 @@ Done:
   https://omar692002.github.io/musclemap/
 - `scripts/screenshot.mjs`: mobile-viewport visual smoke (playwright-core + Edge, dev-only).
 - Build green, 75 tests pass, lint clean.
+
+## Round 2: videos at scale, calmer palette, Google sign-in (2026-06-10)
+- **Video map 16 → 70 entries** (`exerciseVideos.ts`): scraped the real DeltaBolic shorts
+  listing (id + title pairs) and hand-matched ~35 new videos to catalog ids (chest/shoulder/
+  back/arm/leg machines, cables, smith, hip thrust, abduction…). All ids validated by the
+  existing curation tests. PFA/academic embedding; licensed/coach uploads later (T1).
+- **Colour discipline on Home:** one ember-gradient hero = "Today's workout"
+  (`suggestedSessionFor(date)` — fixed weekly rotation), all other sessions are white cards
+  with small tinted icon chips (`WorkoutSession.chip`); session banners all use
+  `SESSION_HERO_GRADIENT`. Per-session rainbow gradients removed.
+- **Auth (Google Identity Services, client-side):** `features/auth/` — `AuthProvider`
+  (+localStorage persistence, `StorageKey.AuthUser`), `googleIdentity.ts` (GIS script loader,
+  ID-token decode), `UserMenu` in the TopBar (GIS icon button → avatar + profile card +
+  sign-out), personalised Home greeting. Configured via `VITE_GOOGLE_CLIENT_ID`
+  (`auth.config.ts`); all auth UI hidden when unset. CI passes the repo *variable*
+  `VITE_GOOGLE_CLIENT_ID` (see deploy.yml). i18n +4 strings (todaysPick, allSessions,
+  signIn, signOut).

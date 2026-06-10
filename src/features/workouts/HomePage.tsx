@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom'
 import { CalendarDays, ChevronRight, Search } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
-import { SessionCard } from './SessionCard'
-import { HOME_SESSIONS } from '../../config/sessions.config'
+import { SessionCard, SessionHeroCard } from './SessionCard'
+import { HOME_SESSIONS, suggestedSessionFor } from '../../config/sessions.config'
 import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { getActiveLanguage } from '../../config/i18n'
+import { useAuth } from '../auth/AuthContext'
 
 /** Today's date in the active language, e.g. "Wednesday, June 10". */
 function todayLabel(): string {
@@ -37,18 +38,30 @@ function QuickTile({ to, icon: Icon, title, hint }: { to: string; icon: LucideIc
   )
 }
 
-/** Workout-first landing: pick a ready-made session, or build your own / browse. */
+/** Workout-first landing: today's featured session, the rest, and shortcuts. */
 export function HomePage() {
+  const { user } = useAuth()
+  const featured = suggestedSessionFor(new Date())
+  const others = HOME_SESSIONS.filter((session) => session.id !== featured.id)
+  const firstName = user?.name.split(' ')[0]
+
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5">
         <p className="text-sm font-medium capitalize text-zinc-400">{todayLabel()}</p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">{UiText.homeGreeting} 💪</h1>
-        <p className="mt-1 text-sm text-zinc-500">{UiText.homePickSession}</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+          {UiText.homeGreeting}
+          {firstName ? `, ${firstName}` : ''} 💪
+        </h1>
       </header>
 
-      <div className="flex flex-col gap-3">
-        {HOME_SESSIONS.map((session) => (
+      <SessionHeroCard session={featured} />
+
+      <h2 className="mb-2.5 mt-6 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+        {UiText.allSessions}
+      </h2>
+      <div className="flex flex-col gap-2.5">
+        {others.map((session) => (
           <SessionCard key={session.id} session={session} />
         ))}
       </div>

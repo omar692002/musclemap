@@ -71,6 +71,10 @@ export const fr: Translation = {
     demoLabel: 'Démo',
     videoGuideLabel: 'Guide vidéo',
     playPauseDemo: 'Lecture / pause de la démo',
+    todaysPick: 'Séance du jour',
+    allSessions: 'Toutes les séances',
+    signIn: 'Se connecter',
+    signOut: 'Se déconnecter',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',

@@ -3,6 +3,7 @@ import { Dumbbell } from 'lucide-react'
 import { AppRoutes } from '../config/routes'
 import { UiText } from '../config/labels'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { UserMenu } from '../features/auth/UserMenu'
 
 /** Slim app bar: brand (→ home) on one side, language picker on the other. */
 export function TopBar() {
@@ -17,7 +18,10 @@ export function TopBar() {
         </span>
         <span className="text-base font-extrabold tracking-tight text-zinc-900">{UiText.appName}</span>
       </Link>
-      <LanguageSwitcher />
+      <div className="flex items-center gap-2">
+        <LanguageSwitcher />
+        <UserMenu />
+      </div>
     </header>
   )
 }
