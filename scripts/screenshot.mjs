@@ -20,8 +20,8 @@ const shots = [
 ]
 
 for (const [name, path] of shots) {
-  await page.goto(base + path, { waitUntil: 'networkidle' })
-  await page.waitForTimeout(1200)
+  await page.goto(base + path, { waitUntil: 'load' })
+  await page.waitForTimeout(2500)
   await page.screenshot({ path: `${outDir}/${name}.png` })
   console.log('shot', name)
 }
