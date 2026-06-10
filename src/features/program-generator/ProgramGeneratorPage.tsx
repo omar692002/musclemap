@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
+import { RefreshCw } from 'lucide-react'
 import { Equipment } from '../../domain/enums/Equipment'
+import { RowListSkeleton } from '../../components/Skeleton'
 import { SplitType } from '../../domain/enums/SplitType'
 import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
@@ -36,12 +38,12 @@ export function ProgramGeneratorPage() {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
-      <header className="mb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.programTitle}</h1>
+      <header className="mb-1">
+        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.programTitle}</h1>
       </header>
-      <p className="mb-5 text-sm text-slate-400">{UiText.programHelp}</p>
+      <p className="mb-5 text-sm text-zinc-500">{UiText.programHelp}</p>
 
-      <div className="mb-6">
+      <div className="mb-6 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
         <ProgramControls
           split={split}
           days={days}
@@ -57,15 +59,16 @@ export function ProgramGeneratorPage() {
           <button
             type="button"
             onClick={() => setSeed((value) => value + 1)}
-            className="rounded-lg border border-slate-700 bg-slate-800 px-4 py-2 text-sm font-medium text-slate-100 transition hover:border-slate-500 hover:bg-slate-700"
+            className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 transition hover:bg-orange-100 active:scale-95"
           >
+            <RefreshCw className="h-4 w-4" aria-hidden />
             {UiText.regenerate}
           </button>
         </div>
       </div>
 
       {loading ? (
-        <p className="text-slate-400">{UiText.loading}</p>
+        <RowListSkeleton count={4} />
       ) : (
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">

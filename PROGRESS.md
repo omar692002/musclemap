@@ -321,3 +321,34 @@ Three more user requests. Build green, lint clean, **73 tests** (1 new). One com
   equipment, splits, goals, roles, levels, …) are translated; **exercise names/instructions stay
   English** (the source dataset is English-only — a per-exercise translation table is a T1 data task).
   RTL is functional (logical `ps-*` used on the warm-up list); a fuller RTL polish pass is a follow-up.
+
+## Production polish + deployment (2026-06-10)
+**State:** full visual redesign to a production-quality light theme; deployed to GitHub Pages.
+
+Done:
+- **Design system rebuilt** (`src/index.css`): removed the slate/sky scale-remap hack; real
+  tokens — Inter Variable font (@fontsource), zinc neutrals + ember orange/red accent,
+  `demo-frame` + `fade-up` keyframes, `no-scrollbar` utility. Components now use standard
+  Tailwind palettes directly.
+- **Icons:** emoji → `lucide-react` everywhere (nav, cards, buttons, brand mark).
+- **App shell:** white blurred TopBar with gradient brand mark; BottomNav with pill active
+  states + safe-area inset; per-route `fade-up` entrance.
+- **Home:** localized date header, gradient session banner cards (config: gradient + icon in
+  `sessions.config.ts`), quick tiles.
+- **Session:** gradient banner header, interactive warm-up checklist (check-off state),
+  exercise rows with animated thumbnails, Shuffle pill.
+- **Animated exercise demos:** new `ExerciseImage` flips the dataset's start/end photos on a
+  CSS steps() loop (GIF-style, zero JS timers, desynced per card) — used on browser cards,
+  workout rows and the detail hero (pausable). `ExerciseMediaGallery` now renders Demo +
+  Video-guide cards.
+- **Detail/Browser/Plan/Map:** skeleton loading states, segmented controls, numbered
+  instruction steps, restyled filters/chips/volume bars; 3D palette neutralised
+  (`muscleMap.config.ts`).
+- **i18n:** +3 strings (demoLabel, videoGuideLabel, playPauseDemo) in EN/FR/AR; `regenerate`
+  is now "Shuffle"/"Mélanger"/"تبديل التمارين".
+- **Deployment:** GitHub Pages via `.github/workflows/deploy.yml` (BASE_PATH-aware build,
+  SPA 404 fallback, PWA scope). `vite.config.ts` takes `base` from `BASE_PATH`; router uses
+  `import.meta.env.BASE_URL`; model URL is base-aware. Live at
+  https://omar692002.github.io/musclemap/
+- `scripts/screenshot.mjs`: mobile-viewport visual smoke (playwright-core + Edge, dev-only).
+- Build green, 75 tests pass, lint clean.

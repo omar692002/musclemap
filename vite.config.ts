@@ -4,8 +4,12 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 import { AppConfig } from './src/config/app.config'
 
+// Deploy base path: '/' locally, '/<repo>/' on GitHub Pages (set by CI).
+const base = process.env.BASE_PATH ?? '/'
+
 // https://vite.dev/config/
 export default defineConfig({
+  base,
   plugins: [
     react(),
     tailwindcss(),
@@ -36,7 +40,8 @@ export default defineConfig({
         theme_color: AppConfig.themeColor,
         background_color: AppConfig.backgroundColor,
         display: 'standalone',
-        start_url: AppConfig.startUrl,
+        start_url: base,
+        scope: base,
         icons: [
           {
             src: 'icon.svg',

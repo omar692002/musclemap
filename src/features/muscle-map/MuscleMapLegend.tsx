@@ -12,7 +12,7 @@ export function MuscleMapLegend({ roles }: MuscleMapLegendProps) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5">
       {roles.map((role) => (
-        <span key={role} className="flex items-center gap-1.5 text-xs text-slate-400">
+        <span key={role} className="flex items-center gap-1.5 text-xs font-medium text-zinc-500">
           <span
             className="inline-block h-3 w-3 rounded-sm"
             style={{ backgroundColor: ROLE_FILL[role] }}

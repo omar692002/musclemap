@@ -11,10 +11,10 @@ interface ProgramDayCardProps {
 export function ProgramDayCard({ day }: ProgramDayCardProps) {
   const hasExercises = day.exercises.length > 0
   return (
-    <div className="flex flex-col rounded-xl border border-slate-800 bg-slate-800/40 p-4">
-      <div className="mb-3 flex items-baseline justify-between gap-2">
-        <h3 className="font-semibold text-slate-100">{DAY_FOCUS_LABELS[day.focus]}</h3>
-        <span className="text-xs uppercase tracking-wide text-slate-500">
+    <div className="flex flex-col rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h3 className="font-bold text-zinc-900">{DAY_FOCUS_LABELS[day.focus]}</h3>
+        <span className="rounded-full bg-zinc-100 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
           {UiText.dayWord} {day.index}
         </span>
       </div>
@@ -24,14 +24,14 @@ export function ProgramDayCard({ day }: ProgramDayCardProps) {
           <div className="mb-3">
             <WarmupBlock />
           </div>
-          <ul className="flex flex-col divide-y divide-slate-800">
+          <ul className="flex flex-col divide-y divide-zinc-100">
             {day.exercises.map((item) => (
               <WorkoutExerciseRow key={item.exercise.id} item={item} />
             ))}
           </ul>
         </>
       ) : (
-        <p className="text-sm text-slate-500">{UiText.emptyDay}</p>
+        <p className="text-sm text-zinc-400">{UiText.emptyDay}</p>
       )}
     </div>
   )

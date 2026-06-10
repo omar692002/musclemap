@@ -15,7 +15,7 @@ applyDocumentLanguage(getActiveLanguage())
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RepositoryContext.Provider value={{ exerciseRepository, muscleRepository }}>
-      <BrowserRouter>
+      <BrowserRouter basename={import.meta.env.BASE_URL}>
         <App />
       </BrowserRouter>
     </RepositoryContext.Provider>

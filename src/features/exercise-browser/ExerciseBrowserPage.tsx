@@ -1,5 +1,7 @@
 import { useState } from 'react'
+import { X } from 'lucide-react'
 import { useExerciseData } from './useExerciseData'
+import { CardGridSkeleton } from '../../components/Skeleton'
 import { useExerciseFilters } from './useExerciseFilters'
 import { FilterBar } from './components/FilterBar'
 import { ExerciseCard } from './components/ExerciseCard'
@@ -14,12 +16,10 @@ function ActiveFilterChip({ label, onClear }: { label: string; onClear: () => vo
     <button
       type="button"
       onClick={onClear}
-      className="inline-flex items-center gap-1.5 rounded-full border border-sky-500/40 bg-sky-500/10 px-3 py-1 text-xs text-sky-200 transition hover:bg-sky-500/20"
+      className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700 transition hover:bg-orange-100"
     >
       {UiText.muscleFilterLabel}: {label}
-      <span aria-hidden className="text-sky-300">
-        ✕
-      </span>
+      <X className="h-3 w-3" aria-hidden />
       <span className="sr-only">{UiText.clearFilter}</span>
     </button>
   )
@@ -64,7 +64,7 @@ export function ExerciseBrowserPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
       <header className="mb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.navExercises}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.navExercises}</h1>
       </header>
 
       <div className="mb-3">
@@ -79,7 +79,7 @@ export function ExerciseBrowserPage() {
       </div>
 
       <div className="mb-5 flex flex-wrap items-center gap-2">
-        <span className="text-sm text-slate-400">
+        <span className="text-sm tabular-nums text-zinc-400">
           {results.length} {UiText.exercisesWord}
         </span>
         {headName ? <ActiveFilterChip label={headName} onClear={clearHead} /> : null}
@@ -87,9 +87,11 @@ export function ExerciseBrowserPage() {
       </div>
 
       {loading ? (
-        <p className="text-slate-400">{UiText.loading}</p>
+        <CardGridSkeleton count={8} />
       ) : results.length === 0 ? (
-        <p className="text-slate-400">{UiText.noResults}</p>
+        <p className="rounded-2xl border border-zinc-200/80 bg-white p-6 text-center text-sm text-zinc-400">
+          {UiText.noResults}
+        </p>
       ) : (
         <>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
@@ -103,7 +105,7 @@ export function ExerciseBrowserPage() {
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + UiConfig.browserPageSize)}
-                className="rounded-lg border border-slate-700 bg-slate-800 px-5 py-2 text-sm font-medium text-slate-100 transition hover:border-slate-500 hover:bg-slate-700"
+                className="rounded-full border border-zinc-200 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 active:scale-95"
               >
                 {UiText.loadMore} ({remaining})
               </button>

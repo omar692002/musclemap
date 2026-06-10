@@ -67,6 +67,10 @@ export interface UiStrings {
   readonly cardioSubtitle: string
   readonly cardioDuration: string
   readonly browseAll: string
+  // Exercise media (animated demo + curated video).
+  readonly demoLabel: string
+  readonly videoGuideLabel: string
+  readonly playPauseDemo: string
 }
 
 /**

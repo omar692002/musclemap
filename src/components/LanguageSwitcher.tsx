@@ -1,3 +1,4 @@
+import { Globe } from 'lucide-react'
 import { Language } from '../domain/enums/Language'
 import { getActiveLanguage, setActiveLanguage, LANGUAGE_LABELS } from '../config/i18n'
 import { UiText } from '../config/labels'
@@ -10,10 +11,8 @@ import { UiText } from '../config/labels'
 export function LanguageSwitcher() {
   const current = getActiveLanguage()
   return (
-    <label className="flex items-center gap-1 rounded-full border border-slate-700 bg-slate-800/80 px-2 py-1 text-xs text-slate-200">
-      <span aria-hidden className="text-slate-400">
-        🌐
-      </span>
+    <label className="flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1 text-xs font-medium text-zinc-600 transition hover:border-zinc-300">
+      <Globe className="h-3.5 w-3.5 text-zinc-400" aria-hidden />
       <span className="sr-only">{UiText.languageLabel}</span>
       <select
         value={current}

@@ -47,7 +47,7 @@ export const ar: Translation = {
     allEquipmentShort: 'الكل',
     setsWord: 'مجموعات',
     repsWord: 'تكرارات',
-    regenerate: '↻ إعادة التوليد',
+    regenerate: 'تبديل التمارين',
     weeklyVolume: 'الحجم الأسبوعي (مجموعات فعّالة / عضلة)',
     emptyDay: 'لا توجد تمارين مطابقة — فعّل المزيد من المعدّات.',
     dayWord: 'اليوم',
@@ -68,6 +68,9 @@ export const ar: Translation = {
     cardioSubtitle: 'لياقة وقلب',
     cardioDuration: '20–30 دقيقة',
     browseAll: 'كل التمارين',
+    demoLabel: 'عرض الحركة',
+    videoGuideLabel: 'فيديو توضيحي',
+    playPauseDemo: 'تشغيل / إيقاف العرض',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',

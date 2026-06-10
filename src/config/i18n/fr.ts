@@ -47,7 +47,7 @@ export const fr: Translation = {
     allEquipmentShort: 'Tout',
     setsWord: 'séries',
     repsWord: 'reps',
-    regenerate: '↻ Régénérer',
+    regenerate: 'Mélanger',
     weeklyVolume: 'Volume hebdo (séries effectives / muscle)',
     emptyDay: 'Aucun exercice — activez plus de matériel.',
     dayWord: 'Jour',
@@ -68,6 +68,9 @@ export const fr: Translation = {
     cardioSubtitle: 'Condition & cœur',
     cardioDuration: '20–30 min',
     browseAll: 'Tous les exercices',
+    demoLabel: 'Démo',
+    videoGuideLabel: 'Guide vidéo',
+    playPauseDemo: 'Lecture / pause de la démo',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',

@@ -32,7 +32,7 @@ export function MuscleMapBoard({ muscleIndex, highlight, selected, onSelect, des
               onSelect={onSelect}
               describe={describe}
             />
-            <figcaption className="text-xs uppercase tracking-wide text-slate-500">
+            <figcaption className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
               {BODY_VIEW_LABELS[view]}
             </figcaption>
           </figure>

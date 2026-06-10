@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Local visual-smoke output (scripts/screenshot.mjs)
+screenshots

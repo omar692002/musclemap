@@ -9,6 +9,8 @@ import { headsOf } from './headAttribution'
 import { isHeadedMuscle } from '../../data/static/taxonomy/muscleHeads'
 import { browserPathForMuscle, browserPathForHead } from '../../config/routes'
 import { UiText } from '../../config/labels'
+import { SegmentedControl } from '../../components/SegmentedControl'
+import { Skeleton } from '../../components/Skeleton'
 
 // three.js is heavy — only fetched when the 3D view is actually shown.
 const Muscle3DView = lazy(() => import('./three/Muscle3DView'))
@@ -53,32 +55,31 @@ export function MuscleMapPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
       <header className="mb-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-100">{UiText.mapTitle}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.mapTitle}</h1>
       </header>
 
       <div className="mb-5 flex items-center justify-between gap-3">
-        <p className="text-sm text-slate-400">{UiText.mapHelp}</p>
-        <div className="inline-flex rounded-lg border border-slate-700 bg-slate-800 p-0.5" role="group">
-          {DIMENSIONS.map((value) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => setDimension(value)}
-              aria-pressed={dimension === value}
-              className={`rounded-md px-3 py-1 text-sm font-medium transition ${
-                dimension === value ? 'bg-sky-500 text-white' : 'text-slate-300 hover:text-white'
-              }`}
-            >
-              {DIMENSION_LABELS[value]}
-            </button>
-          ))}
-        </div>
+        <p className="text-sm text-zinc-500">{UiText.mapHelp}</p>
+        <SegmentedControl
+          options={DIMENSIONS.map((value) => ({ value, label: DIMENSION_LABELS[value] }))}
+          value={dimension}
+          onChange={(value) => setDimension(value)}
+        />
       </div>
 
       {loading ? (
-        <p className="text-slate-400">{UiText.loading}</p>
+        <div className="flex justify-center">
+          <Skeleton className="aspect-[3/4] w-full max-w-[380px] rounded-2xl" />
+        </div>
       ) : dimension === '3D' ? (
-        <Suspense fallback={<p className="text-slate-400">{UiText.loading3d}</p>}>
+        <Suspense
+          fallback={
+            <div className="flex flex-col items-center gap-2">
+              <Skeleton className="aspect-[3/4] w-full max-w-[380px] rounded-2xl" />
+              <p className="text-sm text-zinc-400">{UiText.loading3d}</p>
+            </div>
+          }
+        >
           <Muscle3DView muscleIndex={muscleIndex} onSelect={handleRegion} countFor={countFor} />
         </Suspense>
       ) : (

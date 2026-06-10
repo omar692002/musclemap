@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AppRoutes } from './config/routes'
 import { HomePage } from './features/workouts/HomePage'
 import { SessionPage } from './features/workouts/SessionPage'
@@ -15,10 +15,12 @@ import { BottomNav } from './components/BottomNav'
  * builder are the other tabs. Repositories are provided by main.tsx.
  */
 function App() {
+  const location = useLocation()
   return (
-    <div className="flex min-h-dvh flex-col bg-gradient-to-b from-amber-50 via-orange-50 to-orange-100 text-slate-100">
+    <div className="flex min-h-dvh flex-col bg-zinc-50 text-zinc-900">
       <TopBar />
-      <main className="flex-1">
+      {/* Keyed by path so each screen replays the entrance animation. */}
+      <main key={location.pathname} className="flex-1 animate-fade-up">
         <Routes>
           <Route path={AppRoutes.home} element={<HomePage />} />
           <Route path={AppRoutes.session} element={<SessionPage />} />

@@ -42,7 +42,7 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
   return (
     <div className="flex w-full flex-col items-center gap-2">
       <div
-        className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-slate-800"
+        className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-zinc-200/80 shadow-sm"
         style={{ background: MuscleMapConfig.model3d.background }}
       >
         <Canvas camera={{ position: [0, 0, 5.0], fov: 40 }} dpr={[1, 2]}>
@@ -57,9 +57,9 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
           <OrbitControls enablePan={false} enableDamping minDistance={2.6} maxDistance={6} />
         </Canvas>
       </div>
-      <p className="h-5 text-center text-sm text-slate-400">{caption}</p>
+      <p className="h-5 text-center text-sm text-zinc-500">{caption}</p>
       {highlight ? <MuscleMapLegend roles={rolesInHighlight(highlight)} /> : null}
-      <p className="text-center text-[11px] text-slate-600">{AnatomyModelConfig.attribution}</p>
+      <p className="text-center text-[11px] text-zinc-400">{AnatomyModelConfig.attribution}</p>
     </div>
   )
 }

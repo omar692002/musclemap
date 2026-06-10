@@ -40,6 +40,14 @@ npm run dev          # local; add `-- --host` to view on iPhone over Wi-Fi
 ```
 
 ## Current status
+**Production-polish pass DONE + DEPLOYED (2026-06).** Live at https://omar692002.github.io/musclemap/
+(GitHub Pages, `.github/workflows/deploy.yml`, BASE_PATH-aware build + SPA 404 fallback).
+The light theme is now a real design system in `src/index.css` (Inter font, zinc neutrals,
+ember orange accent — the old slate-remap hack is GONE; components use standard palettes).
+Icons are `lucide-react`. Exercise demos are **animated two-frame loops** (`ExerciseImage`,
+CSS `demo-frame` keyframes) built from the dataset's start/end photos. See PROGRESS.md →
+"Production polish + deployment".
+
 **M0–M4 are COMPLETE** (the Tier-0 MVP), plus a **post-M2 fixes** pass and the 3D/head-level work.
 Build green (`npm run build`), tests pass (`npm run test` — 73 Vitest), lint clean (`npm run lint`).
 - M4: program generator at `/program` (`features/program-generator/`) — pick split/days/equipment

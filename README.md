@@ -1,73 +1,42 @@
-# React + TypeScript + Vite
+# MuscleMap 💪
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A mobile-first fitness PWA that shows **exactly which muscles every exercise trains** —
+down to the individual muscle head on a rotatable 3D anatomy model — and generates
+**balanced, non-redundant workout programs**.
 
-Currently, two official plugins are available:
+**Live demo:** https://omar692002.github.io/musclemap/
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Features
 
-## React Compiler
+- **Workout-first home** — one-tap quick sessions (Chest & Triceps, Back & Biceps,
+  Shoulders & Core, Legs, Cardio) with warm-up checklist and seeded "Shuffle".
+- **873-exercise catalog** — search + muscle-group / equipment filters, animated
+  two-frame demos (start → end position) on every card, curated video form guides.
+- **Interactive body map** — rotatable 3D anatomy model (BodyParts3D / Z-Anatomy,
+  CC BY-SA) split into 23 muscle heads; tap a head to see the exercises that train it.
+  2D SVG fallback included.
+- **Program generator** — split (Full body / Upper-Lower / PPL / Body-part),
+  days per week, training goal (strength / hypertrophy / endurance) and available
+  equipment → a balanced week with effective-set volume per muscle group.
+- **i18n** — English, French, Arabic (full RTL).
+- **PWA** — installable, offline-capable (the 3D model is runtime-cached).
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Stack
 
-## Expanding the ESLint configuration
+React 19 · TypeScript (strict, OOP/SOLID, repository interfaces) · Vite · Tailwind CSS v4
+· react-three-fiber · vite-plugin-pwa. Exercise data: [free-exercise-db](https://github.com/yuhonas/free-exercise-db).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Develop
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```powershell
+npm install
+npm run dev      # local dev server
+npm run test     # vitest (75 tests)
+npm run lint     # eslint
+npm run build    # tsc + vite + PWA
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Deploy
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Pushing to `master` triggers `.github/workflows/deploy.yml`, which builds with
+`BASE_PATH=/musclemap/` and publishes `dist/` to GitHub Pages (SPA fallback via `404.html`).
