@@ -49,10 +49,14 @@ describe('ExerciseNormalizer', () => {
     expect(exercise.force).toBe(ExerciseForce.Pull)
   })
 
-  it('wraps source images as File image media resolved against the base url', () => {
+  it('prepends the curated video, then the images resolved against the base url', () => {
     const exercise = normalizer.normalize(sample)
 
-    expect(exercise.media).toEqual([
+    // Every catalog exercise has a curated YouTube demo (exerciseVideos.ts).
+    expect(exercise.media[0]?.kind).toBe(MediaKind.Video)
+    expect(exercise.media[0]?.source).toBe(MediaSource.YouTube)
+    expect(exercise.media[0]?.url).toMatch(/^[A-Za-z0-9_-]{11}$/)
+    expect(exercise.media.slice(1)).toEqual([
       { kind: MediaKind.Image, source: MediaSource.File, url: 'https://cdn.example/3_4_Sit-Up/0.jpg' },
       { kind: MediaKind.Image, source: MediaSource.File, url: 'https://cdn.example/3_4_Sit-Up/1.jpg' },
     ])

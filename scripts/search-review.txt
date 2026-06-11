@@ -1,0 +1,82 @@
+One-Arm_Kettlebell_Para_Press  (One-Arm Kettlebell Para Press)  cov=0.80
+  'One-Arm_Kettlebell_Para_Press': 'skjHmTDtNVY', // How to: One Arm Kettlebell Clean & Press
+One-Arm_Kettlebell_Push_Press  (One-Arm Kettlebell Push Press)  cov=0.80
+  'One-Arm_Kettlebell_Push_Press': 'JYk7okndWFQ', // Kettlebell Single Arm Push Press
+One-Arm_Overhead_Kettlebell_Squats  (One-Arm Overhead Kettlebell Squats)  cov=0.80
+  'One-Arm_Overhead_Kettlebell_Squats': 'al0fcJzlSrc', // Performance Care - Tips for One Arm Overhead Squats
+Chest_And_Front_Of_Shoulder_Stretch  (Chest And Front Of Shoulder Stretch)  cov=0.75
+  Chest_And_Front_Of_Shoulder_Stretch: 'ICi4iiAn_n4', // Chest and Shoulder Stretch
+Leg-Up_Hamstring_Stretch  (Leg-Up Hamstring Stretch)  cov=0.75
+  'Leg-Up_Hamstring_Stretch': 'qQ26F282VRo', // Standing hamstring stretch with leg elevated - Fit Family Physical Therapy
+Medicine_Ball_Scoop_Throw  (Medicine Ball Scoop Throw)  cov=0.75
+  Medicine_Ball_Scoop_Throw: 'KuFp5h7Ts2M', // Medicine Ball Scoop Toss
+One-Arm_Kettlebell_Row  (One-Arm Kettlebell Row)  cov=0.75
+  'One-Arm_Kettlebell_Row': 'l5qelXL5nfs', // Single Arm Kettlebell Row
+One-Arm_Kettlebell_Snatch  (One-Arm Kettlebell Snatch)  cov=0.75
+  'One-Arm_Kettlebell_Snatch': '3rFbWLHZe_Q', // HOW TO: Single Arm Kettlebell Snatch
+Smith_Incline_Shoulder_Raise  (Smith Incline Shoulder Raise)  cov=0.75
+  Smith_Incline_Shoulder_Raise: 'gTLkYHdUETM', // Smith Machine High Incline Shoulder Press
+Standing_Cable_Wood_Chop  (Standing Cable Wood Chop)  cov=0.75
+  Standing_Cable_Wood_Chop: 'ZDt4MCvjMAA', // HOW TO: Cable Wood Chop
+Alternating_Renegade_Row  (Alternating Renegade Row)  cov=0.67
+  Alternating_Renegade_Row: 'Q28cLuweLv4', // How To Do A Renegade Row
+Band_Hip_Adductions  (Band Hip Adductions)  cov=0.67
+  Band_Hip_Adductions: '2S7OgmeCs6E', // Hip exercise - adduction with band
+Barbell_Ab_Rollout  (Barbell Ab Rollout)  cov=0.67
+  Barbell_Ab_Rollout: '3C1TRMJveXo', // Barbell Rollout
+Heavy_Bag_Thrust  (Heavy Bag Thrust)  cov=0.67
+  Heavy_Bag_Thrust: '8SqmvviOpx4', // Heavy Bag Blues 🥊
+Hip_Lift_with_Band  (Hip Lift with Band)  cov=0.67
+  Hip_Lift_with_Band: 'amJp4BIwtHo', // Banded hip lift
+Incline_Cable_Flye  (Incline Cable Flye)  cov=0.67
+  Incline_Cable_Flye: 'HJmQQuJ-MQ8', // How to incline cable chest fly
+Intermediate_Groin_Stretch  (Intermediate Groin Stretch)  cov=0.67
+  Intermediate_Groin_Stretch: '4xOP3JM23ro', // How to do a groin stretch.
+Isometric_Chest_Squeezes  (Isometric Chest Squeezes)  cov=0.67
+  Isometric_Chest_Squeezes: 'anxpxp0rbHs', // Isometric Chest Squeeze
+Middle_Back_Stretch  (Middle Back Stretch)  cov=0.67
+  Middle_Back_Stretch: 'JrNcpg6QbDM', // Mid Back Stretches To Do At Home!!
+One_Handed_Hang  (One Handed Hang)  cov=0.67
+  One_Handed_Hang: 'd-v2ds4_WFU', // One hand hang Exercise
+One_Knee_To_Chest  (One Knee To Chest)  cov=0.67
+  One_Knee_To_Chest: 'RJlykGcn5bo', // Single Knee to Chest Exercise
+Single_Dumbbell_Raise  (Single Dumbbell Raise)  cov=0.67
+  Single_Dumbbell_Raise: 'yPdoJZ89Xkk', // Dumbbell Front raises (shoulder exercise)
+Standing_Front_Barbell_Raise_Over_Head  (Standing Front Barbell Raise Over Head)  cov=0.67
+  Standing_Front_Barbell_Raise_Over_Head: 'Ytffw4cHBh0', // Barbell Standing Front Raise Overhead
+Battling_Ropes  (Battling Ropes)  cov=0.50
+  Battling_Ropes: 'ZEAqK0lXnb0', // How to Use Battle Ropes #gym #workouttips
+Bicycling_Stationary  (Bicycling, Stationary)  cov=0.50
+  Bicycling_Stationary: 'NY4_GJnrfKQ', // Soozier Stationary Magnetic Exercise Bike, Belt Drive Training Bicycle, Indoor Cardio Workout
+Car_Drivers  (Car Drivers)  cov=0.50
+  Car_Drivers: 'W1NdRfZHfV4', // Car Stretches for Passengers
+Fast_Skipping  (Fast Skipping)  cov=0.50
+  Fast_Skipping: 'Xc7gFBIUvwA', // Skipping (without rope)
+Jogging_Treadmill  (Jogging, Treadmill)  cov=0.50
+  Jogging_Treadmill: 'UIyZUHq2UdU', // How to run on a treadmill (improve your gait)
+Kettlebell_One-Legged_Deadlift  (Kettlebell One-Legged Deadlift)  cov=0.50
+  'Kettlebell_One-Legged_Deadlift': '77QZkTrVSNY', // Kettlebell Single-Leg Deadlift
+Landmine_180s  (Landmine 180's)  cov=0.50
+  Landmine_180s: 'EeruocCrJCw', // How to do landmine 180
+Lying_Bent_Leg_Groin  (Lying Bent Leg Groin)  cov=0.50
+  Lying_Bent_Leg_Groin: 'agP60k0FcVE', // Straight Leg Banded Groin Stretch-band assisted adductor stretch
+Peroneals_Stretch  (Peroneals Stretch)  cov=0.50
+  Peroneals_Stretch: 'b7bTCrhJ34I', // Peroneal stretch
+Rowing_Stationary  (Rowing, Stationary)  cov=0.50
+  Rowing_Stationary: 'bCxq4zMHpzs', // How to Use a Rowing Machine for Beginners (cardio) #shorts
+Runners_Stretch  (Runner's Stretch)  cov=0.50
+  Runners_Stretch: 'tJp7GPu09Io', // after running stretches
+Running_Treadmill  (Running, Treadmill)  cov=0.50
+  Running_Treadmill: 'xvW1SccxjGc', // HIIT TREADMILL WORKOUT 🔥
+Scissors_Jump  (Scissors Jump)  cov=0.50
+  Scissors_Jump: '0JdQaT69gRo', // Scissor Jumps - Exercise Demo
+Toe_Touchers  (Toe Touchers)  cov=0.50
+  Toe_Touchers: 'd5hmkNgmaPE', // Lying Toe Taps #coreexercises #howtoexercise #abexercises
+Upward_Stretch  (Upward Stretch)  cov=0.50
+  Upward_Stretch: 'EBMrPbWJIKA', // Low Back Stretch - Lower Trunk Rotations
+Pushups_Close_and_Wide_Hand_Positions  (Pushups (Close and Wide Hand Positions))  cov=0.40
+  Pushups_Close_and_Wide_Hand_Positions: 'skWcxqxh2qw', // Wide Pushups
+Body_Tricep_Press  (Body Tricep Press)  cov=0.33
+  Body_Tricep_Press: 'Tdk8LPJHPSc', // Best Tricep Exercises!
+Bicycling  (Bicycling)  cov=0.00
+  Bicycling: 'luV0VZdCeC8', // Indoor Cycling FIESTA

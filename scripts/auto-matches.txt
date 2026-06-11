@@ -1,0 +1,38 @@
+// Stage A: exact normalized-name matches
+  Band_Pull_Apart: 'cFYqfAf3zcI', // [musclewiki] Band Pull-Apart #shorts
+  Barbell_Step_Ups: 'eBK8Gb50yLI', // [musclewiki] Barbell Step Up #shorts
+  External_Rotation_with_Cable: 'LpNgc6Vx4iY', // [bbcom] How To Do A Cable External Rotation | Exercise Guide
+  Glute_Ham_Raise: 'TDdV0dCsqKs', // [bbcom] Glute Ham Raise - Legs / Glutes Exercise - Bodybuilding.com
+  'Lying_T-Bar_Row': 'w0KnlQ-b7jw', // [bbcom] Lying T-Bar Row - Back Exercise - Bodybuilding.com
+  Spider_Curl: 'TVjOooXvzO8', // [bbcom] Spider Curl - Biceps Exercise - Bodybuilding.com
+  Superman: 'hhq86gJvrvo', // [bbcom] Superman - Back Exercise - Bodybuilding.com
+  Suspended_Fallout: '0FAMdxWgFnA', // [bbcom] Suspended Fallout - Shoulder / Core Exercise - Bodybuilding.com
+  Svend_Press: 'cIoUZOnypS8', // [bbcom] Svend Press | Guide dexercices
+  Zottman_Curl: 'FSGDM9-dZ9w', // [bbcom] Curl Zottman | Guide dexercices
+
+// Stage B: full coverage, small surplus
+  Ball_Leg_Curl: 'e3EeeA6L3YQ', // [scotth] How To: Single-Leg Curl on Exercise Ball
+  Barbell_Side_Bend: '9_kAFDM6l6o', // [bbcom] Barbell Side Bend - Core / Abs - Bodybuilding.com
+  Clean: 'D0MGPIicrWU', // [bbcom] Max Clean & Grace | Brute Showdown : Épisode 2
+  Decline_Crunch: 'S2xh-DD0zz8', // [deltabolic] Hanging Decline Rowing Crunches #shorts
+  Dumbbell_Raise: 'ezBH3fcvNY4', // [scotth] How To: Incline Dumbbell W Raise
+  Dumbbell_Step_Ups: '7UrtdFHNqGU', // [musclewiki] Dumbbell Side Step Up #shorts
+  External_Rotation: 'LpNgc6Vx4iY', // [bbcom] How To Do A Cable External Rotation | Exercise Guide
+  Floor_Press: '77gWg_ZA8Kg', // [bbcom] How To Do Barbell Floor Press | John Rusin, PT, DPT, CSCS
+  Good_Morning: '_Omn7frzCgk', // [musclewiki] Good Mornings For Huge Hams
+  'Jackknife_Sit-Up': 'GEZ8NLbtc8Q', // [bbcom] Jackknife Sit Up - Core / Abs - Bodybuilding.com
+  'Janda_Sit-Up': 'UsFGTXPmPaI', // [scotth] Comment faire : Janda Sit-Up
+  Jefferson_Squats: '9TbV93ZQEXY', // [scotth] Comment faire : Jefferson Squat || DÉVELOPPEZ DES QUADS MASSIFS !
+  Leg_Lift: '-wtT-a7Ns2Q', // [scotth] JUST LIFT! Legs!
+  Lying_Hamstring: 'QMRI6V5I9QA', // [bbcom] Lying Hamstring Curls with Hunter Labrada | Exercise Guide
+  Muscle_Up: '86bwH-yHgMQ', // [scotth] How To: Muscle-Up On Rings
+  Oblique_Crunches: '2wvLc4TEl2A', // [scotth] Comment faire : Crunch oblique (force du marteau)
+  Overhead_Squat: '15fJCN9esQY', // [musclewiki] Overhead Barbell Squat #shorts
+  Pallof_Press: '-oHlLRJeEAU', // [musclewiki] Band Pallof Press
+  Russian_Twist: 'j_0I-O9qQiA', // [musclewiki] 💪 How To Russian Twist 💪. #absworkout #musclewiki #obliques
+  Single_Dumbbell_Raise: '6I6AlMABLL8', // [scotth] How To: Incline Single-Arm Dumbbell Raise- Posterior Deltoid Gains!
+  Snatch: 'TAOLs97u_dc', // [musclewiki] Dumbbell Snatch #shorts
+  Stomach_Vacuum: 'gDx1xfSobG4', // [scotth] Comment faire : Stomach Vacuum || ENTRAÎNEMENT DE BASE PLUS RESSERRÉ !
+  Tate_Press: 'IgSjoXbpy1M', // [scotth] Comment faire : Tate Press | AUGMENTEZ VOTRE BANC ET DÉVELOPPEZ DE PLUS GROS TRICEPS !
+  'Upright_Row_-_With_Bands': 'bfzl23IIOi8', // [scotth] How To: Resistance Band Upright-Row
+  Zercher_Squats: 'vpy4ADmlo1E', // [scotth] Comment faire : Zercher Squat

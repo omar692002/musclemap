@@ -405,3 +405,29 @@ sign-in / sign-out buttons; 260 exercises have curated form-guide videos.
   added row was hand-reviewed (same-movement matches only; false positives
   like "Muscle Up" ≠ push-up rejected). Existing test validates all keys/ids.
 - Tests 71/71 (4 removed with the 2D geometry), lint + tsc green.
+
+## Round 5: 100% video coverage - 873/873 exercises (2026-06-11)
+**State:** deployed. Every exercise in the catalog now has a curated, embeddable
+YouTube form-guide video (799 distinct videos); the two-frame demo remains the
+alternative tab.
+
+How it was done (all dev tooling lives in scripts/):
+- `harvest-channel.mjs` - generalised channel harvester (shorts AND /videos
+  tabs): Bodybuilding.com (2663), ScottHermanFitness (1869), MuscleWiki (75).
+- `match-videos.mjs` - multi-source title matcher (exact normalized-name
+  stage + fuzzy stage, FR+EN vocab). Channels alone covered only ~150 of the
+  613 then-unmapped, because BB.com's classic exercise-database uploads are
+  unlisted (site-embedded only) and invisible on the channel page.
+- `search-videos.mjs` - the breakthrough: one YouTube search per unmapped
+  exercise (608 searches, resumable JSONL), top-10 results scored against the
+  exercise name. Full-coverage matches auto-accepted after a manual scan of
+  all 543 (15 rejected: e.g. Crucifix->stretch video, Body-Up->generic
+  workout); 31 of 41 weaker ones accepted by hand. Search surfaces the
+  unlisted official BB.com guides ("... Exercise Videos & Guides
+  Bodybuilding com" titles), which are ideal exact matches.
+- `search-stragglers.mjs` - 23 final exercises re-searched with hand-written
+  queries (e.g. Car Drivers -> "Plate Driver Rotation"); all picked by hand.
+- `check-embeddable.mjs` - all 799 distinct ids verified embeddable via
+  YouTube oEmbed (0 failures), so no dead iframes in the app.
+- Tests updated: normalizer/repository fixtures assumed a no-video exercise;
+  now assert video-first media (id format) + CDN images. 71/71 green.

@@ -46,7 +46,7 @@ geometry/bodyGeometry + test, BodyView enum, view2d/3d + bodyView i18n keys are 
 any mention of a 2D/3D toggle further down is historical). Auth has explicit labeled
 buttons: GIS standard Sign-in-with-Google pill when signed out; avatar + round logout
 icon button (+ labeled sign-out in the profile dropdown) when signed in. LanguageSwitcher
-shows the language code closed. Video coverage is 260 exercises / 192 distinct shorts
+shows the language code closed. Video coverage is COMPLETE: 873/873 exercises, 799 distinct embeddable videos (see PROGRESS.md round 5; tooling in scripts/)
 (scripts/match-shorts.mjs proposes title-to-exercise matches from scripts/shorts-list.txt;
 all entries hand-reviewed). NOTE: .env.local must be saved WITHOUT a UTF-8 BOM or Vite
 silently drops the first env key (auth disables itself locally). Tests 71/71, lint + build green.

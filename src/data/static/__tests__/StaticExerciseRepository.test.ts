@@ -14,7 +14,9 @@ describe('static repositories (normalised dataset)', () => {
     expect(exercise).not.toBeNull()
     expect(exercise?.name).toBe('3/4 Sit-Up')
     expect(exercise?.muscles.length).toBeGreaterThan(0)
-    expect(exercise?.media[0]?.url).toContain('https://')
+    // Media is video-first (a bare YouTube id), then CDN-resolved images.
+    expect(exercise?.media[0]?.url).toMatch(/^[A-Za-z0-9_-]{11}$/)
+    expect(exercise?.media[1]?.url).toContain('https://')
   })
 
   it('findByMuscleGroup resolves involvements through the taxonomy', async () => {

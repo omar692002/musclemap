@@ -10,11 +10,13 @@ down to the individual muscle head on a rotatable 3D anatomy model — and gener
 
 - **Workout-first home** — one-tap quick sessions (Chest & Triceps, Back & Biceps,
   Shoulders & Core, Legs, Cardio) with warm-up checklist and seeded "Shuffle".
-- **873-exercise catalog** — search + muscle-group / equipment filters, animated
-  two-frame demos (start → end position) on every card, and 260 curated video form
-  guides (DeltaBolic shorts; PFA/academic use — licensed media planned for any
-  commercial phase). Detail pages are video-first with the animated demo as the
-  alternative tab.
+- **873-exercise catalog, 100% video coverage** — search + muscle-group /
+  equipment filters, animated two-frame demos (start → end position) on every
+  card, and a curated YouTube form-guide video on **every single exercise**
+  (DeltaBolic, Bodybuilding.com exercise guides, ScottHermanFitness, MuscleWiki
+  + per-exercise search curation; PFA/academic use — licensed media planned for
+  any commercial phase). Detail pages are video-first with the animated demo as
+  the alternative tab.
 - **Google sign-in (optional)** — client-side OAuth via Google Identity Services;
   set `VITE_GOOGLE_CLIENT_ID` (locally in `.env.local`, on CI as a repository
   variable) to enable it. Without it the app runs guest-only.
