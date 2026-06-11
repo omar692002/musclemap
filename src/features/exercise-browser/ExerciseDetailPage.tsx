@@ -1,13 +1,11 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense } from 'react'
 import { Link } from 'react-router-dom'
 import { useExerciseData } from './useExerciseData'
 import { MuscleInvolvementList } from './components/MuscleInvolvementList'
 import { ExerciseMediaGallery } from './components/ExerciseMediaGallery'
-import { MuscleMapBoard } from '../muscle-map/MuscleMapBoard'
-import { highlightFromExercise, highlightHeadsFromExercise } from '../muscle-map/highlight'
+import { highlightHeadsFromExercise } from '../muscle-map/highlight'
 import { Badge } from '../../components/Badge'
 import { BackButton } from '../../components/BackButton'
-import { SegmentedControl } from '../../components/SegmentedControl'
 import { Skeleton } from '../../components/Skeleton'
 import { AppRoutes } from '../../config/routes'
 
@@ -24,19 +22,12 @@ import {
 } from '../../config/labels'
 import { useParams } from 'react-router-dom'
 
-const VIEW_OPTIONS = [
-  { value: '3d', label: UiText.view3dLabel },
-  { value: '2d', label: UiText.view2dLabel },
-] as const
-type ViewDimension = (typeof VIEW_OPTIONS)[number]['value']
-
-/** Full exercise view: animated demo, muscles worked (by role), instructions. */
+/** Full exercise view: video/demo, muscles worked (by role), instructions. */
 export function ExerciseDetailPage() {
   const params = useParams()
   const id = params.id ? decodeURIComponent(params.id) : ''
   const { exercises, muscleIndex, loading } = useExerciseData()
   const exercise = exercises.find((candidate) => candidate.id === id)
-  const [view, setView] = useState<ViewDimension>('3d')
 
   if (loading) {
     return (
@@ -81,22 +72,12 @@ export function ExerciseDetailPage() {
       <section className="mb-6 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between gap-2">
           <h2 className="text-base font-bold text-zinc-900">{UiText.musclesWorked}</h2>
-          <SegmentedControl
-            options={VIEW_OPTIONS}
-            value={view}
-            onChange={(value) => setView(value)}
-          />
         </div>
         <div className="mb-4">
-          {view === '3d' ? (
-            // 3D is head-level (e.g. a lateral raise lights only the side delt);
-            // the 2D fallback/board stays whole-muscle.
-            <Suspense fallback={<MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />}>
-              <Muscle3DView muscleIndex={muscleIndex} highlight={highlightHeadsFromExercise(exercise)} />
-            </Suspense>
-          ) : (
-            <MuscleMapBoard muscleIndex={muscleIndex} highlight={highlightFromExercise(exercise)} />
-          )}
+          {/* Head-level: a lateral raise lights only the side delt. */}
+          <Suspense fallback={<Skeleton className="mx-auto aspect-[3/4] w-full max-w-[380px] rounded-2xl" />}>
+            <Muscle3DView muscleIndex={muscleIndex} highlight={highlightHeadsFromExercise(exercise)} />
+          </Suspense>
         </div>
         <MuscleInvolvementList exercise={exercise} muscleIndex={muscleIndex} />
       </section>

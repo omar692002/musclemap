@@ -6,9 +6,9 @@ import { useAuth } from './AuthContext'
 import { mountGoogleSignIn } from './googleIdentity'
 
 /**
- * Top-bar auth control: the Google sign-in button when signed out, or the
- * user's avatar (tap → profile card with sign-out) when signed in.
- * Renders nothing when no Google client id is configured.
+ * Top-bar auth controls: a labeled Google sign-in button when signed out, or
+ * the user's avatar (tap → profile card) plus an explicit sign-out button when
+ * signed in. Renders nothing when no Google client id is configured.
  */
 export function UserMenu() {
   const { user, signIn, signOut } = useAuth()
@@ -28,7 +28,7 @@ export function UserMenu() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative flex items-center gap-1.5">
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
@@ -42,6 +42,16 @@ export function UserMenu() {
             {user.name.charAt(0).toUpperCase()}
           </span>
         )}
+      </button>
+
+      <button
+        type="button"
+        onClick={signOut}
+        aria-label={UiText.signOut}
+        title={UiText.signOut}
+        className="grid h-8 w-8 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition hover:bg-zinc-50 hover:text-zinc-700 active:scale-95"
+      >
+        <LogOut className="h-4 w-4" aria-hidden />
       </button>
 
       {open ? (

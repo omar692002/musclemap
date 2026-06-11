@@ -11,15 +11,15 @@ down to the individual muscle head on a rotatable 3D anatomy model — and gener
 - **Workout-first home** — one-tap quick sessions (Chest & Triceps, Back & Biceps,
   Shoulders & Core, Legs, Cardio) with warm-up checklist and seeded "Shuffle".
 - **873-exercise catalog** — search + muscle-group / equipment filters, animated
-  two-frame demos (start → end position) on every card, and ~70 curated video form
+  two-frame demos (start → end position) on every card, and 260 curated video form
   guides (DeltaBolic shorts; PFA/academic use — licensed media planned for any
-  commercial phase).
+  commercial phase). Detail pages are video-first with the animated demo as the
+  alternative tab.
 - **Google sign-in (optional)** — client-side OAuth via Google Identity Services;
   set `VITE_GOOGLE_CLIENT_ID` (locally in `.env.local`, on CI as a repository
   variable) to enable it. Without it the app runs guest-only.
 - **Interactive body map** — rotatable 3D anatomy model (BodyParts3D / Z-Anatomy,
   CC BY-SA) split into 23 muscle heads; tap a head to see the exercises that train it.
-  2D SVG fallback included.
 - **Program generator** — split (Full body / Upper-Lower / PPL / Body-part),
   days per week, training goal (strength / hypertrophy / endurance) and available
   equipment → a balanced week with effective-set volume per muscle group.
@@ -36,7 +36,7 @@ React 19 · TypeScript (strict, OOP/SOLID, repository interfaces) · Vite · Tai
 ```powershell
 npm install
 npm run dev      # local dev server
-npm run test     # vitest (75 tests)
+npm run test     # vitest (71 tests)
 npm run lint     # eslint
 npm run build    # tsc + vite + PWA
 ```

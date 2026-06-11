@@ -1,7 +1,6 @@
 import type { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import type { Equipment } from '../../domain/enums/Equipment'
 import type { MuscleRole } from '../../domain/enums/MuscleRole'
-import type { BodyView } from '../../domain/enums/BodyView'
 import type { SplitType } from '../../domain/enums/SplitType'
 import type { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import type { DayFocus } from '../../domain/enums/DayFocus'
@@ -30,8 +29,6 @@ export interface UiStrings {
   readonly muscleFilterLabel: string
   readonly clearFilter: string
   readonly exercisesWord: string
-  readonly view2dLabel: string
-  readonly view3dLabel: string
   readonly map3dHint: string
   readonly rotateHint: string
   readonly loading3d: string
@@ -89,7 +86,6 @@ export interface Translation {
   readonly muscleGroup: Readonly<Record<MuscleGroup, string>>
   readonly equipment: Readonly<Record<Equipment, string>>
   readonly role: Readonly<Record<MuscleRole, string>>
-  readonly bodyView: Readonly<Record<BodyView, string>>
   readonly split: Readonly<Record<SplitType, string>>
   readonly goal: Readonly<Record<TrainingGoal, string>>
   readonly dayFocus: Readonly<Record<DayFocus, string>>

@@ -1,9 +1,9 @@
 import { MuscleId } from '../../../domain/enums/MuscleId'
 
 /**
- * 3D geometry for the rotating muscle model — the spatial cousin of the 2D
- * `bodyGeometry`. A stylised mannequin built from typed primitives (sphere /
- * capsule / box) positioned in a Y-up space (X = left/right, +Z = front).
+ * 3D geometry for the rotating muscle model. A stylised mannequin built from
+ * typed primitives (sphere / capsule / box) positioned in a Y-up space
+ * (X = left/right, +Z = front).
  *
  * This is a *prototype* body: front/back muscles live at different Z so they're
  * distinguishable as you rotate. A realistic segmented anatomy mesh (GLTF) is a

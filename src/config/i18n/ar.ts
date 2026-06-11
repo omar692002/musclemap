@@ -2,7 +2,6 @@ import type { Translation } from './types'
 import { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import { Equipment } from '../../domain/enums/Equipment'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
-import { BodyView } from '../../domain/enums/BodyView'
 import { SplitType } from '../../domain/enums/SplitType'
 import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { DayFocus } from '../../domain/enums/DayFocus'
@@ -32,8 +31,6 @@ export const ar: Translation = {
     muscleFilterLabel: 'العضلة',
     clearFilter: 'مسح',
     exercisesWord: 'تمارين',
-    view2dLabel: '2D',
-    view3dLabel: '3D',
     map3dHint: 'اسحب للتدوير · اضغط على عضلة',
     rotateHint: 'اسحب للتدوير',
     loading3d: 'جارٍ تحميل النموذج ثلاثي الأبعاد…',
@@ -110,10 +107,6 @@ export const ar: Translation = {
     [MuscleRole.Primary]: 'أساسية',
     [MuscleRole.Secondary]: 'ثانوية',
     [MuscleRole.Stabilizer]: 'مثبّتة',
-  },
-  bodyView: {
-    [BodyView.Front]: 'أمامي',
-    [BodyView.Back]: 'خلفي',
   },
   split: {
     [SplitType.FullBody]: 'الجسم كامل',

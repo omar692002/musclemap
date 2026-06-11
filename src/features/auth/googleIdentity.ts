@@ -72,7 +72,8 @@ export async function mountGoogleSignIn(parent: HTMLElement, onUser: (user: Auth
       if (user) onUser(user)
     },
   })
-  id.renderButton(parent, { type: 'icon', shape: 'pill', size: 'medium' })
+  // Labeled "Sign in" pill (GIS localises the text to the browser language).
+  id.renderButton(parent, { type: 'standard', shape: 'pill', size: 'medium', text: 'signin' })
 }
 
 /** Stops GIS from auto-selecting the previous account after sign-out. */

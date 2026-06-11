@@ -2,7 +2,6 @@ import type { Translation } from './types'
 import { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import { Equipment } from '../../domain/enums/Equipment'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
-import { BodyView } from '../../domain/enums/BodyView'
 import { SplitType } from '../../domain/enums/SplitType'
 import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { DayFocus } from '../../domain/enums/DayFocus'
@@ -32,8 +31,6 @@ export const en: Translation = {
     muscleFilterLabel: 'Muscle',
     clearFilter: 'Clear',
     exercisesWord: 'exercises',
-    view2dLabel: '2D',
-    view3dLabel: '3D',
     map3dHint: 'Drag to rotate · tap a muscle',
     rotateHint: 'Drag to rotate',
     loading3d: 'Loading 3D model…',
@@ -110,10 +107,6 @@ export const en: Translation = {
     [MuscleRole.Primary]: 'Primary',
     [MuscleRole.Secondary]: 'Secondary',
     [MuscleRole.Stabilizer]: 'Stabilizer',
-  },
-  bodyView: {
-    [BodyView.Front]: 'Front',
-    [BodyView.Back]: 'Back',
   },
   split: {
     [SplitType.FullBody]: 'Full body',

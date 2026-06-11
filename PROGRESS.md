@@ -381,3 +381,27 @@ Done:
 - **Video-first detail:** ExerciseMediaGallery shows the curated video as the primary view
   with a "Video guide | Demo" segmented toggle (animated two-frame demo kept as the
   alternative); demo-only exercises render the animation directly.
+
+## Round 4: 3D-only, explicit auth buttons, 260 videos (2026-06-11)
+**State:** deployed. 3D is now the only muscle visualisation; auth has labeled
+sign-in / sign-out buttons; 260 exercises have curated form-guide videos.
+
+- **Removed all 2D displays.** Deleted `BodyDiagram`, `MuscleMapBoard`,
+  `geometry/bodyGeometry` (+ its test), `BodyView` enum, `bodyView` labels and
+  the `view2dLabel`/`view3dLabel` i18n keys. `MuscleMapPage` and
+  `ExerciseDetailPage` render the head-split 3D model directly (Skeleton as the
+  Suspense fallback); `muscleMap.config.ts` keeps only the `model3d` palette.
+- **Explicit login/logout buttons.** The GIS button is now the labeled
+  `type:'standard'` pill ("Sign in with Google", localised by GIS). Signed-in
+  shows avatar + a round logout icon button; the profile dropdown keeps a
+  labeled sign-out. `LanguageSwitcher` compacted (shows the language code
+  closed, full names in the dropdown) so everything fits a 390 px top bar.
+- **Fixed `.env.local` BOM bug:** the PowerShell-written file had a UTF-8 BOM,
+  which corrupted the first dotenv key — locally auth was silently disabled
+  (CI was unaffected: it injects the repo variable). Rewritten BOM-less.
+- **Video coverage 160 → 260 exercises** (192 distinct shorts). New dev tool
+  `scripts/match-shorts.mjs` scores harvested titles (EN + FR vocabulary)
+  against unmapped exercise names → `scripts/match-suggestions.txt`; every
+  added row was hand-reviewed (same-movement matches only; false positives
+  like "Muscle Up" ≠ push-up rejected). Existing test validates all keys/ids.
+- Tests 71/71 (4 removed with the 2D geometry), lint + tsc green.

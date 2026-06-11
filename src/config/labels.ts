@@ -13,7 +13,6 @@ const t = TRANSLATIONS[getActiveLanguage()]
 export const MUSCLE_GROUP_LABELS = t.muscleGroup
 export const EQUIPMENT_LABELS = t.equipment
 export const MUSCLE_ROLE_LABELS = t.role
-export const BODY_VIEW_LABELS = t.bodyView
 export const SPLIT_LABELS = t.split
 export const GOAL_LABELS = t.goal
 export const DAY_FOCUS_LABELS = t.dayFocus

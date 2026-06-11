@@ -46,6 +46,24 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   'Bent-Arm_Dumbbell_Pullover': '6yYVcIOAERY', // Dumbbell pullover variations
   'Straight-Arm_Dumbbell_Pullover': '6yYVcIOAERY',
   'Bent-Arm_Barbell_Pullover': '8W2HkeypREE', // Pullover vs lying triceps extension
+  'Wide-Grip_Decline_Barbell_Pullover': 'Datv2L6t3-4', // You're doing pullovers WRONG
+  Decline_Dumbbell_Bench_Press: 'WbCEvFA0NJs', // FIX your dumbbell bench press
+  One_Arm_Dumbbell_Bench_Press: '62k5691EJIk', // Dumbbell bench press mistake (FR)
+  'Close-Grip_Dumbbell_Press': 'mTaiQemkEpU', // The PERFECT (neutral-grip) DB press
+  Incline_Cable_Chest_Press: 'Gruq177Psnk', // Incline chest press mistake
+  Decline_Dumbbell_Flyes: 'PuZ3NwGukkQ', // Dumbbell fly mistake
+  Incline_Dumbbell_Flyes: 'rk8YayRoTRQ', // Fix these dumbbell chest fly mistakes
+  'Incline_Dumbbell_Flyes_-_With_A_Twist': 'lrfMJUUdSVw', // Avoid this dumbbell fly mistake
+  'Wide-Grip_Decline_Barbell_Bench_Press': 'Ti5wayXCWIk', // Bench press grip widths
+  'Bench_Press_-_With_Bands': '79Wdpx9b4uY', // Fix your bench press
+  Bench_Press_with_Chains: '2at6Hx8_Mtw', // Fix these bench press mistakes
+  Reverse_Band_Bench_Press: '79Wdpx9b4uY',
+  'Smith_Machine_Close-Grip_Bench_Press': 'gQ3afio08V8', // 5 Smith machine bench mistakes
+  Smith_Machine_Decline_Press: 'gQ3afio08V8',
+  Decline_Smith_Press: 'gQ3afio08V8',
+  'Push-Up_Wide': '0Hc-UOdIqnY', // PERFECT push-up workout
+  'Incline_Push-Up_Medium': 'SOu-3_YyX2c', // Pushup variations (upper/mid/lower chest)
+  'Incline_Push-Up_Wide': 'SOu-3_YyX2c',
   // ── Shoulders ────────────────────────────────────────────────────────────
   Side_Lateral_Raise: 'Kl3LEzQ5Zqs', // The Perfect Lateral Raise
   Seated_Side_Lateral_Raise: 'lMYs7FY8os4', // The PERFECT Lateral Raise
@@ -76,6 +94,14 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   'Seated_Bent-Over_Rear_Delt_Raise': 'LsT-bR_zxLo', // PERFECT dumbbell rear delt fly
   Face_Pull: 'ywQsaOTRjzM', // Do Face Pulls LIKE THIS
   'Cable_Rope_Rear-Delt_Rows': 'naoYdHwwrR4', // Rear-delt row mistakes
+  'Dumbbell_One-Arm_Shoulder_Press': 'A94MvXVPi8M', // DB shoulder press mistake (FR)
+  Alternating_Cable_Shoulder_Press: 'AfBJ6f_e6SA', // Cable shoulder workout
+  'Shoulder_Press_-_With_Bands': 'tNPEBFuc-Sw', // Shoulder press mistake
+  Front_Cable_Raise: 'eJ_HNftboic', // Front raise mistake
+  Front_Plate_Raise: 'eJ_HNftboic',
+  Front_Incline_Dumbbell_Raise: 'eJ_HNftboic',
+  Side_Laterals_to_Front_Raise: '2pb0rbxV62U', // Fix these lateral raise mistakes
+  'One-Arm_Incline_Lateral_Raise': 'Ugk4cahT3Xw', // Fix this lateral raise mistake
   // ── Back ─────────────────────────────────────────────────────────────────
   'Wide-Grip_Lat_Pulldown': '7jBmlCq5QzQ', // Do Lat Pulldowns LIKE THIS
   'Close-Grip_Front_Lat_Pulldown': 'RFgiCDJs8Nk', // Lat pulldown variations
@@ -108,6 +134,21 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   Barbell_Shrug: 'r37wwZeCNp4', // Build bigger traps
   Dumbbell_Shrug: 'rFsSeClGnNA', // Dumbbell shrug mistakes
   Leverage_Shrug: 'h0zFdmOH-K0', // Shrug like this for bigger traps
+  One_Arm_Lat_Pulldown: 'PRmiRY1iqWE', // Do lat pulldowns LIKE THIS
+  Elevated_Cable_Rows: 'YqD0tKXHTvM', // The PERFECT cable row
+  Barbell_Rear_Delt_Row: 'naoYdHwwrR4', // Rear-delt row mistakes
+  Weighted_Pull_Ups: 'eDP_OOhMTZ4', // The Perfect Pull-Up
+  'Scapular_Pull-Up': 'tlLNz1D7xcI', // How to build pull-up strength
+  Reverse_Hyperextension: '8rXdAAwm8Rs', // Hyperextension (know the difference)
+  Axle_Deadlift: 'K8a_Ab9R-aI', // The PERFECT deadlift guide
+  Clean_Deadlift: 'K8a_Ab9R-aI',
+  Cable_Deadlifts: 'K8a_Ab9R-aI',
+  Deadlift_with_Bands: 'K8a_Ab9R-aI',
+  Deadlift_with_Chains: 'K8a_Ab9R-aI',
+  Deficit_Deadlift: 'K8a_Ab9R-aI',
+  Romanian_Deadlift_from_Deficit: 'uTA4GWNwUEo', // Romanian deadlift mistake
+  'Smith_Machine_Stiff-Legged_Deadlift': 'Wou9zVQrAfs', // Romanian vs stiff-leg deadlift
+  Wide_Stance_Stiff_Legs: 'Wou9zVQrAfs',
   // ── Biceps ───────────────────────────────────────────────────────────────
   Dumbbell_Bicep_Curl: 'E-Ru1nwKiQ4', // Want WIDER biceps? Do this
   Dumbbell_Alternate_Bicep_Curl: '_aoad2yuP5w', // Dumbbell curl variations
@@ -124,6 +165,20 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   'Cable_Hammer_Curls_-_Rope_Attachment': 'xLEpXce3-SA', // Cable curl variations
   Hammer_Curls: '2LpuygMBn4Q', // Dumbbell curl grips (know the difference)
   Concentration_Curls: 'I_bKCYL2nL8', // Do this on the concentration curl
+  Machine_Bicep_Curl: 'S4dDLfp3e8w', // The PERFECT machine preacher curl
+  Cable_Preacher_Curl: '7ixqAPO6JvU', // Fix your preacher curls
+  One_Arm_Dumbbell_Preacher_Curl: 'WyAVZn6_PIY', // PERFECT preacher curl form
+  Preacher_Hammer_Dumbbell_Curl: 'WyAVZn6_PIY',
+  Zottman_Preacher_Curl: '7ixqAPO6JvU',
+  Reverse_Barbell_Preacher_Curls: '7ixqAPO6JvU',
+  Incline_Inner_Biceps_Curl: '7dGvfAjiqM4', // Incline biceps curl hack
+  Incline_Hammer_Curls: 'fXFN8_1Bh6k', // Incline bicep curl mistake
+  'Standing_Inner-Biceps_Curl': 'iwvkZ6K-m-s', // 3 bicep curl mistakes to fix
+  Standing_Concentration_Curl: 'EjUnEEfTSEY', // Concentration curl mistakes
+  Seated_Dumbbell_Curl: '_aoad2yuP5w', // Dumbbell curl variations
+  Seated_Dumbbell_Inner_Biceps_Curl: '_aoad2yuP5w',
+  Reverse_Barbell_Curl: '54x2WF1_Suc', // The Perfect Barbell Bicep Curl
+  Reverse_Cable_Curl: 'CrbTqNOlFgE', // The PERFECT cable bicep curl
   // ── Triceps ──────────────────────────────────────────────────────────────
   Triceps_Pushdown: '-PqzEk57xiw', // The PERFECT Triceps Pushdown
   'Triceps_Pushdown_-_Rope_Attachment': '1FjkhpZsaxc', // The Perfect Triceps Pushdown
@@ -141,6 +196,21 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   Low_Cable_Triceps_Extension: '9Ark9S11uXw', // PERFECT low pulley overhead extensions
   Cable_One_Arm_Tricep_Extension: 'f59wGKbXZ0w', // Cable triceps exercises (all heads)
   Tricep_Dumbbell_Kickback: 'WhBxKbe1-NU', // The PERFECT Triceps Kickback
+  Overhead_Triceps: 'YpQansy246A', // Overhead triceps complete guide
+  Cable_Lying_Triceps_Extension: 'K3mFeNz4e3w', // The Perfect lying triceps extension
+  Machine_Triceps_Extension: 'Kfbfkd0Sf_o', // Triceps extension mistake
+  Cable_Incline_Triceps_Extension: 'NTk0Igxqcsk', // PERFECT high-cable overhead extension
+  Kneeling_Cable_Triceps_Extension: 'oZ1MbUl-_-w', // Overhead cable extensions LIKE THIS
+  Decline_Dumbbell_Triceps_Extension: 'yjeVsevmPGM', // Fix your lying tricep extensions
+  'Dumbbell_One-Arm_Triceps_Extension': 'LmA9b-kcJU0', // DB overhead extension mistake
+  'Standing_One-Arm_Dumbbell_Triceps_Extension': 'LmA9b-kcJU0',
+  Standing_Overhead_Barbell_Triceps_Extension: 'YpQansy246A',
+  'Dumbbell_Tricep_Extension_-Pronated_Grip': 'yjeVsevmPGM',
+  One_Arm_Pronated_Dumbbell_Triceps_Extension: 'yjeVsevmPGM',
+  One_Arm_Supinated_Dumbbell_Triceps_Extension: 'yjeVsevmPGM',
+  'Standing_Low-Pulley_One-Arm_Triceps_Extension': '9Ark9S11uXw', // Low pulley overhead extensions
+  Reverse_Grip_Triceps_Pushdown: 'eDa0VYlbDeQ', // Triceps pushdown mistakes
+  Band_Skull_Crusher: 'L-lMUcVdc2I', // Skull crusher mistake (FR)
   // ── Legs ─────────────────────────────────────────────────────────────────
   Barbell_Squat: 'dW3zj79xfrc', // The PERFECT Barbell Squat
   Barbell_Full_Squat: 'dW3zj79xfrc',
@@ -177,6 +247,28 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   Standing_Barbell_Calf_Raise: 'wdOkFomQNp8', // Build bigger calves
   Smith_Machine_Calf_Raise: 'FV3a0w1LFeQ', // Wanna bigger calves? Do these
   Calf_Press_On_The_Leg_Press_Machine: 'N1Qn84y9i3s', // Struggling to grow calves
+  Bodyweight_Squat: '_aFzWlnxzco', // Fix this squat mistake
+  Box_Squat: 'dW3zj79xfrc', // The PERFECT Barbell Squat
+  Box_Squat_with_Bands: 'dW3zj79xfrc',
+  Box_Squat_with_Chains: 'dW3zj79xfrc',
+  Speed_Box_Squat: 'dW3zj79xfrc',
+  Barbell_Squat_To_A_Bench: 'dW3zj79xfrc',
+  Olympic_Squat: 'dW3zj79xfrc',
+  Speed_Squats: 'dW3zj79xfrc',
+  Squat_with_Bands: 'dW3zj79xfrc',
+  Squat_with_Chains: 'dW3zj79xfrc',
+  'Squats_-_With_Bands': 'dW3zj79xfrc',
+  Wide_Stance_Barbell_Squat: 'dW3zj79xfrc',
+  Chair_Squat: 'jDlVaog-_io', // Squat mistake you need to fix
+  Sit_Squats: 'jDlVaog-_io',
+  Weighted_Squat: 'cHWw9J7ceig', // Fix this squat mistake
+  Front_Barbell_Squat_To_A_Bench: '_qv0m3tPd3s', // The PERFECT Front Squat
+  Front_Squat_Clean_Grip: '_qv0m3tPd3s',
+  Front_Squats_With_Two_Kettlebells: '_qv0m3tPd3s',
+  Dumbbell_Squat_To_A_Bench: 'cuUPtfanAFQ', // Dumbbell squat (know the difference)
+  Suspended_Split_Squat: 'or1frhkjBDc', // Bulgarian split squat setup & form
+  'Calf_Raises_-_With_Bands': 'ey9a2M71-vU', // Calf raises: inner vs outer
+  Donkey_Calf_Raises: 'ey9a2M71-vU',
   // ── Core ─────────────────────────────────────────────────────────────────
   Crunches: 'ZKw4t23ERuw', // Stop doing ab crunches like this
   'Sit-Up': 'aP4HfrLkOLU', // Abs exercise variations
@@ -184,6 +276,7 @@ export const EXERCISE_VIDEO_IDS: Readonly<Record<string, string>> = {
   Rope_Crunch: 'rf_wTA6EDus', // Don't do cable crunches like this
   Plank: 'xe2MXatLTUw', // The PERFECT Plank
   Flat_Bench_Lying_Leg_Raise: '5uB0KaoCF9w', // Lying leg raise mistake
+  Cable_Seated_Crunch: 'ByZJuk85YuE', // Cable crunch mistakes
   // ── Forearms ─────────────────────────────────────────────────────────────
   'Seated_Dumbbell_Palms-Up_Wrist_Curl': 'mwfM_0xBh1s', // Forearm workout (dumbbells only)
   Cable_Wrist_Curl: 'cocFB-38xgA', // Bigger 3D forearms with cables
