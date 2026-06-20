@@ -21,6 +21,7 @@ import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
+import { CoachContentType } from '../../domain/enums/CoachContentType'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -207,6 +208,48 @@ export const ar: Translation = {
     adminYou: 'أنت',
     adminNoUsers: 'لا يوجد مستخدمون بعد.',
     adminUpdateError: 'تعذّر تطبيق التغيير. أعد المحاولة.',
+    navCoach: 'مساحة المدرّب',
+    navContent: 'محتوى المدرّب',
+    coachTitle: 'مساحة المدرّب',
+    coachSubtitle: 'أنشئ وانشر محتواك الخاص',
+    coachUnavailable: 'التدريب يتطلب الخادم',
+    coachUnavailableHint: 'محتوى المدرّب مخزَّن على الخادم. سجّل الدخول إلى نشر يحتوي على خادم للإنشاء والنشر.',
+    coachLoadError: 'تعذّر تحميل محتواك.',
+    coachRetry: 'إعادة المحاولة',
+    coachNewContent: 'محتوى جديد',
+    coachEmpty: 'لا يوجد محتوى بعد. أنشئ عنصرك الأول.',
+    coachDraftBadge: 'مسودة',
+    coachPublishedBadge: 'منشور',
+    coachPremiumBadge: 'مميّز',
+    coachPublish: 'نشر',
+    coachUnpublish: 'إلغاء النشر',
+    coachEdit: 'تعديل',
+    coachDelete: 'حذف',
+    coachDeleteConfirm: 'حذف هذا العنصر؟',
+    coachSaveError: 'تعذّر الحفظ. أعد المحاولة.',
+    coachFormNewTitle: 'محتوى جديد',
+    coachFormEditTitle: 'تعديل المحتوى',
+    coachFieldType: 'النوع',
+    coachFieldTitle: 'العنوان',
+    coachFieldDescription: 'الوصف',
+    coachFieldVideoUrl: 'رابط الفيديو',
+    coachFieldThumbnailUrl: 'رابط الصورة المصغّرة',
+    coachFieldExercise: 'تمرين مرتبط (اختياري)',
+    coachFieldMuscle: 'المجموعة العضلية (اختياري)',
+    coachFieldPremium: 'محتوى مميّز',
+    coachFieldDuration: 'المدة (ثوانٍ)',
+    coachFormCreate: 'إنشاء',
+    coachFormSave: 'حفظ التغييرات',
+    coachFormCancel: 'إلغاء',
+    coachTitleRequired: 'العنوان مطلوب',
+    contentTitle: 'محتوى المدرّب',
+    contentSubtitle: 'دروس وبرامج من مدرّبينا',
+    contentUnavailable: 'المحتوى يتطلب الخادم',
+    contentUnavailableHint: 'مكتبة المحتوى تعمل عبر الـ API المباشر. سجّل الدخول إلى نشر يحتوي على خادم لتصفّحها.',
+    contentLoadError: 'تعذّر تحميل المحتوى.',
+    contentEmpty: 'لا يوجد محتوى منشور بعد. عُد قريبًا.',
+    contentWatch: 'مشاهدة',
+    contentBy: 'بواسطة',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -360,6 +403,11 @@ export const ar: Translation = {
     [UserRole.User]: 'مستخدم',
     [UserRole.Coach]: 'مدرّب',
     [UserRole.Admin]: 'مدير',
+  },
+  coachContentType: {
+    [CoachContentType.Technique]: 'تقنية',
+    [CoachContentType.Education]: 'درس',
+    [CoachContentType.Program]: 'برنامج',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

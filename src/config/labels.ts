@@ -35,6 +35,8 @@ export const MUSCLE_READINESS_LABELS = t.muscleReadiness
 export const RECOVERY_ADVICE_LABELS = t.recoveryAdvice
 // Admin Platform (EM9).
 export const USER_ROLE_LABELS = t.userRole
+// Coach Platform (EM10).
+export const COACH_CONTENT_TYPE_LABELS = t.coachContentType
 
 /** Standard warm-up checklist shown atop each generated training day. */
 export const WARMUP_STEPS = t.warmup

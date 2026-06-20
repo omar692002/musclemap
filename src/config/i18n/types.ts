@@ -20,6 +20,7 @@ import type { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import type { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import type { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import type { UserRole } from '../../domain/enums/UserRole'
+import type { CoachContentType } from '../../domain/enums/CoachContentType'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -216,6 +217,49 @@ export interface UiStrings {
   readonly adminYou: string
   readonly adminNoUsers: string
   readonly adminUpdateError: string
+  // Coach Platform (EM10).
+  readonly navCoach: string
+  readonly navContent: string
+  readonly coachTitle: string
+  readonly coachSubtitle: string
+  readonly coachUnavailable: string
+  readonly coachUnavailableHint: string
+  readonly coachLoadError: string
+  readonly coachRetry: string
+  readonly coachNewContent: string
+  readonly coachEmpty: string
+  readonly coachDraftBadge: string
+  readonly coachPublishedBadge: string
+  readonly coachPremiumBadge: string
+  readonly coachPublish: string
+  readonly coachUnpublish: string
+  readonly coachEdit: string
+  readonly coachDelete: string
+  readonly coachDeleteConfirm: string
+  readonly coachSaveError: string
+  readonly coachFormNewTitle: string
+  readonly coachFormEditTitle: string
+  readonly coachFieldType: string
+  readonly coachFieldTitle: string
+  readonly coachFieldDescription: string
+  readonly coachFieldVideoUrl: string
+  readonly coachFieldThumbnailUrl: string
+  readonly coachFieldExercise: string
+  readonly coachFieldMuscle: string
+  readonly coachFieldPremium: string
+  readonly coachFieldDuration: string
+  readonly coachFormCreate: string
+  readonly coachFormSave: string
+  readonly coachFormCancel: string
+  readonly coachTitleRequired: string
+  readonly contentTitle: string
+  readonly contentSubtitle: string
+  readonly contentUnavailable: string
+  readonly contentUnavailableHint: string
+  readonly contentLoadError: string
+  readonly contentEmpty: string
+  readonly contentWatch: string
+  readonly contentBy: string
 }
 
 /**
@@ -251,6 +295,8 @@ export interface Translation {
   readonly recoveryAdvice: Readonly<Record<RecoveryAdvice, string>>
   /** Admin platform vocabularies (EM9). */
   readonly userRole: Readonly<Record<UserRole, string>>
+  /** Coach platform vocabularies (EM10). */
+  readonly coachContentType: Readonly<Record<CoachContentType, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }

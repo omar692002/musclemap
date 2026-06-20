@@ -21,6 +21,7 @@ import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
+import { CoachContentType } from '../../domain/enums/CoachContentType'
 
 /** French. */
 export const fr: Translation = {
@@ -207,6 +208,48 @@ export const fr: Translation = {
     adminYou: 'Vous',
     adminNoUsers: 'Aucun utilisateur.',
     adminUpdateError: "Impossible d'appliquer la modification. Réessayez.",
+    navCoach: 'Espace coach',
+    navContent: 'Contenu coach',
+    coachTitle: 'Espace coach',
+    coachSubtitle: 'Créez et publiez votre propre contenu',
+    coachUnavailable: 'Le coaching nécessite le backend',
+    coachUnavailableHint: 'Le contenu coach est stocké sur le serveur. Connectez-vous à un déploiement avec backend pour créer et publier.',
+    coachLoadError: "Impossible de charger votre contenu.",
+    coachRetry: 'Réessayer',
+    coachNewContent: 'Nouveau contenu',
+    coachEmpty: 'Aucun contenu. Créez votre premier élément.',
+    coachDraftBadge: 'Brouillon',
+    coachPublishedBadge: 'Publié',
+    coachPremiumBadge: 'Premium',
+    coachPublish: 'Publier',
+    coachUnpublish: 'Dépublier',
+    coachEdit: 'Modifier',
+    coachDelete: 'Supprimer',
+    coachDeleteConfirm: 'Supprimer cet élément ?',
+    coachSaveError: "Impossible d'enregistrer. Réessayez.",
+    coachFormNewTitle: 'Nouveau contenu',
+    coachFormEditTitle: 'Modifier le contenu',
+    coachFieldType: 'Type',
+    coachFieldTitle: 'Titre',
+    coachFieldDescription: 'Description',
+    coachFieldVideoUrl: 'URL de la vidéo',
+    coachFieldThumbnailUrl: 'URL de la miniature',
+    coachFieldExercise: 'Exercice associé (optionnel)',
+    coachFieldMuscle: 'Groupe musculaire (optionnel)',
+    coachFieldPremium: 'Contenu premium',
+    coachFieldDuration: 'Durée (secondes)',
+    coachFormCreate: 'Créer',
+    coachFormSave: 'Enregistrer',
+    coachFormCancel: 'Annuler',
+    coachTitleRequired: 'Un titre est requis',
+    contentTitle: 'Contenu coach',
+    contentSubtitle: 'Leçons et programmes de nos coachs',
+    contentUnavailable: 'Le contenu nécessite le backend',
+    contentUnavailableHint: "La bibliothèque de contenu utilise l'API en ligne. Connectez-vous à un déploiement avec backend pour la parcourir.",
+    contentLoadError: "Impossible de charger le contenu.",
+    contentEmpty: 'Aucun contenu publié pour le moment. Revenez bientôt.',
+    contentWatch: 'Regarder',
+    contentBy: 'Par',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -360,6 +403,11 @@ export const fr: Translation = {
     [UserRole.User]: 'Utilisateur',
     [UserRole.Coach]: 'Coach',
     [UserRole.Admin]: 'Admin',
+  },
+  coachContentType: {
+    [CoachContentType.Technique]: 'Technique',
+    [CoachContentType.Education]: 'Leçon',
+    [CoachContentType.Program]: 'Programme',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

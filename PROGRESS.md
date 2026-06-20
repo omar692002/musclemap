@@ -1,5 +1,53 @@
 # Progress Log
 
+## EM10 — Coach Platform (complete, 2026-06-20)
+**State:** The two halves of one feature, both on the existing `coach_videos` table
+(created in V1, never used until now). **Authoring side** — backend package
+`com.musclemap.coach` exposes `/api/v1/coach/videos` (already `hasAnyRole("COACH","ADMIN")`
+in `SecurityConfig`): `POST` creates an **unpublished draft**, `GET` returns the coach's
+**own** library (drafts + published), `PUT/{id}` edits, `PATCH/{id}/publish` toggles
+visibility, `DELETE/{id}` removes. `CoachService`/`CoachServiceImpl` resolve the owning
+coach from the verified principal and enforce ownership on every read/mutate — a mismatch
+is a **404**, never leaking another coach's ids (same pattern as `WorkoutSessionServiceImpl`).
+Publishing is deliberately a separate step from saving, so editing a draft never silently
+publishes it. DTOs `CoachVideoRequest` (no `published` field), `CoachVideoResponse`
+(carries `coachId`/`coachName` to credit the author), `PublishRequest`.
+
+**Consumer side** — `ContentController` exposes `GET /api/v1/content/videos`, returning
+every **published** item to any signed-in user. It lives under `/content/**` (not
+`/coach/**`), so no coach role is required to browse. Premium items are returned here and
+flagged `premium`, but the actual premium **access gate is deferred to EM11**.
+
+**Schema.** Flyway **V4** adds `coach_videos.content_type`
+(`TECHNIQUE`/`EDUCATION`/`PROGRAM`, default `TECHNIQUE`, VARCHAR + CHECK) → new
+`CoachContentType` enum on the entity. This covers the milestone's "uploads videos /
+creates programs / publishes educational content" without a second table. Bumped app
+version 0.3.0→0.4.0 / milestone to "EM10 - Coach Platform".
+
+**Frontend.** `features/coach/coachApi.ts` is backend-only (no localStorage fallback —
+coach content is shared server state, exactly like `adminApi.ts`); `isCoachBackendReady()`
+gates the UI, which shows an honest "needs backend" notice on the static deploy.
+`features/coach/CoachStudioPage.tsx` (`/coach`) is the studio: a create/edit form
+(type/title/description/video+thumbnail URLs/exercise/muscle/premium/duration), per-item
+publish toggle, and delete-with-confirm; COACH/ADMIN only (others redirected home).
+`features/content/ContentLibraryPage.tsx` (`/content`) is the public library: published
+content as cards (thumbnail, type/premium badges, coach credit, watch link). New
+`CoachContentType` enum + `CoachVideo`/`CoachVideoDraft` models. User-menu entries —
+"Coach studio" for COACH/ADMIN, "Coach content" for any signed-in user when a backend is
+wired; the 6-tab bottom nav is untouched. 44 EN/FR/AR `ui` keys + a `coachContentType` map.
+
+**Quality.** `mvn test` **44** green (+8 `CoachServiceImplTest`: create-as-draft, default
+content type, owner-scoped 404 on update/delete, publish toggle, listPublished). `npm test`
+**102** green, `npm run build`/`lint` green. Verified **end-to-end on dockerized Postgres**:
+Flyway V4 applied (history row 4 + `content_type` column present); draft created
+unpublished → absent from `/content` → published → appears in `/content` with coach credit;
+a plain USER gets **403** on `/coach/videos` but **200** on `/content/videos`; blank title
+→ **400**.
+
+**Next action:** EM11 — Subscription Architecture (FREE/PREMIUM entities, feature gates,
+premium guards; no Stripe yet). The `subscriptions` table is seeded since EM1 and EM10's
+content already carries a `premium` flag waiting to be gated.
+
 ## EM9 — Admin Platform (complete, 2026-06-20)
 **State:** A real, RBAC-gated **admin platform**. New backend package
 `com.musclemap.admin` exposes `/api/v1/admin/**` (already `hasRole("ADMIN")` in

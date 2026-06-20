@@ -21,7 +21,7 @@ Supabase plan in the older docs.
 | **EM7** | Progress Analytics | Bodyweight evolution, frequency, PRs, volume; cards + charts + weekly summaries | **done (2026-06-20)** |
 | **EM8** | Advanced Muscle Intelligence | Primary/secondary/stabilizer detail, fatigue analysis (under/over-trained), recovery recommendations | **done (2026-06-20)** |
 | **EM9** | Admin Platform | Manage users/exercises/programs/muscle groups/coach content; dashboard metrics | **done (2026-06-20)** |
-| **EM10** | Coach Platform | Coach uploads videos, creates programs, publishes educational/premium content | pending |
+| **EM10** | Coach Platform | Coach uploads videos, creates programs, publishes educational/premium content | **done (2026-06-20)** |
 | **EM11** | Subscription Architecture | FREE/PREMIUM entities, feature gates, premium guards (no Stripe yet) | pending (table seeded EM1) |
 | **EM12** | Product Polish | Animations, skeletons, empty/error states, a11y, responsiveness, dark mode, visual consistency | pending |
 

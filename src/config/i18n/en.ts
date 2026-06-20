@@ -21,6 +21,7 @@ import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
+import { CoachContentType } from '../../domain/enums/CoachContentType'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -207,6 +208,48 @@ export const en: Translation = {
     adminYou: 'You',
     adminNoUsers: 'No users yet.',
     adminUpdateError: "Couldn't apply the change. Please retry.",
+    navCoach: 'Coach studio',
+    navContent: 'Coach content',
+    coachTitle: 'Coach studio',
+    coachSubtitle: 'Create and publish your own content',
+    coachUnavailable: 'Coaching needs the backend',
+    coachUnavailableHint: 'Coach content lives on the server. Sign in to a deployment with a backend to author and publish.',
+    coachLoadError: "Couldn't load your content.",
+    coachRetry: 'Retry',
+    coachNewContent: 'New content',
+    coachEmpty: 'No content yet. Create your first item.',
+    coachDraftBadge: 'Draft',
+    coachPublishedBadge: 'Published',
+    coachPremiumBadge: 'Premium',
+    coachPublish: 'Publish',
+    coachUnpublish: 'Unpublish',
+    coachEdit: 'Edit',
+    coachDelete: 'Delete',
+    coachDeleteConfirm: 'Delete this content item?',
+    coachSaveError: "Couldn't save. Please retry.",
+    coachFormNewTitle: 'New content',
+    coachFormEditTitle: 'Edit content',
+    coachFieldType: 'Type',
+    coachFieldTitle: 'Title',
+    coachFieldDescription: 'Description',
+    coachFieldVideoUrl: 'Video URL',
+    coachFieldThumbnailUrl: 'Thumbnail URL',
+    coachFieldExercise: 'Related exercise (optional)',
+    coachFieldMuscle: 'Muscle group (optional)',
+    coachFieldPremium: 'Premium content',
+    coachFieldDuration: 'Duration (seconds)',
+    coachFormCreate: 'Create',
+    coachFormSave: 'Save changes',
+    coachFormCancel: 'Cancel',
+    coachTitleRequired: 'A title is required',
+    contentTitle: 'Coach content',
+    contentSubtitle: 'Lessons and programs from our coaches',
+    contentUnavailable: 'Content needs the backend',
+    contentUnavailableHint: 'The content library runs against the live API. Sign in to a deployment with a backend to browse it.',
+    contentLoadError: "Couldn't load content.",
+    contentEmpty: 'No published content yet. Check back soon.',
+    contentWatch: 'Watch',
+    contentBy: 'By',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -360,6 +403,11 @@ export const en: Translation = {
     [UserRole.User]: 'User',
     [UserRole.Coach]: 'Coach',
     [UserRole.Admin]: 'Admin',
+  },
+  coachContentType: {
+    [CoachContentType.Technique]: 'Technique',
+    [CoachContentType.Education]: 'Lesson',
+    [CoachContentType.Program]: 'Program',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

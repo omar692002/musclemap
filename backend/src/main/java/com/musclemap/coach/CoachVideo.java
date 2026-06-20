@@ -4,6 +4,8 @@ import com.musclemap.common.domain.BaseEntity;
 import com.musclemap.user.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -26,6 +28,10 @@ public class CoachVideo extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "coach_id", nullable = false)
     private User coach;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "content_type", nullable = false, length = 20)
+    private CoachContentType contentType = CoachContentType.TECHNIQUE;
 
     @Column(name = "title", nullable = false, length = 200)
     private String title;

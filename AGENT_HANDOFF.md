@@ -108,8 +108,31 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   the user menu, shown only to ADMIN (not a bottom-nav tab). 28 EN/FR/AR `ui` keys +
   `userRole` map. `mvn test` **36** green (+8 `AdminServiceImplTest`), `npm test` **102**
   green, `build`/`lint` green. App version 0.2.0→0.3.0, milestone "EM9 - Admin Platform".
-- **NEXT = EM10 (Coach Platform):** coach uploads videos, creates programs, publishes
-  educational/premium content.
+- **EM10 (Coach Platform) is DONE** (2026-06-20). Two sides of one feature on the
+  existing `coach_videos` table (V1). **Authoring:** backend `com.musclemap.coach`
+  → `/coach/videos` (`hasAnyRole("COACH","ADMIN")`): `POST` (creates an **unpublished
+  draft**), `GET` (the coach's own library), `PUT/{id}`, `PATCH/{id}/publish`,
+  `DELETE/{id}`. `CoachServiceImpl` is owner-scoped exactly like `WorkoutSessionServiceImpl`
+  (a mismatch → 404, never leaking another coach's ids). **Consumer:** `ContentController`
+  → `GET /content/videos` returns every **published** item to any signed-in user (lives
+  under `/content/**`, so no coach role needed). Flyway **V4** adds `coach_videos.content_type`
+  (`TECHNIQUE`/`EDUCATION`/`PROGRAM`, default `TECHNIQUE`) → new `CoachContentType` enum,
+  covering "uploads videos / creates programs / publishes educational content"; premium
+  items are returned + flagged but **gating is deferred to EM11**. Frontend: `coachApi.ts`
+  backend-only (no localStorage — content is shared server state, like `adminApi`),
+  `features/coach/CoachStudioPage.tsx` at `/coach` (create/edit form + publish toggle +
+  delete, COACH/ADMIN-gated, redirects others home) and `features/content/ContentLibraryPage.tsx`
+  at `/content` (published cards, any user). User-menu entries: "Coach studio" for
+  COACH/ADMIN, "Coach content" for any signed-in user when a backend is wired
+  (`isBackendAuthEnabled()`); nav bar untouched (stays 6 tabs). New enum + `CoachVideo`
+  model; 44 EN/FR/AR keys + `coachContentType` map. `mvn test` **44** green (+8
+  `CoachServiceImplTest`), `npm test` **102** green, `build`/`lint` green. Verified
+  end-to-end on dockerized Postgres (Flyway V4 applied; draft→publish→consumer flow,
+  USER→`/coach` 403 / `/content` 200, blank-title 400). App version 0.3.0→0.4.0,
+  milestone "EM10 - Coach Platform".
+- **NEXT = EM11 (Subscription Architecture):** FREE/PREMIUM entities, feature gates,
+  premium guards (no Stripe yet). The `subscriptions` table is seeded since EM1, and
+  EM10's premium content items already carry a `premium` flag waiting to be gated.
 
 ### Run the backend (verify health)
 ```powershell

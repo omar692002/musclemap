@@ -9,6 +9,8 @@ import { ProgramGeneratorPage } from './features/program-generator/ProgramGenera
 import { AnalyticsPage } from './features/analytics/AnalyticsPage'
 import { MuscleIntelPage } from './features/muscle-intel/MuscleIntelPage'
 import { AdminPage } from './features/admin/AdminPage'
+import { CoachStudioPage } from './features/coach/CoachStudioPage'
+import { ContentLibraryPage } from './features/content/ContentLibraryPage'
 import { OnboardingPage } from './features/onboarding/OnboardingPage'
 import { TopBar } from './components/TopBar'
 import { BottomNav } from './components/BottomNav'
@@ -34,6 +36,8 @@ function App() {
           <Route path={AppRoutes.progress} element={<AnalyticsPage />} />
           <Route path={AppRoutes.intel} element={<MuscleIntelPage />} />
           <Route path={AppRoutes.admin} element={<AdminPage />} />
+          <Route path={AppRoutes.coach} element={<CoachStudioPage />} />
+          <Route path={AppRoutes.content} element={<ContentLibraryPage />} />
           <Route path={AppRoutes.onboarding} element={<OnboardingPage />} />
           <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
           <Route path="*" element={<Navigate to={AppRoutes.home} replace />} />
