@@ -2,6 +2,7 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 import type { AuthUser } from '../../domain/models/AuthUser'
 import { StorageKey } from '../../domain/enums/StorageKey'
 import { disableGoogleAutoSelect } from './googleIdentity'
+import { clearStoredToken } from './authApi'
 
 interface AuthContextValue {
   readonly user: AuthUser | null
@@ -47,6 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     } catch {
       // Nothing stored / storage unavailable — still clear the session.
     }
+    clearStoredToken()
     disableGoogleAutoSelect()
     setUser(null)
   }, [])

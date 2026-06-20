@@ -13,12 +13,20 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   referenced lower in this file and in ARCHITECTURE.md's "T1" notes — treat those as historical.
 - **EM1 (Backend Foundation) is DONE** (2026-06-20). Spring Boot 3 + PostgreSQL + Flyway
   (7 tables) + layered Controller→Service→Repository + roles (USER/COACH/ADMIN) + Docker +
-  Swagger. Verified: `mvn test` green, app boots on dockerized Postgres, Flyway applied,
-  `/api/v1/meta` + `/actuator/health` + `/v3/api-docs` all 200. See `backend/README.md`.
-- **NEXT = EM2 (Authentication & Security):** JWT + BCrypt + RBAC; lock down the
-  deliberately-permissive M1 `SecurityConfig`; `/auth/register|login|logout`; wire the
-  frontend's first real API call + protected routes. The `UserService.register(...)` +
-  `PasswordEncoder` bean are already in place to build on.
+  Swagger. See `backend/README.md`.
+- **EM2 (Authentication & Security) is DONE** (2026-06-20). Stateless **JWT** (HS256) + **BCrypt**
+  + **RBAC**; `SecurityConfig` locked down; `com.musclemap.auth` package; endpoints
+  `/api/v1/auth/{register,login,google,me}` (logout is client-side — stateless tokens).
+  **Google sign-in preserved**: `/auth/google` verifies the Google ID token and maps it to the
+  same `User`/`Role` model; the frontend exchanges the GIS credential for a platform JWT when
+  `VITE_API_BASE_URL` is set, else falls back to local decode (static deploy unaffected).
+  Flyway **V2** adds `users.avatar_url` + `auth_provider`. Verified end-to-end on dockerized
+  Postgres: register 201, `/auth/me` 401→200, wrong password 401, validation 400, duplicate 400,
+  `/auth/google` 503 until configured, public routes still 200; `mvn test` green (11), `npm run
+  build` green. New env for prod: `MUSCLEMAP_JWT_SECRET` (≥32 bytes), `MUSCLEMAP_GOOGLE_CLIENT_ID`.
+- **NEXT = EM3 (Premium Onboarding):** collect age/gender/height/weight/level/experience/goal/
+  frequency/equipment/injuries → persist to `user_profiles` (table already exists); mobile-first
+  flow, gated behind the new auth. Build on `AuthenticatedUser` principal + `/auth/me`.
 
 ### Run the backend (verify health)
 ```powershell

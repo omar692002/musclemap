@@ -30,13 +30,25 @@ spring:
 musclemap:
   app:
     name: MuscleMap
-    version: 0.1.0
-    milestone: "M1 - Backend Foundation"
+    version: 0.2.0
+    milestone: "EM2 - Authentication & Security"
   api:
     base-path: /api/v1
   cors:
     # Comma-separated allowed origins. Overridden per-environment.
     allowed-origins: http://localhost:5173,http://localhost:4173
+  security:
+    jwt:
+      # HS256 signing secret (>= 32 bytes). No default here: prod must supply
+      # MUSCLEMAP_JWT_SECRET or the app refuses to start. dev sets one locally.
+      secret: ${MUSCLEMAP_JWT_SECRET:}
+      ttl-seconds: ${MUSCLEMAP_JWT_TTL_SECONDS:86400}
+      issuer: musclemap
+  oauth:
+    google:
+      # Same Google client id the frontend uses (the token audience we validate).
+      # When blank, /auth/google returns 503 and email/password auth still works.
+      client-id: ${MUSCLEMAP_GOOGLE_CLIENT_ID:}
 
 # Actuator: expose health (+ info) for platform health checks (Render etc.).
 management:

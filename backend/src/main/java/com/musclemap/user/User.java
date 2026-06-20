@@ -11,8 +11,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Platform identity. Credentials (password_hash) are populated by the M2 auth flow;
- * in M1 the entity + table exist so the rest of the model can reference users.
+ * Platform identity. Local users carry a BCrypt {@code passwordHash}; Google
+ * users are provisioned without one ({@code authProvider = GOOGLE}). The EM2 auth
+ * flow (email/password + Google sign-in) populates this entity.
  */
 @Entity
 @Table(name = "users")
@@ -33,6 +34,13 @@ public class User extends BaseEntity {
 
     @Column(name = "display_name", length = 120)
     private String displayName;
+
+    @Column(name = "avatar_url", length = 500)
+    private String avatarUrl;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "auth_provider", nullable = false, length = 20)
+    private AuthProvider authProvider = AuthProvider.LOCAL;
 
     @Column(name = "enabled", nullable = false)
     private boolean enabled = true;

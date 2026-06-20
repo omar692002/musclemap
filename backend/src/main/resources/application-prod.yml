@@ -2,7 +2,8 @@
 # Production profile (Render today; portable to Docker/ACR/AKS later).
 # All secrets/connection details come from environment variables - nothing is
 # hardcoded. On Render set: SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME,
-# SPRING_DATASOURCE_PASSWORD, MUSCLEMAP_CORS_ALLOWED_ORIGINS.
+# SPRING_DATASOURCE_PASSWORD, MUSCLEMAP_CORS_ALLOWED_ORIGINS,
+# MUSCLEMAP_JWT_SECRET (>=32 random bytes), MUSCLEMAP_GOOGLE_CLIENT_ID.
 # ---------------------------------------------------------------------------
 spring:
   datasource:

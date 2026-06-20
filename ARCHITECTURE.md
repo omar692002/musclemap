@@ -9,13 +9,25 @@ in the "Deployment evolution" section below (kept as history).
   `subscription`, `meta`, `common`, `config`).
 - **Flyway owns the schema** (`hibernate.ddl-auto=none`); enum columns are `VARCHAR` +
   `CHECK` mirrored by Java enums. UUID PKs + audit timestamps via `BaseEntity`.
-- **Security:** Spring Security + `BCryptPasswordEncoder` bean in place (M1 permissive;
-  JWT + RBAC arrive in EM2). Config via `@ConfigurationProperties` (no magic strings).
+- **Security (EM2):** stateless **JWT** (HS256, jjwt) + **BCrypt** + **RBAC**. `SecurityConfig`
+  is locked down (was permissive in M1): `JwtAuthenticationFilter` authenticates bearer tokens,
+  `DaoAuthenticationProvider` backs email/password login, public routes are `/auth/{register,
+  login,google}` + meta + health + Swagger, `/coach/**` and `/admin/**` are role-gated, all else
+  `authenticated()`. 401/403 render the uniform `ApiError`. `com.musclemap.auth` package holds
+  the flow (`AuthController/Service`, `JwtService`, `GoogleTokenVerifier`, `AppUserDetails*`).
+  Config via `@ConfigurationProperties` (`musclemap.security.jwt.*`, `musclemap.oauth.google.*`).
+- **Google sign-in (kept):** the existing frontend Google Identity flow is preserved.
+  `/auth/google` verifies the Google ID token server-side and maps it onto the same `User`/`Role`
+  model (provider `GOOGLE`, no local password). Google is **additive**, not a replacement for
+  email/password.
 - **Deploy:** multi-stage Docker image → **Render** (frontend stays on GitHub Pages),
-  portable to ACR/AKS unchanged. `dev`/`prod` profiles; prod secrets come from env.
-- **Frontend ↔ backend:** not yet wired (frontend still 100% static); EM2 adds the first
-  real API integration (auth). A future `ApiExerciseRepository` plugs into the existing
-  frontend repository/interface seam with zero UI change.
+  portable to ACR/AKS unchanged. `dev`/`prod` profiles; prod secrets come from env
+  (`MUSCLEMAP_JWT_SECRET`, `MUSCLEMAP_GOOGLE_CLIENT_ID`).
+- **Frontend ↔ backend (EM2):** first real API integration. When `VITE_API_BASE_URL` is set, the
+  Google credential is exchanged at `/auth/google` for a platform JWT (stored as
+  `StorageKey.AuthToken`); when unset it falls back to local ID-token decoding, so the static
+  GH-Pages build keeps working with no backend. A future `ApiExerciseRepository` plugs into the
+  existing frontend repository/interface seam with zero UI change.
 
 ## Stack (frontend)
 - **React 19 + TypeScript**, bundled with **Vite**.

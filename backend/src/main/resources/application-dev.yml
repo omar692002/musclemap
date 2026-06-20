@@ -15,6 +15,13 @@ spring:
       hibernate:
         format_sql: true
 
+musclemap:
+  security:
+    jwt:
+      # Dev-only fixed secret so the app boots without env wiring. NEVER used in prod
+      # (prod requires MUSCLEMAP_JWT_SECRET; there is no default in application.yml).
+      secret: ${MUSCLEMAP_JWT_SECRET:dev-only-insecure-jwt-secret-change-me-0123456789}
+
 logging:
   level:
     com.musclemap: DEBUG

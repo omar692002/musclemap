@@ -1,8 +1,13 @@
 # MuscleMap Backend
 
-Spring Boot 3 backend for the MuscleMap fitness platform. **Milestone 1 — Backend
-Foundation**: layered Clean Architecture, PostgreSQL persistence, Flyway-managed
-schema, the role taxonomy, and OpenAPI docs. Authentication/JWT land in Milestone 2.
+Spring Boot 3 backend for the MuscleMap fitness platform. **EM1 — Backend Foundation**:
+layered Clean Architecture, PostgreSQL persistence, Flyway-managed schema, role taxonomy,
+OpenAPI docs. **EM2 — Authentication & Security**: stateless JWT (HS256) + BCrypt + RBAC;
+email/password and Google sign-in at `/api/v1/auth/{register,login,google,me}`.
+
+Prod env beyond the datasource: `MUSCLEMAP_JWT_SECRET` (≥32 random bytes, required) and
+`MUSCLEMAP_GOOGLE_CLIENT_ID` (the Google client id whose ID tokens `/auth/google` accepts;
+when unset, Google sign-in returns 503 and email/password auth still works).
 
 ## Stack
 - Java 17, Spring Boot 3.3 (Web, Data JPA, Security, Validation, Actuator)

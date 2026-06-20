@@ -34,7 +34,38 @@ public class UserServiceImpl implements UserService {
         user.setPasswordHash(passwordEncoder.encode(rawPassword));
         user.setDisplayName(displayName);
         user.setRole(role != null ? role : Role.USER);
+        user.setAuthProvider(AuthProvider.LOCAL);
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public User findOrCreateOAuthUser(String email, String displayName, String avatarUrl, AuthProvider provider) {
+        String normalizedEmail = normalize(email);
+        return userRepository.findByEmailIgnoreCase(normalizedEmail)
+                .map(existing -> {
+                    // Refresh provider-owned profile fields on each sign-in.
+                    if (avatarUrl != null && !avatarUrl.isBlank()) {
+                        existing.setAvatarUrl(avatarUrl);
+                    }
+                    if ((existing.getDisplayName() == null || existing.getDisplayName().isBlank())
+                            && displayName != null && !displayName.isBlank()) {
+                        existing.setDisplayName(displayName);
+                    }
+                    existing.setEmailVerified(true);
+                    return existing; // managed entity; flushed on commit
+                })
+                .orElseGet(() -> {
+                    User user = new User();
+                    user.setEmail(normalizedEmail);
+                    user.setDisplayName(displayName);
+                    user.setAvatarUrl(avatarUrl);
+                    user.setRole(Role.USER);
+                    user.setAuthProvider(provider != null ? provider : AuthProvider.GOOGLE);
+                    user.setEmailVerified(true);
+                    // No password hash: OAuth users cannot sign in with a password.
+                    return userRepository.save(user);
+                });
     }
 
     @Override

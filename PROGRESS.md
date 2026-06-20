@@ -1,5 +1,54 @@
 # Progress Log
 
+## EM2 — Authentication & Security (complete, 2026-06-20)
+**State:** The M1 foundation now has real authentication and authorization. The
+deliberately-permissive `SecurityConfig` is locked down: **stateless JWT** (HS256 via jjwt),
+**BCrypt** password login, and **RBAC** (USER/COACH/ADMIN). **Existing Google sign-in is
+preserved** and now maps onto the same identity model.
+
+**Endpoints** (`com.musclemap.auth`): `POST /api/v1/auth/register` (201 + token),
+`POST /auth/login`, `POST /auth/google`, `GET /auth/me` (bearer-protected). Logout is
+client-side by design — JWTs are stateless, so the client simply discards its token.
+
+**Security wiring:**
+- `JwtService` issues/verifies HS256 tokens (subject = user id; `email`/`role`/`name` claims);
+  signing secret from `musclemap.security.jwt.secret` — **fails fast** if < 32 bytes (prod must
+  set `MUSCLEMAP_JWT_SECRET`; dev has a local default).
+- `JwtAuthenticationFilter` authenticates `Authorization: Bearer` requests into an
+  `AuthenticatedUser` principal (no per-request DB hit). `DaoAuthenticationProvider` +
+  `AppUserDetailsService` back email/password login.
+- `SecurityConfig`: stateless; public = `/auth/{register,login,google}` + `/meta` + health +
+  Swagger; `/admin/**` = ADMIN, `/coach/**` = COACH|ADMIN; everything else authenticated.
+  401/403 render the uniform `ApiError` (`JwtAuthenticationEntryPoint` / `RestAccessDeniedHandler`);
+  `GlobalExceptionHandler` maps bad credentials → 401, unconfigured Google → 503.
+
+**Google sign-in kept (owner requirement):** `GoogleTokenVerifier` validates the Google ID token
+server-side (signature/issuer/audience/expiry) and `UserService.findOrCreateOAuthUser(...)`
+provisions/links the user (provider `GOOGLE`, no password, email pre-verified). Frontend: when
+`VITE_API_BASE_URL` is set, `authApi.loginWithGoogle` exchanges the GIS credential at
+`/auth/google` for a platform JWT (stored as `StorageKey.AuthToken`); otherwise it **falls back**
+to the previous client-side ID-token decode, so the static GH-Pages build keeps working with no
+backend (zero-risk to the live app).
+
+**Schema:** Flyway **V2** (`V2__auth_provider.sql`) adds `users.avatar_url` and
+`users.auth_provider` (`LOCAL`/`GOOGLE`, CHECK-constrained); `password_hash` stays nullable.
+
+**Verified end-to-end** (dockerized Postgres, dev profile): register → 201 + JWT; `/auth/me`
+401 without token, 200 with; login wrong password → 401, correct → 200; invalid body → 400 with
+field details; duplicate email → 400; `/auth/google` → 503 (client id unconfigured locally);
+`/meta`, `/v3/api-docs`, Swagger UI → 200; Flyway applied **V2**. `mvn test` green (11 tests:
++`JwtServiceTest`, +OAuth cases in `UserServiceImplTest`). `npm run build` green (tsc + vite + PWA).
+
+**Files:** backend `auth/**` (controller, service+impl, `JwtService`, `JwtAuthenticationFilter`,
+`AppUserDetails(+Service)`, `GoogleTokenVerifier`, entry-point/denied handlers, `dto/**`),
+`user/AuthProvider.java` + `User`/`UserService(+Impl)` additions, `SecurityConfig` lockdown,
+`OpenApiConfig` bearer scheme, `MuscleMapProperties` (jwt+oauth), `application{,-dev,-prod}.yml`,
+`db/migration/V2__auth_provider.sql`, deps `jjwt` + `google-api-client` in `pom.xml`. Frontend
+`features/auth/authApi.ts` (new), `googleIdentity.ts`/`AuthContext.tsx`/`auth.config.ts`/
+`StorageKey.ts` updates.
+
+**Next action:** EM3 — Premium Onboarding (persist `user_profiles`, gated behind auth).
+
 ## EM1 — Backend Foundation (complete, 2026-06-20)
 **State:** A real Spring Boot 3 backend exists in `/backend`, boots against PostgreSQL,
 applies its Flyway schema, and serves a versioned REST API + Swagger. Verified

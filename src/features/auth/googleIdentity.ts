@@ -1,11 +1,16 @@
 import type { AuthUser } from '../../domain/models/AuthUser'
 import { AuthConfig } from '../../config/auth.config'
+import { loginWithGoogle } from './authApi'
 
 /**
  * Thin wrapper around Google Identity Services (GIS): loads the official
- * script on demand, renders the "Sign in with Google" button, and decodes the
- * returned ID-token credential into our `AuthUser`. Client-side only — no
- * backend; the decoded profile is used purely for display/personalisation.
+ * script on demand, renders the "Sign in with Google" button, and turns the
+ * returned ID-token credential into our `AuthUser`.
+ *
+ * When a backend is configured (`VITE_API_BASE_URL`), the credential is
+ * exchanged at `/auth/google` for a platform JWT (real session, RBAC-ready).
+ * Otherwise — or if the backend is unreachable — it falls back to decoding the
+ * ID token locally, so Google sign-in keeps working with no backend at all.
  */
 
 /** The slice of the GIS API this app uses (the SDK ships no TS types). */
@@ -68,8 +73,12 @@ export async function mountGoogleSignIn(parent: HTMLElement, onUser: (user: Auth
   id.initialize({
     client_id: AuthConfig.googleClientId,
     callback: (response) => {
-      const user = decodeIdToken(response.credential)
-      if (user) onUser(user)
+      // Prefer a backend-issued JWT session; fall back to local decode if there
+      // is no backend or it is unreachable (keeps Google sign-in always working).
+      void loginWithGoogle(response.credential).then((session) => {
+        const user = session?.user ?? decodeIdToken(response.credential)
+        if (user) onUser(user)
+      })
     },
   })
   // Labeled "Sign in" pill (GIS localises the text to the browser language).

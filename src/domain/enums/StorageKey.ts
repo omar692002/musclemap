@@ -7,4 +7,5 @@ export enum StorageKey {
   UserPreferences = 'musclemap.userPreferences',
   Language = 'musclemap.language',
   AuthUser = 'musclemap.authUser',
+  AuthToken = 'musclemap.authToken',
 }

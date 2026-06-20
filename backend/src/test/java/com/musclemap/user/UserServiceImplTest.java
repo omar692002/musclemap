@@ -82,4 +82,35 @@ class UserServiceImplTest {
         assertThatThrownBy(() -> userService.getById(id))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
+
+    @Test
+    void findOrCreateOAuthUser_createsGoogleUserWithoutPassword() {
+        when(userRepository.findByEmailIgnoreCase("ada@gmail.com")).thenReturn(Optional.empty());
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        User created = userService.findOrCreateOAuthUser(
+                "  Ada@Gmail.com ", "Ada", "https://pic", AuthProvider.GOOGLE);
+
+        assertThat(created.getEmail()).isEqualTo("ada@gmail.com");
+        assertThat(created.getPasswordHash()).isNull();
+        assertThat(created.getAuthProvider()).isEqualTo(AuthProvider.GOOGLE);
+        assertThat(created.getAvatarUrl()).isEqualTo("https://pic");
+        assertThat(created.isEmailVerified()).isTrue();
+        verify(passwordEncoder, never()).encode(anyString());
+    }
+
+    @Test
+    void findOrCreateOAuthUser_returnsExistingUserAndRefreshesAvatar() {
+        User existing = new User();
+        existing.setEmail("ada@gmail.com");
+        existing.setAuthProvider(AuthProvider.GOOGLE);
+        when(userRepository.findByEmailIgnoreCase("ada@gmail.com")).thenReturn(Optional.of(existing));
+
+        User result = userService.findOrCreateOAuthUser(
+                "ada@gmail.com", "Ada", "https://new-pic", AuthProvider.GOOGLE);
+
+        assertThat(result).isSameAs(existing);
+        assertThat(result.getAvatarUrl()).isEqualTo("https://new-pic");
+        verify(userRepository, never()).save(any());
+    }
 }
