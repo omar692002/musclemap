@@ -17,13 +17,15 @@ public class MuscleMapProperties {
     private final Cors cors;
     private final Security security;
     private final Oauth oauth;
+    private final Admin admin;
 
-    public MuscleMapProperties(App app, Api api, Cors cors, Security security, Oauth oauth) {
+    public MuscleMapProperties(App app, Api api, Cors cors, Security security, Oauth oauth, Admin admin) {
         this.app = app != null ? app : new App("MuscleMap", "0.1.0", "M1 - Backend Foundation");
         this.api = api != null ? api : new Api("/api/v1");
         this.cors = cors != null ? cors : new Cors(List.of());
         this.security = security != null ? security : new Security(null);
         this.oauth = oauth != null ? oauth : new Oauth(null);
+        this.admin = admin != null ? admin : new Admin(List.of());
     }
 
     public App getApp() {
@@ -44,6 +46,10 @@ public class MuscleMapProperties {
 
     public Oauth getOauth() {
         return oauth;
+    }
+
+    public Admin getAdmin() {
+        return admin;
     }
 
     /** Application descriptor surfaced by the meta endpoint. */
@@ -86,6 +92,18 @@ public class MuscleMapProperties {
                     issuer = "musclemap";
                 }
             }
+        }
+    }
+
+    /**
+     * Platform administration settings (EM9). {@code bootstrapEmails} are
+     * first-admin accounts: any existing user whose email matches is elevated to
+     * ADMIN on startup (see {@code AdminBootstrap}), so the platform always has a
+     * way in without hand-editing the database. Empty = no bootstrap.
+     */
+    public record Admin(List<String> bootstrapEmails) {
+        public Admin {
+            bootstrapEmails = bootstrapEmails != null ? List.copyOf(bootstrapEmails) : List.of();
         }
     }
 

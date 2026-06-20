@@ -20,7 +20,7 @@ class JwtServiceTest {
     private static JwtService jwtService(String secret) {
         MuscleMapProperties props = new MuscleMapProperties(null, null, null,
                 new MuscleMapProperties.Security(new MuscleMapProperties.Security.Jwt(secret, 3600, "musclemap")),
-                null);
+                null, null);
         return new JwtService(props);
     }
 

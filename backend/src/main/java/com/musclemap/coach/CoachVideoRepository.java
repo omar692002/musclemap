@@ -11,4 +11,7 @@ public interface CoachVideoRepository extends JpaRepository<CoachVideo, UUID> {
     List<CoachVideo> findByCoachIdOrderByCreatedAtDesc(UUID coachId);
 
     List<CoachVideo> findByPublishedTrueOrderByCreatedAtDesc();
+
+    /** Published-content count (EM9 admin metrics). */
+    long countByPublishedTrue();
 }

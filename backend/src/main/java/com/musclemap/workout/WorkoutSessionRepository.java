@@ -13,4 +13,7 @@ public interface WorkoutSessionRepository extends JpaRepository<WorkoutSession, 
     List<WorkoutSession> findByUserIdAndStatus(UUID userId, SessionStatus status);
 
     long countByUserIdAndStatus(UUID userId, SessionStatus status);
+
+    /** Platform-wide count by lifecycle state (EM9 admin metrics). */
+    long countByStatus(SessionStatus status);
 }

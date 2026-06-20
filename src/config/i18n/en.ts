@@ -20,6 +20,7 @@ import { OverloadCue } from '../../domain/enums/OverloadCue'
 import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
+import { UserRole } from '../../domain/enums/UserRole'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -178,6 +179,34 @@ export const en: Translation = {
     intelMrv: 'MRV',
     hoursUnitShort: 'h',
     daysUnitShort: 'd',
+    navAdmin: 'Admin',
+    adminTitle: 'Admin platform',
+    adminSubtitle: 'Manage users, roles and platform health',
+    adminUnavailable: 'Admin needs the backend',
+    adminUnavailableHint: 'User management runs against the live API. Sign in to a deployment with a backend to administer the platform.',
+    adminLoadError: "Couldn't load admin data.",
+    adminRetry: 'Retry',
+    adminSectionPlatform: 'Platform',
+    adminSectionUsers: 'Users',
+    adminMetricUsers: 'Total users',
+    adminMetricActive: 'Active',
+    adminMetricLocal: 'Email / password',
+    adminMetricGoogle: 'Google',
+    adminMetricProfiles: 'Profiles',
+    adminMetricPrograms: 'Programs',
+    adminMetricSessions: 'Sessions',
+    adminMetricCompleted: 'Completed',
+    adminMetricCoachVideos: 'Coach videos',
+    adminMetricPublished: 'Published',
+    adminColRole: 'Role',
+    adminColStatus: 'Status',
+    adminEnabled: 'Active',
+    adminDisabled: 'Disabled',
+    adminEnable: 'Enable',
+    adminDisable: 'Disable',
+    adminYou: 'You',
+    adminNoUsers: 'No users yet.',
+    adminUpdateError: "Couldn't apply the change. Please retry.",
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -326,6 +355,11 @@ export const en: Translation = {
     [RecoveryAdvice.GoodToTrain]: 'Recovered — good to train',
     [RecoveryAdvice.KeepResting]: 'Still recovering — rest',
     [RecoveryAdvice.ReduceVolume]: 'High volume — ease off',
+  },
+  userRole: {
+    [UserRole.User]: 'User',
+    [UserRole.Coach]: 'Coach',
+    [UserRole.Admin]: 'Admin',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

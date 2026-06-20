@@ -30,8 +30,12 @@ spring:
 musclemap:
   app:
     name: MuscleMap
-    version: 0.2.0
-    milestone: "EM2 - Authentication & Security"
+    version: 0.3.0
+    milestone: "EM9 - Admin Platform"
+  admin:
+    # First-admin bootstrap (EM9): comma-separated emails elevated to ADMIN on
+    # startup. Defaults to the platform owner so there is always a way in.
+    bootstrap-emails: ${MUSCLEMAP_ADMIN_EMAILS:omarmnif123@gmail.com}
   api:
     base-path: /api/v1
   cors:

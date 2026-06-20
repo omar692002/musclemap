@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { LogOut, UserCog } from 'lucide-react'
+import { LogOut, ShieldCheck, UserCog } from 'lucide-react'
 import { isAuthEnabled } from '../../config/auth.config'
+import { UserRole } from '../../domain/enums/UserRole'
 import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { useAuth } from './AuthContext'
@@ -68,6 +69,16 @@ export function UserMenu() {
             <UserCog className="h-3.5 w-3.5" aria-hidden />
             {UiText.editProfile}
           </Link>
+          {user.role === UserRole.Admin ? (
+            <Link
+              to={AppRoutes.admin}
+              onClick={() => setOpen(false)}
+              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100"
+            >
+              <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
+              {UiText.navAdmin}
+            </Link>
+          ) : null}
           <button
             type="button"
             onClick={() => {

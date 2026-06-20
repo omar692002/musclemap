@@ -20,6 +20,7 @@ import { OverloadCue } from '../../domain/enums/OverloadCue'
 import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
+import { UserRole } from '../../domain/enums/UserRole'
 
 /** French. */
 export const fr: Translation = {
@@ -178,6 +179,34 @@ export const fr: Translation = {
     intelMrv: 'MRV',
     hoursUnitShort: 'h',
     daysUnitShort: 'j',
+    navAdmin: 'Admin',
+    adminTitle: 'Espace admin',
+    adminSubtitle: 'Gérer les utilisateurs, les rôles et la santé de la plateforme',
+    adminUnavailable: "L'admin nécessite le backend",
+    adminUnavailableHint: "La gestion des utilisateurs s'appuie sur l'API en ligne. Connectez-vous à un déploiement avec backend pour administrer la plateforme.",
+    adminLoadError: "Impossible de charger les données d'administration.",
+    adminRetry: 'Réessayer',
+    adminSectionPlatform: 'Plateforme',
+    adminSectionUsers: 'Utilisateurs',
+    adminMetricUsers: 'Utilisateurs',
+    adminMetricActive: 'Actifs',
+    adminMetricLocal: 'E-mail / mot de passe',
+    adminMetricGoogle: 'Google',
+    adminMetricProfiles: 'Profils',
+    adminMetricPrograms: 'Programmes',
+    adminMetricSessions: 'Séances',
+    adminMetricCompleted: 'Terminées',
+    adminMetricCoachVideos: 'Vidéos coach',
+    adminMetricPublished: 'Publiées',
+    adminColRole: 'Rôle',
+    adminColStatus: 'Statut',
+    adminEnabled: 'Actif',
+    adminDisabled: 'Désactivé',
+    adminEnable: 'Activer',
+    adminDisable: 'Désactiver',
+    adminYou: 'Vous',
+    adminNoUsers: 'Aucun utilisateur.',
+    adminUpdateError: "Impossible d'appliquer la modification. Réessayez.",
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -326,6 +355,11 @@ export const fr: Translation = {
     [RecoveryAdvice.GoodToTrain]: 'Récupéré — prêt à travailler',
     [RecoveryAdvice.KeepResting]: 'Encore en récupération — repos',
     [RecoveryAdvice.ReduceVolume]: 'Volume élevé — levez le pied',
+  },
+  userRole: {
+    [UserRole.User]: 'Utilisateur',
+    [UserRole.Coach]: 'Coach',
+    [UserRole.Admin]: 'Admin',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

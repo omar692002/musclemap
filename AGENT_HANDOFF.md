@@ -93,8 +93,23 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   `config/muscleIntel.config.ts` (landmarks cited to Renaissance Periodization). New enums
   `TrainingStatus`/`MuscleReadiness`/`RecoveryAdvice`; 18 EN/FR/AR `ui` keys + 3 enum maps.
   `npm test` **102** green (+9), `build`/`lint` green.
-- **NEXT = EM9 (Admin Platform):** manage users/exercises/programs/muscle groups/coach
-  content; dashboard metrics.
+- **EM9 (Admin Platform) is DONE** (2026-06-20). RBAC-gated admin: backend package
+  `com.musclemap.admin` → `/api/v1/admin/**` (`hasRole("ADMIN")`): `GET /admin/metrics`,
+  `GET /admin/users`, `PATCH /admin/users/{id}/role`, `PATCH /admin/users/{id}/status`.
+  `AdminServiceImpl` aggregates counts across the repos and mutates the managed `User`;
+  both mutations take the acting admin's id and **refuse a self-lockout** (can't drop own
+  ADMIN role / disable self) — guarded server-side and in the UI. `AdminBootstrap`
+  (`ApplicationRunner`) elevates `musclemap.admin.bootstrap-emails` (defaults to the owner)
+  to ADMIN on startup so there's always a way in. Frontend: `role` plumbed end-to-end (new
+  `UserRole` enum + optional `AuthUser.role`, mapped from the backend `AuthResponse`,
+  persisted in `AuthContext`); the client-side-only Google fallback stays role-less (never
+  admin). New `features/admin/` (`adminApi.ts` backend-only, `AdminPage.tsx` at `/admin`):
+  metrics grid + user table (role select + enable/disable, own controls locked). Entry in
+  the user menu, shown only to ADMIN (not a bottom-nav tab). 28 EN/FR/AR `ui` keys +
+  `userRole` map. `mvn test` **36** green (+8 `AdminServiceImplTest`), `npm test` **102**
+  green, `build`/`lint` green. App version 0.2.0→0.3.0, milestone "EM9 - Admin Platform".
+- **NEXT = EM10 (Coach Platform):** coach uploads videos, creates programs, publishes
+  educational/premium content.
 
 ### Run the backend (verify health)
 ```powershell

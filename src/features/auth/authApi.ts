@@ -1,4 +1,5 @@
 import type { AuthUser } from '../../domain/models/AuthUser'
+import { UserRole } from '../../domain/enums/UserRole'
 import { StorageKey } from '../../domain/enums/StorageKey'
 import { AuthConfig, isBackendAuthEnabled } from '../../config/auth.config'
 
@@ -18,7 +19,15 @@ interface BackendAuthResponse {
     readonly email: string
     readonly displayName?: string | null
     readonly avatarUrl?: string | null
+    readonly role?: string | null
   }
+}
+
+/** Maps the backend role string onto our enum (unknown/missing → undefined). */
+function toRole(value: string | null | undefined): UserRole | undefined {
+  return (Object.values(UserRole) as string[]).includes(value ?? '')
+    ? (value as UserRole)
+    : undefined
 }
 
 /** The stored backend session: a bearer token plus the mapped display profile. */
@@ -54,11 +63,12 @@ export function getStoredToken(): string | null {
 }
 
 function toAuthUser(response: BackendAuthResponse): AuthUser {
-  const { email, displayName, avatarUrl } = response.user
+  const { email, displayName, avatarUrl, role } = response.user
   return {
     name: displayName && displayName.length > 0 ? displayName : email,
     email,
     avatarUrl: avatarUrl ?? undefined,
+    role: toRole(role),
   }
 }
 

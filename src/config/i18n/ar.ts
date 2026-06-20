@@ -20,6 +20,7 @@ import { OverloadCue } from '../../domain/enums/OverloadCue'
 import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
+import { UserRole } from '../../domain/enums/UserRole'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -178,6 +179,34 @@ export const ar: Translation = {
     intelMrv: 'MRV',
     hoursUnitShort: 'س',
     daysUnitShort: 'ي',
+    navAdmin: 'الإدارة',
+    adminTitle: 'لوحة الإدارة',
+    adminSubtitle: 'إدارة المستخدمين والأدوار وصحة المنصة',
+    adminUnavailable: 'الإدارة تتطلب الخادم',
+    adminUnavailableHint: 'تعتمد إدارة المستخدمين على واجهة الـ API المباشرة. سجّل الدخول إلى نسخة بخادم لإدارة المنصة.',
+    adminLoadError: 'تعذّر تحميل بيانات الإدارة.',
+    adminRetry: 'إعادة المحاولة',
+    adminSectionPlatform: 'المنصة',
+    adminSectionUsers: 'المستخدمون',
+    adminMetricUsers: 'إجمالي المستخدمين',
+    adminMetricActive: 'نشطون',
+    adminMetricLocal: 'بريد / كلمة مرور',
+    adminMetricGoogle: 'جوجل',
+    adminMetricProfiles: 'الملفات',
+    adminMetricPrograms: 'البرامج',
+    adminMetricSessions: 'الجلسات',
+    adminMetricCompleted: 'مكتملة',
+    adminMetricCoachVideos: 'فيديوهات المدرّب',
+    adminMetricPublished: 'منشورة',
+    adminColRole: 'الدور',
+    adminColStatus: 'الحالة',
+    adminEnabled: 'نشط',
+    adminDisabled: 'معطّل',
+    adminEnable: 'تفعيل',
+    adminDisable: 'تعطيل',
+    adminYou: 'أنت',
+    adminNoUsers: 'لا يوجد مستخدمون بعد.',
+    adminUpdateError: 'تعذّر تطبيق التغيير. أعد المحاولة.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -326,6 +355,11 @@ export const ar: Translation = {
     [RecoveryAdvice.GoodToTrain]: 'تعافى — جاهز للتدريب',
     [RecoveryAdvice.KeepResting]: 'ما زال يتعافى — استرح',
     [RecoveryAdvice.ReduceVolume]: 'حجم مرتفع — خفّف',
+  },
+  userRole: {
+    [UserRole.User]: 'مستخدم',
+    [UserRole.Coach]: 'مدرّب',
+    [UserRole.Admin]: 'مدير',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

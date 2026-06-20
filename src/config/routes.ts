@@ -11,6 +11,7 @@ export const AppRoutes = {
   program: '/program',
   progress: '/progress',
   intel: '/intel',
+  admin: '/admin',
   onboarding: '/onboarding',
 } as const
 

@@ -1,5 +1,54 @@
 # Progress Log
 
+## EM9 — Admin Platform (complete, 2026-06-20)
+**State:** A real, RBAC-gated **admin platform**. New backend package
+`com.musclemap.admin` exposes `/api/v1/admin/**` (already `hasRole("ADMIN")` in
+`SecurityConfig`): `GET /admin/metrics` (platform-health snapshot), `GET /admin/users`
+(full roster, newest first), `PATCH /admin/users/{id}/role` and
+`PATCH /admin/users/{id}/status` (enable/disable). `AdminService`/`AdminServiceImpl`
+aggregate counts across the user/profile/program/session/coach-video repositories and
+mutate the managed `User` entity; both mutating paths take the **acting admin's id** and
+refuse a **self-lockout** (an admin can't drop their own ADMIN role or disable their own
+account — guarded server-side *and* in the UI). DTOs `AdminMetricsResponse`,
+`AdminUserResponse` (no password hash ever), `UpdateRoleRequest`, `UpdateUserStatusRequest`.
+
+**First-admin bootstrap.** `AdminBootstrap` (an `ApplicationRunner`) elevates any user in
+`musclemap.admin.bootstrap-emails` to ADMIN on startup (idempotent; defaults to the owner
+`omarmnif123@gmail.com` via `MUSCLEMAP_ADMIN_EMAILS`), so the platform always has a way in
+without hand-editing the DB. Added `MuscleMapProperties.Admin` + the `musclemap.admin` yml
+block; bumped app version 0.2.0→0.3.0 / milestone to "EM9 - Admin Platform".
+
+**Frontend.** Role is now plumbed end-to-end: new `UserRole` enum, optional `role` on
+`AuthUser`, mapped from the backend `AuthResponse` in `authApi.ts` and persisted/restored in
+`AuthContext`. The **client-side-only Google fallback stays role-less** → never treated as
+admin (admin features closed by default; owner's Google sign-in preserved, role comes from
+the backend JWT exchange). New `features/admin/`: `adminApi.ts` (backend-only client, no
+localStorage fallback — nothing local to administer; `isAdminBackendReady()` gates it) and
+`AdminPage.tsx` (`/admin` route) — a platform-metrics grid + a user list with a role
+`<select>` and an enable/disable toggle (own-account controls locked, "You" badge). Reached
+via an **Admin** entry in the user menu shown only when `role === ADMIN` (deliberately *not*
+a 7th bottom-nav tab — keeps the workout-first nav uncluttered). Honest states: redirect
+home for non-admins, an "admin needs the backend" notice on the static deploy, load-error +
+retry, and per-row busy locking.
+
+**i18n:** 28 new EN/FR/AR `ui` keys + a `userRole` enum label map (`USER_ROLE_LABELS`); TS
+keeps all three packs exhaustive. **Tests:** backend `mvn test` **36** green (+8
+`AdminServiceImplTest`: metrics aggregation, roster mapping without secrets, role change,
+self-demotion guard, self-admin re-assert allowed, missing-user 404, disable another, and
+self-disable guard). `npm test` **102** green, `build`/`lint` green. The admin frontend is
+UI/network code (no new pure engine to unit-test).
+
+**Files:** backend `admin/{AdminController,AdminService,AdminServiceImpl,AdminBootstrap}`,
+`admin/dto/{AdminMetricsResponse,AdminUserResponse,UpdateRoleRequest,UpdateUserStatusRequest}`,
+`config/MuscleMapProperties` (+`Admin`), `resources/application.yml`, repo count methods
+(`UserRepository`,`WorkoutSessionRepository`,`CoachVideoRepository`); frontend
+`domain/enums/UserRole.ts`, `domain/models/AuthUser.ts`, `features/auth/{authApi,AuthContext,UserMenu}`,
+`features/admin/{adminApi.ts,AdminPage.tsx}`, `config/{routes,labels}.ts`,
+`config/i18n/{types,en,fr,ar}.ts`, `App.tsx`.
+
+**Next action:** EM10 — Coach Platform (coach uploads videos, creates programs, publishes
+educational/premium content).
+
 ## EM8 — Advanced Muscle Intelligence (complete, 2026-06-20)
 **State:** A new **Intel** tab (6th bottom-nav tab, `Gauge`) → `features/muscle-intel/
 MuscleIntelPage.tsx` turns the EM6 workout history into per-muscle-group intelligence:

@@ -19,6 +19,7 @@ import type { OverloadCue } from '../../domain/enums/OverloadCue'
 import type { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import type { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import type { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
+import type { UserRole } from '../../domain/enums/UserRole'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -186,6 +187,35 @@ export interface UiStrings {
   readonly intelMrv: string
   readonly hoursUnitShort: string
   readonly daysUnitShort: string
+  // Admin Platform (EM9).
+  readonly navAdmin: string
+  readonly adminTitle: string
+  readonly adminSubtitle: string
+  readonly adminUnavailable: string
+  readonly adminUnavailableHint: string
+  readonly adminLoadError: string
+  readonly adminRetry: string
+  readonly adminSectionPlatform: string
+  readonly adminSectionUsers: string
+  readonly adminMetricUsers: string
+  readonly adminMetricActive: string
+  readonly adminMetricLocal: string
+  readonly adminMetricGoogle: string
+  readonly adminMetricProfiles: string
+  readonly adminMetricPrograms: string
+  readonly adminMetricSessions: string
+  readonly adminMetricCompleted: string
+  readonly adminMetricCoachVideos: string
+  readonly adminMetricPublished: string
+  readonly adminColRole: string
+  readonly adminColStatus: string
+  readonly adminEnabled: string
+  readonly adminDisabled: string
+  readonly adminEnable: string
+  readonly adminDisable: string
+  readonly adminYou: string
+  readonly adminNoUsers: string
+  readonly adminUpdateError: string
 }
 
 /**
@@ -219,6 +249,8 @@ export interface Translation {
   readonly trainingStatus: Readonly<Record<TrainingStatus, string>>
   readonly muscleReadiness: Readonly<Record<MuscleReadiness, string>>
   readonly recoveryAdvice: Readonly<Record<RecoveryAdvice, string>>
+  /** Admin platform vocabularies (EM9). */
+  readonly userRole: Readonly<Record<UserRole, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }

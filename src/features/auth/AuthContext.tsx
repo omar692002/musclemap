@@ -25,7 +25,7 @@ function readStoredUser(): AuthUser | null {
     if (!raw) return null
     const parsed = JSON.parse(raw) as Partial<AuthUser>
     return parsed.name && parsed.email
-      ? { name: parsed.name, email: parsed.email, avatarUrl: parsed.avatarUrl }
+      ? { name: parsed.name, email: parsed.email, avatarUrl: parsed.avatarUrl, role: parsed.role }
       : null
   } catch {
     return null
