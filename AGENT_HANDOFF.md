@@ -79,8 +79,22 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   `workoutApi` (backend-or-localStorage, cleared on sign-out). 25 EN/FR/AR i18n keys. `mvn test`
   **28** green, `npm test` **93** green, `build`/`lint` green; verified end-to-end on dockerized
   Postgres (Flyway V3 applied, 401/201/upsert/400 all correct).
-- **NEXT = EM8 (Advanced Muscle Intelligence):** primary/secondary/stabilizer detail, fatigue
-  analysis (under/over-trained), recovery recommendations.
+- **EM8 (Advanced Muscle Intelligence) is DONE** (2026-06-20). A new **Intel** tab (6th
+  bottom-nav tab, `Gauge`) → `features/muscle-intel/MuscleIntelPage.tsx` turns the EM6
+  history into per-muscle-group intelligence cards: **weekly effective sets** vs
+  evidence-based **MEV/MAV/MRV** landmarks (fatigue/volume), a **recovery-readiness** bar
+  (% recovered + last-trained recency), a **primary/secondary/stabilizer** role breakdown,
+  and a single recovery recommendation; two tiles roll up ready/over-trained counts.
+  Frontend-only (no backend change). Pure `computeMuscleIntel(logs, exerciseIndex,
+  muscleIndex, now)` (`features/muscle-intel/muscleIntel.ts`) folds completed work onto
+  groups via role `contribution`, classifies volume (`TrainingStatus`) and recovery
+  (`MuscleReadiness` from load-scaled hours-since-last vs a per-group recovery window),
+  and maps (status × readiness) → `RecoveryAdvice`. Tunables in
+  `config/muscleIntel.config.ts` (landmarks cited to Renaissance Periodization). New enums
+  `TrainingStatus`/`MuscleReadiness`/`RecoveryAdvice`; 18 EN/FR/AR `ui` keys + 3 enum maps.
+  `npm test` **102** green (+9), `build`/`lint` green.
+- **NEXT = EM9 (Admin Platform):** manage users/exercises/programs/muscle groups/coach
+  content; dashboard metrics.
 
 ### Run the backend (verify health)
 ```powershell

@@ -19,7 +19,7 @@ Supabase plan in the older docs.
 | **EM5** | Smart Generator V2 | Splits (Full Body / Upper-Lower / PPL / Bro), recovery logic, progressive-overload recommendations | **done (2026-06-20)** |
 | **EM6** | Workout Tracking | Start/complete/save/review; persist sets/reps/weight/duration to `workout_sessions`/`workout_exercises` | **done (2026-06-20)** |
 | **EM7** | Progress Analytics | Bodyweight evolution, frequency, PRs, volume; cards + charts + weekly summaries | **done (2026-06-20)** |
-| **EM8** | Advanced Muscle Intelligence | Primary/secondary/stabilizer detail, fatigue analysis (under/over-trained), recovery recommendations | pending |
+| **EM8** | Advanced Muscle Intelligence | Primary/secondary/stabilizer detail, fatigue analysis (under/over-trained), recovery recommendations | **done (2026-06-20)** |
 | **EM9** | Admin Platform | Manage users/exercises/programs/muscle groups/coach content; dashboard metrics | pending |
 | **EM10** | Coach Platform | Coach uploads videos, creates programs, publishes educational/premium content | pending |
 | **EM11** | Subscription Architecture | FREE/PREMIUM entities, feature gates, premium guards (no Stripe yet) | pending (table seeded EM1) |

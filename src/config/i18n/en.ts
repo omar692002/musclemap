@@ -17,6 +17,9 @@ import { Weekday } from '../../domain/enums/Weekday'
 import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
 import { ProgressionStep } from '../../domain/enums/ProgressionStep'
 import { OverloadCue } from '../../domain/enums/OverloadCue'
+import { TrainingStatus } from '../../domain/enums/TrainingStatus'
+import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
+import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -158,6 +161,23 @@ export const en: Translation = {
     viewProgress: 'View progress',
     viewProgressHint: 'Volume, PRs & bodyweight',
     volumeUnitKg: 'kg',
+    navIntel: 'Intel',
+    intelTitle: 'Muscle intelligence',
+    intelSubtitle: 'Fatigue, recovery & weekly volume per muscle',
+    intelNoData: 'No muscle data yet',
+    intelNoDataHint: 'Track a workout and your fatigue, recovery and volume balance will appear here.',
+    intelReadyCount: 'ready to train',
+    intelAttentionCount: 'need attention',
+    intelWeeklySets: 'sets / week',
+    intelRecovered: 'recovered',
+    intelLastTrained: 'Last trained',
+    intelNotTrained: 'Not trained this week',
+    intelRoleVolume: 'Volume by role',
+    intelMev: 'MEV',
+    intelMav: 'MAV',
+    intelMrv: 'MRV',
+    hoursUnitShort: 'h',
+    daysUnitShort: 'd',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -289,6 +309,23 @@ export const en: Translation = {
     [OverloadCue.AddLoadAtTopReps]: 'Add weight once you hit the top reps',
     [OverloadCue.AddRepThenLoad]: 'Add a rep weekly, then add weight',
     [OverloadCue.AddRepsCutRest]: 'Add reps and trim your rest',
+  },
+  trainingStatus: {
+    [TrainingStatus.Untrained]: 'Untrained',
+    [TrainingStatus.Undertrained]: 'Under-trained',
+    [TrainingStatus.Optimal]: 'Optimal',
+    [TrainingStatus.Overtrained]: 'Over-trained',
+  },
+  muscleReadiness: {
+    [MuscleReadiness.Ready]: 'Ready',
+    [MuscleReadiness.Recovering]: 'Recovering',
+    [MuscleReadiness.Fatigued]: 'Fatigued',
+  },
+  recoveryAdvice: {
+    [RecoveryAdvice.AddVolume]: 'Add volume — train this soon',
+    [RecoveryAdvice.GoodToTrain]: 'Recovered — good to train',
+    [RecoveryAdvice.KeepResting]: 'Still recovering — rest',
+    [RecoveryAdvice.ReduceVolume]: 'High volume — ease off',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

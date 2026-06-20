@@ -16,6 +16,9 @@ import type { Weekday } from '../../domain/enums/Weekday'
 import type { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
 import type { ProgressionStep } from '../../domain/enums/ProgressionStep'
 import type { OverloadCue } from '../../domain/enums/OverloadCue'
+import type { TrainingStatus } from '../../domain/enums/TrainingStatus'
+import type { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
+import type { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -165,6 +168,24 @@ export interface UiStrings {
   readonly viewProgress: string
   readonly viewProgressHint: string
   readonly volumeUnitKg: string
+  // Advanced Muscle Intelligence (EM8).
+  readonly navIntel: string
+  readonly intelTitle: string
+  readonly intelSubtitle: string
+  readonly intelNoData: string
+  readonly intelNoDataHint: string
+  readonly intelReadyCount: string
+  readonly intelAttentionCount: string
+  readonly intelWeeklySets: string
+  readonly intelRecovered: string
+  readonly intelLastTrained: string
+  readonly intelNotTrained: string
+  readonly intelRoleVolume: string
+  readonly intelMev: string
+  readonly intelMav: string
+  readonly intelMrv: string
+  readonly hoursUnitShort: string
+  readonly daysUnitShort: string
 }
 
 /**
@@ -194,6 +215,10 @@ export interface Translation {
   readonly recoveryStatus: Readonly<Record<RecoveryStatus, string>>
   readonly progressionStep: Readonly<Record<ProgressionStep, string>>
   readonly overloadCue: Readonly<Record<OverloadCue, string>>
+  /** Advanced Muscle Intelligence vocabularies (EM8). */
+  readonly trainingStatus: Readonly<Record<TrainingStatus, string>>
+  readonly muscleReadiness: Readonly<Record<MuscleReadiness, string>>
+  readonly recoveryAdvice: Readonly<Record<RecoveryAdvice, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }

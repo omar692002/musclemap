@@ -17,6 +17,9 @@ import { Weekday } from '../../domain/enums/Weekday'
 import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
 import { ProgressionStep } from '../../domain/enums/ProgressionStep'
 import { OverloadCue } from '../../domain/enums/OverloadCue'
+import { TrainingStatus } from '../../domain/enums/TrainingStatus'
+import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
+import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -158,6 +161,23 @@ export const ar: Translation = {
     viewProgress: 'عرض التقدّم',
     viewProgressHint: 'الحجم والأرقام القياسية والوزن',
     volumeUnitKg: 'كجم',
+    navIntel: 'تحليل',
+    intelTitle: 'ذكاء العضلات',
+    intelSubtitle: 'الإجهاد والتعافي والحجم الأسبوعي لكل عضلة',
+    intelNoData: 'لا توجد بيانات عضلية بعد',
+    intelNoDataHint: 'سجّل تمرينًا وسيظهر هنا إجهاد عضلاتك وتعافيها وتوازن الحجم.',
+    intelReadyCount: 'جاهزة للتدريب',
+    intelAttentionCount: 'تحتاج انتباهًا',
+    intelWeeklySets: 'مجموعات / أسبوع',
+    intelRecovered: 'متعافٍ',
+    intelLastTrained: 'آخر تدريب',
+    intelNotTrained: 'لم تُدرَّب هذا الأسبوع',
+    intelRoleVolume: 'الحجم حسب الدور',
+    intelMev: 'MEV',
+    intelMav: 'MAV',
+    intelMrv: 'MRV',
+    hoursUnitShort: 'س',
+    daysUnitShort: 'ي',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -289,6 +309,23 @@ export const ar: Translation = {
     [OverloadCue.AddLoadAtTopReps]: 'أضف وزنًا عند بلوغ أعلى عدد تكرارات',
     [OverloadCue.AddRepThenLoad]: 'أضف تكرارًا أسبوعيًا ثم أضف وزنًا',
     [OverloadCue.AddRepsCutRest]: 'أضف تكرارات وقلّل الراحة',
+  },
+  trainingStatus: {
+    [TrainingStatus.Untrained]: 'غير مُدرَّب',
+    [TrainingStatus.Undertrained]: 'تدريب ناقص',
+    [TrainingStatus.Optimal]: 'مثالي',
+    [TrainingStatus.Overtrained]: 'إفراط في التدريب',
+  },
+  muscleReadiness: {
+    [MuscleReadiness.Ready]: 'جاهز',
+    [MuscleReadiness.Recovering]: 'يتعافى',
+    [MuscleReadiness.Fatigued]: 'مُجهَد',
+  },
+  recoveryAdvice: {
+    [RecoveryAdvice.AddVolume]: 'زد الحجم — درّبها قريبًا',
+    [RecoveryAdvice.GoodToTrain]: 'تعافى — جاهز للتدريب',
+    [RecoveryAdvice.KeepResting]: 'ما زال يتعافى — استرح',
+    [RecoveryAdvice.ReduceVolume]: 'حجم مرتفع — خفّف',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

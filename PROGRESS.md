@@ -1,5 +1,46 @@
 # Progress Log
 
+## EM8 — Advanced Muscle Intelligence (complete, 2026-06-20)
+**State:** A new **Intel** tab (6th bottom-nav tab, `Gauge`) → `features/muscle-intel/
+MuscleIntelPage.tsx` turns the EM6 workout history into per-muscle-group intelligence:
+for each major group a card shows **weekly effective sets** against its evidence-based
+**MEV/MAV/MRV** landmark bar (the fatigue/volume read), a **recovery-readiness** bar +
+% recovered with last-trained recency, a **role breakdown** (primary/secondary/
+stabilizer effective sets), and a single **recovery recommendation**. Two summary tiles
+roll up *ready-to-train* and *over-trained* counts. Honest empty state until the first
+tracked session; the screen is frontend-only (no backend change — like EM4/EM5).
+
+**The engine is pure & tested.** `features/muscle-intel/muscleIntel.ts` exposes
+`computeMuscleIntel(logs, exerciseIndex, muscleIndex, now)` → `MuscleIntelSummary`
+(injectable `now`). It folds **completed** exercises in **completed** sessions onto
+muscle groups via each involvement's role `contribution` (Primary 1.0 / Secondary 0.5 /
+Stabilizer 0.25 — same weighting as the generator's volume readout; the dataset has no
+stabilizers yet so that role reads 0 until curation, but the engine already handles it).
+Per group it derives: **weekly effective sets** over a rolling 7-day window →
+`TrainingStatus` vs landmarks (`Untrained`/`Undertrained`/`Optimal`/`Overtrained`);
+**recovery** from hours-since-last-stimulus scaled by that session's load against a
+modelled per-group recovery window → `recoveryPct` + `MuscleReadiness`
+(`Ready`/`Recovering`/`Fatigued`); and a `RecoveryAdvice` recommendation from
+(status × readiness). Tunables (landmarks, recovery hours, window, thresholds,
+displayed groups) live in `config/muscleIntel.config.ts` — MEV/MAV/MRV cited to
+Renaissance Periodization (good PFA material).
+
+**New enums:** `TrainingStatus`, `MuscleReadiness`, `RecoveryAdvice`. **i18n:** 18 new
+EN/FR/AR `ui` keys + 3 new enum label maps (`trainingStatus`/`muscleReadiness`/
+`recoveryAdvice`); TS keeps all three packs exhaustive. **Tests:** `npm test` **102**
+green (+9 `muscleIntel.test.ts`: empty defaults, ignore not-completed, role-weighted
+distribution, landmark classification, 7-day window drop-but-keep-recovery, load-scaled
+recovery bands, most-recent-session recovery driver, advice mapping, whole-body counts).
+`npm run build` (tsc+vite+PWA) + `npm run lint` green. `mvn` untouched (no backend change).
+
+**Files:** `domain/enums/{TrainingStatus,MuscleReadiness,RecoveryAdvice}.ts`,
+`config/muscleIntel.config.ts`, `features/muscle-intel/{muscleIntel.ts,MuscleIntelPage.tsx,
+__tests__/muscleIntel.test.ts}`, `config/routes.ts`, `App.tsx`, `components/BottomNav.tsx`
+(5→6 tabs), `config/labels.ts`, `config/i18n/{types,en,fr,ar}.ts`.
+
+**Next action:** EM9 — Admin Platform (manage users/exercises/programs/muscle groups/
+coach content; dashboard metrics).
+
 ## EM7 — Progress Analytics (complete, 2026-06-20)
 **State:** A new **Progress** tab (5th in the bottom nav, `TrendingUp`) surfaces a
 full analytics screen built on the EM6 session history: a **this-week summary**

@@ -17,6 +17,9 @@ import { Weekday } from '../../domain/enums/Weekday'
 import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
 import { ProgressionStep } from '../../domain/enums/ProgressionStep'
 import { OverloadCue } from '../../domain/enums/OverloadCue'
+import { TrainingStatus } from '../../domain/enums/TrainingStatus'
+import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
+import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 
 /** French. */
 export const fr: Translation = {
@@ -158,6 +161,23 @@ export const fr: Translation = {
     viewProgress: 'Voir les progrès',
     viewProgressHint: 'Volume, records et poids',
     volumeUnitKg: 'kg',
+    navIntel: 'Analyse',
+    intelTitle: 'Intelligence musculaire',
+    intelSubtitle: 'Fatigue, récupération et volume hebdomadaire par muscle',
+    intelNoData: 'Pas encore de données musculaires',
+    intelNoDataHint: 'Enregistrez une séance et votre fatigue, récupération et équilibre de volume apparaîtront ici.',
+    intelReadyCount: 'prêts à travailler',
+    intelAttentionCount: 'à surveiller',
+    intelWeeklySets: 'séries / sem.',
+    intelRecovered: 'récupéré',
+    intelLastTrained: 'Dernier travail',
+    intelNotTrained: 'Pas travaillé cette semaine',
+    intelRoleVolume: 'Volume par rôle',
+    intelMev: 'MEV',
+    intelMav: 'MAV',
+    intelMrv: 'MRV',
+    hoursUnitShort: 'h',
+    daysUnitShort: 'j',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -289,6 +309,23 @@ export const fr: Translation = {
     [OverloadCue.AddLoadAtTopReps]: 'Ajoutez de la charge une fois le haut de la fourchette atteint',
     [OverloadCue.AddRepThenLoad]: 'Ajoutez une rep par semaine, puis de la charge',
     [OverloadCue.AddRepsCutRest]: 'Ajoutez des reps et réduisez le repos',
+  },
+  trainingStatus: {
+    [TrainingStatus.Untrained]: 'Non travaillé',
+    [TrainingStatus.Undertrained]: 'Sous-travaillé',
+    [TrainingStatus.Optimal]: 'Optimal',
+    [TrainingStatus.Overtrained]: 'Surentraîné',
+  },
+  muscleReadiness: {
+    [MuscleReadiness.Ready]: 'Prêt',
+    [MuscleReadiness.Recovering]: 'En récupération',
+    [MuscleReadiness.Fatigued]: 'Fatigué',
+  },
+  recoveryAdvice: {
+    [RecoveryAdvice.AddVolume]: 'Ajoutez du volume — à travailler bientôt',
+    [RecoveryAdvice.GoodToTrain]: 'Récupéré — prêt à travailler',
+    [RecoveryAdvice.KeepResting]: 'Encore en récupération — repos',
+    [RecoveryAdvice.ReduceVolume]: 'Volume élevé — levez le pied',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

@@ -10,6 +10,7 @@ export const AppRoutes = {
   muscleMap: '/map',
   program: '/program',
   progress: '/progress',
+  intel: '/intel',
   onboarding: '/onboarding',
 } as const
 
