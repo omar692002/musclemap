@@ -130,6 +130,10 @@ export const fr: Translation = {
     perWeekUnit: '/sem',
     tunedToProfile: 'Adapté à votre profil',
     restDayHint: 'Récupérer & progresser',
+    finishWorkout: 'Terminer',
+    cancelWorkout: 'Annuler la séance',
+    savingWorkout: 'Enregistrement…',
+    doneLabel: 'Fait',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',

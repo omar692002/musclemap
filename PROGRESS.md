@@ -1,5 +1,53 @@
 # Progress Log
 
+## EM6 — Workout Tracking (complete, 2026-06-20)
+**State:** A signed-in user can now **start, run, finish and save** a workout, and the
+EM4 dashboard's streak / weekly-activity / recent sections light up from that real
+history. Sessions persist to `workout_sessions` / `workout_exercises` (per-exercise
+sets/reps/weight/`completed` + session `duration`), degrading to localStorage on the
+static (no-backend) deploy — same pattern as EM2/EM3. **No Flyway migration** (the
+columns were seeded in V1; aggregate set/rep/weight matches the schema).
+
+**Backend** (`com.musclemap.workout`): `WorkoutController` exposes `POST /api/v1/workouts`
+(201, persist a tracked session), `GET /workouts` (list, newest first), `GET /workouts/{id}`,
+`DELETE /workouts/{id}` — all on the **current** user via `@AuthenticationPrincipal
+AuthenticatedUser`, behind `anyRequest().authenticated()` (no `SecurityConfig` change).
+`WorkoutSessionService(+Impl)` builds a `WorkoutSession` with its `WorkoutExercise` children
+(positions from list order when omitted; `status` defaults to `COMPLETED`), and enforces
+**ownership** on read/delete — another user's id surfaces as **404**, never leaking existence.
+DTOs `dto/Workout{Session,Exercise}{Request,Response}` (bean-validated: `@NotBlank`
+exerciseRef, `@PositiveOrZero` numerics, weight ≤ 9999.99, rpe 0–10, `@NotEmpty` exercises).
+
+**Frontend.** New `domain/models/WorkoutLog.ts` + `domain/enums/SessionStatus.ts` (mirrors the
+backend enum). `features/workouts/workoutApi.ts` mirrors `profileApi`: backend round-trip
+(`POST|GET /workouts`) when `VITE_API_BASE_URL` + a token are present, else a localStorage
+cache (`StorageKey.WorkoutLogs`); every backend read refreshes the cache so the dashboard's
+**synchronous** read stays warm. **Full runner** `WorkoutRunner.tsx` (reached from a new
+"Start workout" CTA on `SessionPage`): a live session **timer**, per-exercise **check-off** +
+editable **reps/weight** inputs, and a **Finish** that saves sets/reps/weight/duration then
+returns home. `dashboardData.ts` is rewritten — the EM4 `getWorkoutActivity()` seam now derives
+from real logs via a pure, testable `computeActivity(logs, now)` (weekly Mon→Sun strip, this-week
+count, **streak** = consecutive trained days ending today/yesterday, 5 most-recent); a new
+`useWorkoutActivity()` hook seeds from the local cache then refreshes from the backend, and
+`Dashboard` consumes it. Sign-out clears the local logs (`clearLocalWorkouts` in `AuthContext`).
+
+**i18n:** 4 new EN/FR/AR `ui` keys (`finishWorkout`/`cancelWorkout`/`savingWorkout`/`doneLabel`);
+`startWorkout`/`repsWord`/`weightWord` reused. **Tests:** `mvn test` **22** green (+6
+`WorkoutSessionServiceImplTest`: persist+ordering, status default, missing-user, ownership 404,
+delete-missing); `npm run test` **86** green (+7 `dashboardData.test.ts`: empty baseline,
+ignore-not-completed, today strip+count+streak, multi-day streak, gap reset, streak-from-yesterday,
+recent-limit-5). `npm run build` + `lint` green.
+
+**Files:** backend `workout/WorkoutController.java`, `workout/WorkoutSessionService(+Impl).java`,
+`workout/dto/Workout{Session,Exercise}{Request,Response}.java`,
+`test/.../WorkoutSessionServiceImplTest.java`. Frontend `domain/models/WorkoutLog.ts`,
+`domain/enums/{SessionStatus,StorageKey}.ts`, `features/workouts/{workoutApi.ts,WorkoutRunner.tsx,
+SessionPage.tsx}`, `features/dashboard/{dashboardData.ts,Dashboard.tsx,__tests__/dashboardData.test.ts}`,
+`features/auth/AuthContext.tsx`, `config/i18n/{types,en,fr,ar}.ts`.
+
+**Next action:** EM7 — Progress Analytics (bodyweight evolution, frequency, PRs, volume;
+cards + charts + weekly summaries) — built on the EM6 session history.
+
 ## EM5 — Smart Generator V2 (complete, 2026-06-20)
 **State:** The program generator (`/program`) is now recovery-aware, profile-tuned,
 and ships progressive-overload guidance. **Frontend-only & pure** — the generator

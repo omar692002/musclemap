@@ -9,4 +9,5 @@ export enum StorageKey {
   AuthUser = 'musclemap.authUser',
   AuthToken = 'musclemap.authToken',
   UserProfile = 'musclemap.userProfile',
+  WorkoutLogs = 'musclemap.workoutLogs',
 }

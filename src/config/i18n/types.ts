@@ -135,6 +135,11 @@ export interface UiStrings {
   readonly perWeekUnit: string
   readonly tunedToProfile: string
   readonly restDayHint: string
+  // Workout tracking (EM6).
+  readonly finishWorkout: string
+  readonly cancelWorkout: string
+  readonly savingWorkout: string
+  readonly doneLabel: string
 }
 
 /**

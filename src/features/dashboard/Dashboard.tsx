@@ -3,7 +3,7 @@ import { CalendarDays, ChevronRight, Dumbbell, Flame, Map, Pencil, Search } from
 import type { LucideIcon } from 'lucide-react'
 import { SessionHeroCard } from '../workouts/SessionCard'
 import { recommendedSessionFor } from '../../config/recommendation.config'
-import { getWorkoutActivity } from './dashboardData'
+import { useWorkoutActivity } from './dashboardData'
 import { useProfile } from '../onboarding/ProfileContext'
 import { AppRoutes } from '../../config/routes'
 import {
@@ -109,7 +109,7 @@ function todayIndex(): number {
 export function Dashboard() {
   const { profile } = useProfile()
   const recommended = recommendedSessionFor(profile, new Date())
-  const activity = getWorkoutActivity()
+  const activity = useWorkoutActivity()
   const initials = weekdayInitials()
   const today = todayIndex()
 

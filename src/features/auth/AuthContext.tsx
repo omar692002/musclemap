@@ -4,6 +4,7 @@ import { StorageKey } from '../../domain/enums/StorageKey'
 import { disableGoogleAutoSelect } from './googleIdentity'
 import { clearStoredToken } from './authApi'
 import { clearLocalProfile } from '../onboarding/profileApi'
+import { clearLocalWorkouts } from '../workouts/workoutApi'
 
 interface AuthContextValue {
   readonly user: AuthUser | null
@@ -51,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     clearStoredToken()
     clearLocalProfile()
+    clearLocalWorkouts()
     disableGoogleAutoSelect()
     setUser(null)
   }, [])

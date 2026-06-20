@@ -130,6 +130,10 @@ export const ar: Translation = {
     perWeekUnit: '/أسبوع',
     tunedToProfile: 'مخصّص حسب ملفك',
     restDayHint: 'تعافَ وانمُ',
+    finishWorkout: 'إنهاء',
+    cancelWorkout: 'إلغاء التمرين',
+    savingWorkout: '…جارٍ الحفظ',
+    doneLabel: 'تم',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',

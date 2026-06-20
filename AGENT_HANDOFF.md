@@ -54,9 +54,19 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   ("Tuned to your profile" chip). New enums `Weekday`/`RecoveryStatus`/`ProgressionStrategy`/
   `ProgressionStep`/`OverloadCue`; new EN/FR/AR i18n maps; `mvn` untouched; `npm run test`
   **79** green, `build`/`lint` green.
-- **NEXT = EM6 (Workout Tracking):** start/complete/save/review; persist sets/reps/weight/
-  duration to `workout_sessions`/`workout_exercises`. Also lights up the EM4 dashboard's
-  streak/activity/recent sections via the `getWorkoutActivity()` seam in `dashboardData.ts`.
+- **EM6 (Workout Tracking) is DONE** (2026-06-20). A **full runner** (`features/workouts/
+  WorkoutRunner.tsx`, reached from a "Start workout" CTA on `SessionPage`) gives a live timer,
+  per-exercise check-off + editable reps/weight, and a **Finish** that persists the session
+  (sets/reps/weight/duration) and returns home. Backend `com.musclemap.workout`:
+  `WorkoutController` (`POST|GET|GET{id}|DELETE /api/v1/workouts`) + `WorkoutSessionService(+Impl)`
+  (current-user-scoped, ownership-checked → 404, status defaults `COMPLETED`); DTOs in
+  `workout/dto`. Frontend `workoutApi.ts` mirrors `profileApi` (backend when `VITE_API_BASE_URL`
+  + token, else `StorageKey.WorkoutLogs` localStorage). The EM4 `getWorkoutActivity()` seam now
+  derives from real logs via pure `computeActivity(logs, now)` (streak / weekly strip / recent),
+  surfaced through a new `useWorkoutActivity()` hook. **No Flyway migration** (V1 columns).
+  `mvn test` **22** green, `npm run test` **86** green, `build`/`lint` green.
+- **NEXT = EM7 (Progress Analytics):** bodyweight evolution, frequency, PRs, volume; cards +
+  charts + weekly summaries — built on the EM6 session history.
 
 ### Run the backend (verify health)
 ```powershell

@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 import { Navigate, useParams } from 'react-router-dom'
-import { RefreshCw } from 'lucide-react'
+import { Play, RefreshCw } from 'lucide-react'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { sessionExercises, sessionTitle, sessionSubtitle } from './sessionPlan'
+import { WorkoutRunner } from './WorkoutRunner'
 import { SESSION_BY_ID, SESSION_HERO_GRADIENT } from '../../config/sessions.config'
 import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
@@ -17,6 +18,7 @@ export function SessionPage() {
   const session = params.id ? SESSION_BY_ID.get(decodeURIComponent(params.id)) : undefined
   const { exercises, muscleIndex, loading } = useExerciseData()
   const [seed, setSeed] = useState(0)
+  const [running, setRunning] = useState(false)
 
   const items = useMemo(
     () => (session ? sessionExercises(session, exercises, muscleIndex, seed) : []),
@@ -48,38 +50,61 @@ export function SessionPage() {
         </div>
       </header>
 
-      <div className="mb-4">
-        <WarmupBlock />
-      </div>
-
-      {loading ? (
-        <RowListSkeleton count={6} />
+      {running ? (
+        <WorkoutRunner
+          items={items}
+          sessionId={session.id}
+          focus={session.focus ?? null}
+          title={sessionTitle(session)}
+          onCancel={() => setRunning(false)}
+        />
       ) : (
-        <section className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-          <div className="mb-1 flex items-center justify-between gap-2">
-            <h2 className="text-sm font-semibold text-zinc-900">
-              {UiText.exercisesHeading}
-              <span className="ms-1.5 text-xs font-normal text-zinc-400">{items.length}</span>
-            </h2>
+        <>
+          <div className="mb-4">
+            <WarmupBlock />
+          </div>
+
+          {loading ? (
+            <RowListSkeleton count={6} />
+          ) : (
+            <section className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+              <div className="mb-1 flex items-center justify-between gap-2">
+                <h2 className="text-sm font-semibold text-zinc-900">
+                  {UiText.exercisesHeading}
+                  <span className="ms-1.5 text-xs font-normal text-zinc-400">{items.length}</span>
+                </h2>
+                <button
+                  type="button"
+                  onClick={() => setSeed((value) => value + 1)}
+                  className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 active:scale-95"
+                >
+                  <RefreshCw className="h-3.5 w-3.5" aria-hidden />
+                  {UiText.regenerate}
+                </button>
+              </div>
+              {items.length === 0 ? (
+                <p className="py-2 text-sm text-zinc-400">{UiText.emptyDay}</p>
+              ) : (
+                <ul className="flex flex-col divide-y divide-zinc-100">
+                  {items.map((item) => (
+                    <WorkoutExerciseRow key={item.exercise.id} item={item} />
+                  ))}
+                </ul>
+              )}
+            </section>
+          )}
+
+          {!loading && items.length > 0 ? (
             <button
               type="button"
-              onClick={() => setSeed((value) => value + 1)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 active:scale-95"
+              onClick={() => setRunning(true)}
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-2xl bg-orange-600 py-3.5 text-base font-semibold text-white shadow-lg shadow-orange-600/20 transition hover:bg-orange-700 active:scale-[0.99]"
             >
-              <RefreshCw className="h-3.5 w-3.5" aria-hidden />
-              {UiText.regenerate}
+              <Play className="h-5 w-5" aria-hidden />
+              {UiText.startWorkout}
             </button>
-          </div>
-          {items.length === 0 ? (
-            <p className="py-2 text-sm text-zinc-400">{UiText.emptyDay}</p>
-          ) : (
-            <ul className="flex flex-col divide-y divide-zinc-100">
-              {items.map((item) => (
-                <WorkoutExerciseRow key={item.exercise.id} item={item} />
-              ))}
-            </ul>
-          )}
-        </section>
+          ) : null}
+        </>
       )}
     </div>
   )
