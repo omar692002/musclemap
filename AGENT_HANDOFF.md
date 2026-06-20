@@ -3,6 +3,31 @@
 This is the entry point for any new session/agent continuing **MuscleMap**.
 Read this, then `PROGRESS.md` (current state) and `ROADMAP.md` (what's next).
 
+## ⭐ ACTIVE PROGRAM: PFA Evolution Sprint (started 2026-06-20)
+The project is now in a **12-milestone evolution sprint** (ROADMAP → "PFA Evolution Sprint",
+EM1–EM12) to become a production-ready fitness platform on a **real backend**. Work
+**one milestone at a time**; each must leave the app stable.
+
+- **Backend = Spring Boot 3** (full), in a monorepo **`/backend`** Maven module, deployed on
+  **Render**, extensible to Docker/ACR/AKS. **This supersedes the older Supabase plan** still
+  referenced lower in this file and in ARCHITECTURE.md's "T1" notes — treat those as historical.
+- **EM1 (Backend Foundation) is DONE** (2026-06-20). Spring Boot 3 + PostgreSQL + Flyway
+  (7 tables) + layered Controller→Service→Repository + roles (USER/COACH/ADMIN) + Docker +
+  Swagger. Verified: `mvn test` green, app boots on dockerized Postgres, Flyway applied,
+  `/api/v1/meta` + `/actuator/health` + `/v3/api-docs` all 200. See `backend/README.md`.
+- **NEXT = EM2 (Authentication & Security):** JWT + BCrypt + RBAC; lock down the
+  deliberately-permissive M1 `SecurityConfig`; `/auth/register|login|logout`; wire the
+  frontend's first real API call + protected routes. The `UserService.register(...)` +
+  `PasswordEncoder` bean are already in place to build on.
+
+### Run the backend (verify health)
+```powershell
+cd C:\Users\User\Desktop\cours2emeIng\musclemap\backend
+docker compose up -d db        # Postgres on host port 5433
+mvn spring-boot:run            # dev profile; http://localhost:8080/swagger-ui.html
+mvn test                       # fast unit tests, no DB needed
+```
+
 ## What this project is (1 paragraph)
 A mobile-first **PWA** (React + TS + Vite + Tailwind v4) that visualises which muscles/heads
 each exercise trains (primary/secondary/stabilizer), lets you browse by muscle group, and

@@ -1,6 +1,23 @@
 # Architecture & Conventions
 
-## Stack
+## Backend (added EM1, 2026-06-20) — `/backend`
+A **Spring Boot 3 + PostgreSQL** backend lives in the monorepo `/backend` Maven module
+(full details in `backend/README.md`). It replaces the earlier *Supabase* plan referenced
+in the "Deployment evolution" section below (kept as history).
+- **Layered Clean Architecture:** Controller → Service (interface + impl) → Spring Data
+  Repository, package-by-feature under `com.musclemap` (`user`, `workout`, `coach`,
+  `subscription`, `meta`, `common`, `config`).
+- **Flyway owns the schema** (`hibernate.ddl-auto=none`); enum columns are `VARCHAR` +
+  `CHECK` mirrored by Java enums. UUID PKs + audit timestamps via `BaseEntity`.
+- **Security:** Spring Security + `BCryptPasswordEncoder` bean in place (M1 permissive;
+  JWT + RBAC arrive in EM2). Config via `@ConfigurationProperties` (no magic strings).
+- **Deploy:** multi-stage Docker image → **Render** (frontend stays on GitHub Pages),
+  portable to ACR/AKS unchanged. `dev`/`prod` profiles; prod secrets come from env.
+- **Frontend ↔ backend:** not yet wired (frontend still 100% static); EM2 adds the first
+  real API integration (auth). A future `ApiExerciseRepository` plugs into the existing
+  frontend repository/interface seam with zero UI change.
+
+## Stack (frontend)
 - **React 19 + TypeScript**, bundled with **Vite**.
 - **Tailwind CSS v4** (via `@tailwindcss/vite`) — mobile-first styling.
 - **vite-plugin-pwa** — installable, offline-capable PWA.

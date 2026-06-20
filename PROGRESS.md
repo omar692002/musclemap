@@ -1,5 +1,65 @@
 # Progress Log
 
+## EM1 — Backend Foundation (complete, 2026-06-20)
+**State:** A real Spring Boot 3 backend exists in `/backend`, boots against PostgreSQL,
+applies its Flyway schema, and serves a versioned REST API + Swagger. Verified
+end-to-end: `mvn test` green (5 unit tests), app boots on the dockerized Postgres,
+Flyway created all 7 tables + history, `GET /api/v1/meta` and `/actuator/health` return 200,
+`/v3/api-docs` (Swagger) returns 200.
+
+This is the first milestone of the **PFA Evolution Sprint** (see ROADMAP → "PFA Evolution
+Sprint"). Backend stack confirmed with the owner: **Spring Boot 3** (not the older
+Supabase plan), monorepo `/backend`, deploy on **Render**, extensible to Docker/ACR/AKS.
+
+**Architecture (Clean / SOLID, Controller → Service → Repository):**
+- Package-by-feature under `com.musclemap`: `user`, `workout`, `coach`, `subscription`,
+  `meta`, plus `common` (BaseEntity, ApiError, GlobalExceptionHandler, ResourceNotFoundException)
+  and `config` (SecurityConfig, OpenApiConfig, MuscleMapProperties).
+- **Flyway is the single source of truth** for the schema; `hibernate.ddl-auto=none`
+  (Hibernate never alters the DB). Enum columns are `VARCHAR` + `CHECK` kept in lockstep
+  with Java enums (`Role`, `Gender`, `FitnessLevel`, `TrainingGoal`, `SplitType`,
+  `SessionStatus`, `SubscriptionPlan`, `SubscriptionStatus`).
+- UUID PKs + audit timestamps via `BaseEntity`. No magic strings: API base path, CORS
+  origins and app metadata bound through `MuscleMapProperties` (`@ConfigurationProperties`).
+
+**Schema (`V1__init_schema.sql`):** `users`, `user_profiles`, `generated_programs`,
+`workout_sessions`, `workout_exercises`, `coach_videos`, `subscriptions` — UUID PKs, FKs
+with sensible cascade rules, indexes, and CHECK constraints for all enum columns.
+
+**Roles:** USER / COACH / ADMIN (`com.musclemap.user.Role`), persisted on `users.role`.
+Enforcement (Spring Security RBAC + JWT) is **EM2** — M1's `SecurityConfig` is deliberately
+permissive/stateless so the foundation is browsable, but the `BCryptPasswordEncoder` bean and
+`UserService.register(...)` (hashes passwords, normalizes email, rejects duplicates) are
+already in place for EM2.
+
+**Cross-cutting:** `GlobalExceptionHandler` (@RestControllerAdvice) → uniform `ApiError`
+envelope; bean validation starter wired; Actuator health probes for Render; springdoc
+Swagger UI at `/swagger-ui.html`.
+
+**Containerization / deploy:** multi-stage `backend/Dockerfile` (Maven build → slim JRE,
+non-root). `backend/docker-compose.yml` runs Postgres on host **5433** (avoids clashing
+with a locally-installed Postgres on 5432) and, with `--profile full`, the API too.
+`dev`/`prod` Spring profiles; prod reads all DB creds + CORS origins from env (no secrets in
+git). Render steps documented in `backend/README.md`.
+
+**Files added:** entire `backend/` module — `pom.xml`, `Dockerfile`, `.dockerignore`,
+`.gitignore`, `docker-compose.yml`, `README.md`, `src/main/resources/{application.yml,
+application-dev.yml,application-prod.yml,db/migration/V1__init_schema.sql}`,
+`src/main/java/com/musclemap/**` (application, config, common, user, workout, coach,
+subscription, meta), `src/test/java/.../UserServiceImplTest.java`.
+
+**Risks / notes:**
+- Local JDK is 18; the project targets Java 17 bytecode (`maven.compiler.release=17`) and
+  the Docker build uses Temurin 17 — consistent everywhere.
+- `workout_exercises` tracks set/rep/weight at the exercise level (aggregate). If EM6 needs
+  per-set rows, add a `workout_sets` table via a new Flyway migration (don't edit V1).
+- Frontend is NOT yet wired to the backend (still 100% static). EM2 introduces the first
+  real API integration (auth). The repository/interface seam on the frontend is where a
+  future `ApiExerciseRepository` would plug in.
+
+**Next action:** EM2 — Authentication & Security (JWT, RBAC, lock down `SecurityConfig`,
+`/auth/register|login|logout`, frontend auth client + protected routes).
+
 ## M0 — Project setup (complete)
 **State:** A deployable PWA skeleton with the future-proofing baked in. Production build is green
 (`npm run build` -> tsc + vite + PWA service worker all pass).

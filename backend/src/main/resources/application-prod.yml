@@ -1,0 +1,24 @@
+# ---------------------------------------------------------------------------
+# Production profile (Render today; portable to Docker/ACR/AKS later).
+# All secrets/connection details come from environment variables - nothing is
+# hardcoded. On Render set: SPRING_DATASOURCE_URL, SPRING_DATASOURCE_USERNAME,
+# SPRING_DATASOURCE_PASSWORD, MUSCLEMAP_CORS_ALLOWED_ORIGINS.
+# ---------------------------------------------------------------------------
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX:5}
+  jpa:
+    show-sql: false
+
+musclemap:
+  cors:
+    allowed-origins: ${MUSCLEMAP_CORS_ALLOWED_ORIGINS:https://omar692002.github.io}
+
+logging:
+  level:
+    root: INFO
+    com.musclemap: INFO

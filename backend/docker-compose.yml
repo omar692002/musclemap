@@ -1,0 +1,43 @@
+# ---------------------------------------------------------------------------
+# Local development stack.
+#   docker compose up -d db                 # just PostgreSQL (run the API from your IDE/mvn)
+#   docker compose --profile full up -d     # PostgreSQL + the backend container
+# ---------------------------------------------------------------------------
+services:
+  db:
+    image: postgres:16
+    container_name: musclemap-db
+    environment:
+      POSTGRES_DB: musclemap
+      POSTGRES_USER: musclemap
+      POSTGRES_PASSWORD: musclemap
+    ports:
+      # Host 5433 -> container 5432, so it never clashes with a locally-installed Postgres.
+      - "5433:5432"
+    volumes:
+      - musclemap-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U musclemap -d musclemap"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: .
+    container_name: musclemap-backend
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/musclemap
+      SPRING_DATASOURCE_USERNAME: musclemap
+      SPRING_DATASOURCE_PASSWORD: musclemap
+      PORT: 8080
+    ports:
+      - "8080:8080"
+    profiles:
+      - full
+
+volumes:
+  musclemap-pgdata:
