@@ -1,5 +1,46 @@
 # Progress Log
 
+## EM4 — Personalized Dashboard (complete, 2026-06-20)
+**State:** The static session launcher on Home is replaced, for a signed-in
+**onboarded** user, by a profile-driven dashboard. Signed-out / not-yet-onboarded
+users still get the original session launcher (now `SessionLanding` inside
+`HomePage`) plus the EM3 onboarding nudge, so nothing regresses.
+
+**Frontend** (`features/dashboard/**` — EM4 is frontend-only; it consumes the
+EM3 profile and needs no backend change). `Dashboard.tsx` renders, top to bottom:
+a **goal-aware recommended workout** (`config/recommendation.config.ts`:
+`recommendedSessionFor` surfaces the cardio session for `LOSE_FAT` /
+`IMPROVE_ENDURANCE`, otherwise the strength-day rotation `suggestedSessionFor`;
+falls back to the rotation when no profile/goal), **streak** + **this-week** stat
+cards (this-week shows `count / weeklyFrequency` from the profile), a **weekly
+activity** strip (Mon→Sun, today ringed, completed days filled), a **profile
+summary** (goal, level/experience chips, age·height·weight, **Edit profile** →
+`/onboarding`), **recent workouts**, and **quick actions** (build / browse /
+muscle map). `HomePage` branches on `user && profile.onboardingCompleted`; the
+shared `QuickTile` moved into `Dashboard.tsx` (re-exported, used by both paths).
+
+**Honest data caveat:** real session history is **EM6 (Workout Tracking)**. Until
+then there is no source of truth for streak / weekly-activity / recent-workouts,
+so `dashboardData.ts` returns `EMPTY_ACTIVITY` and the UI shows motivating empty
+states. `getWorkoutActivity()` is the single seam EM6 swaps for a real read — the
+`WorkoutActivity` / `RecentWorkout` shapes the UI consumes are already defined.
+
+**i18n:** 16 new `UiStrings` keys (recommended/profile/streak/activity/recent/
+quick-actions + `ageWord`/`heightWord`/`weightWord`/`yearsUnit`/`levelWord`/
+`experienceWord`) across EN/FR/AR; weekday initials + recent dates come from
+`Intl.DateTimeFormat(getActiveLanguage())`, so the strip is localized + RTL-safe.
+
+**Verified:** `npm run build` (tsc+vite+PWA) green, `npm run lint` clean,
+`npm run test` **74** green (+3 `config/__tests__/recommendation.test.ts`).
+
+**Files:** `features/dashboard/{Dashboard.tsx,dashboardData.ts}`,
+`config/recommendation.config.ts`, `config/__tests__/recommendation.test.ts`,
+`features/workouts/HomePage.tsx`, `config/i18n/{types,en,fr,ar}.ts`.
+
+**Next action:** EM5 — Smart Generator V2 (splits Full Body / Upper-Lower / PPL /
+Bro, recovery logic, progressive-overload recommendations), or EM6 — Workout
+Tracking (which also lights up this dashboard's streak/activity/recent sections).
+
 ## EM3 — Premium Onboarding (complete, 2026-06-20)
 **State:** A signed-in user can complete a mobile-first onboarding wizard that
 collects their profile (age/gender/height/weight/level/experience/goal/frequency/

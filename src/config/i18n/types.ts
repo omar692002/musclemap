@@ -105,6 +105,23 @@ export interface UiStrings {
   readonly skipStep: string
   readonly finishOnboarding: string
   readonly savingProfile: string
+  // Personalized dashboard (EM4).
+  readonly recommendedForYou: string
+  readonly yourProfile: string
+  readonly statDayStreak: string
+  readonly statThisWeek: string
+  readonly weeklyActivityTitle: string
+  readonly recentWorkoutsTitle: string
+  readonly noRecentWorkouts: string
+  readonly noRecentWorkoutsHint: string
+  readonly streakEmptyHint: string
+  readonly quickActionsTitle: string
+  readonly levelWord: string
+  readonly experienceWord: string
+  readonly ageWord: string
+  readonly heightWord: string
+  readonly weightWord: string
+  readonly yearsUnit: string
 }
 
 /**

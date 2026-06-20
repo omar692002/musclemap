@@ -34,9 +34,17 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   end-to-end on dockerized Postgres (401 unauth, empty→completed, equipment JSON round-trip, 400 on
   bad enum/range); `mvn test` 16 green, `npm run build`/`lint`/`test` (71) green. No Flyway
   migration (columns existed since V1).
-- **NEXT = EM4 (Personalized Dashboard):** replace the static Home with a profile-driven dashboard
-  (welcome, profile summary, goal, recommended workout, weekly activity, streak, recent workouts,
-  quick actions). Build on the EM3 `UserProfile` + `useProfile()`/`needsOnboarding` signal.
+- **EM4 (Personalized Dashboard) is DONE** (2026-06-20). Frontend-only — consumes the EM3 profile,
+  no backend change. For a signed-in **onboarded** user `HomePage` renders `features/dashboard/
+  Dashboard.tsx` (goal-aware recommended workout via `config/recommendation.config.ts`, streak +
+  this-week stat cards, Mon→Sun activity strip, profile summary with Edit-profile link, recent
+  workouts, quick actions); signed-out / not-onboarded users keep the original launcher
+  (`SessionLanding`). Streak/activity/recent have **no data source until EM6** — `dashboardData.ts`
+  returns `EMPTY_ACTIVITY` (honest empty states); `getWorkoutActivity()` is the one seam EM6 swaps.
+  16 new EN/FR/AR i18n keys; `npm run build`/`lint`/`test` (**74**, +3 recommendation) green.
+- **NEXT = EM5 (Smart Generator V2):** splits (Full Body / Upper-Lower / PPL / Bro), recovery
+  logic, progressive-overload recommendations. (EM6 Workout Tracking also lights up the EM4
+  dashboard's streak/activity/recent sections via the `getWorkoutActivity()` seam.)
 
 ### Run the backend (verify health)
 ```powershell
