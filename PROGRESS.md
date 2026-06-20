@@ -1,5 +1,41 @@
 # Progress Log
 
+## EM5 — Smart Generator V2 (complete, 2026-06-20)
+**State:** The program generator (`/program`) is now recovery-aware, profile-tuned,
+and ships progressive-overload guidance. **Frontend-only & pure** — the generator
+stays client TS (like V1/EM4); no backend change. The four splits already existed
+(Full Body / Upper-Lower / PPL / BodyPart = the "Bro" split), so the milestone's new
+value is **recovery logic + progressive overload + profile-awareness**.
+
+**Recovery logic.** `generateProgram` no longer just cycles `params.days` templates;
+it lays them over a **Mon→Sun calendar** via `WEEKLY_LAYOUTS` (config, keyed by
+day-count) so sessions are spaced (e.g. 3 days → Mon/Wed/Fri) and the gaps become
+**rest days** (`DayFocus.Rest`, `WorkoutDay.isRest`, empty exercises). A per-group
+**recovery readout** (`GroupRecovery` → `RecoveryReadout.tsx`) reports sessions/week
+and the smallest calendar gap, flagged **Optimal (≥48h)** or **Overlap** (back-to-back),
+via `computeRecovery` + `minCyclicGap` (7-day wrap) and `RecoveryConfig.optimalGapDays`.
+
+**Progressive overload.** Goal → `ProgressionStrategy` (Strength=LinearLoad,
+Hypertrophy=DoubleProgression, Endurance=RepsAndDensity) in `config/progression.config.ts`.
+Each prescribed lift gets a mechanic-aware **`OverloadCue`** (`WorkoutExerciseRow`
+renders it under sets×reps, present only on generated programs so quick sessions are
+unchanged). `WorkoutProgram.progression` is a **4-week mesocycle** (`ProgressionWeek[]`,
+3 progressive weeks + deload) → `ProgressionPlanCard.tsx`.
+
+**Profile-awareness.** `config/generatorProfile.ts` `prefillFromProfile()` maps the EM3
+`UserProfile` → split/days/goal/equipment (`ProfileGoal`→`TrainingGoal`, weeklyFrequency→
+days clamped to `dayOptions`, split by frequency). `ProgramGeneratorPage` applies it once
+when an onboarded profile loads (ref-guarded) and shows a **"Tuned to your profile"** chip
+that clears when the user edits a control. Falls back to `DEFAULT_PREFILL` signed-out /
+on the static deploy.
+
+**New enums:** `Weekday`, `RecoveryStatus`, `ProgressionStrategy`, `ProgressionStep`,
+`OverloadCue`; `DayFocus.Rest`. **i18n:** new `weekday`/`recoveryStatus`/`progressionStep`/
+`overloadCue` maps + 8 `ui` keys across EN/FR/AR (TS enforces all three). **Tests:**
+`programGenerator.test.ts` rewritten for the 7-day shape + new coverage (rest-day
+insertion, overload tagging, recovery Optimal vs Overlap, 4-week plan per goal) — **79**
+green (was 74). `npm run build` + `lint` green.
+
 ## EM4 — Personalized Dashboard (complete, 2026-06-20)
 **State:** The static session launcher on Home is replaced, for a signed-in
 **onboarded** user, by a profile-driven dashboard. Signed-out / not-yet-onboarded

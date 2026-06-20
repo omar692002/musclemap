@@ -13,6 +13,10 @@ import { Gender } from '../../domain/enums/Gender'
 import { FitnessLevel } from '../../domain/enums/FitnessLevel'
 import { ProfileGoal } from '../../domain/enums/ProfileGoal'
 import { TrainingExperience } from '../../domain/enums/TrainingExperience'
+import { Weekday } from '../../domain/enums/Weekday'
+import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
+import { ProgressionStep } from '../../domain/enums/ProgressionStep'
+import { OverloadCue } from '../../domain/enums/OverloadCue'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -118,6 +122,14 @@ export const ar: Translation = {
     heightWord: 'الطول',
     weightWord: 'الوزن',
     yearsUnit: 'سنة',
+    recoveryTitle: 'الاستشفاء',
+    recoveryHelp: 'الحصص موزّعة لتمنح كل عضلة نحو 48 ساعة للتعافي.',
+    progressionTitle: 'تدرّج على 4 أسابيع',
+    progressionHelp: 'كرّر هذا الأسبوع مع تقدّم بسيط في كل مرة.',
+    weekWord: 'الأسبوع',
+    perWeekUnit: '/أسبوع',
+    tunedToProfile: 'مخصّص حسب ملفك',
+    restDayHint: 'تعافَ وانمُ',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -199,6 +211,7 @@ export const ar: Translation = {
     [DayFocus.ChestTriceps]: 'صدر وثلاثية الرؤوس',
     [DayFocus.BackBiceps]: 'ظهر وذات الرأسين',
     [DayFocus.ShouldersCore]: 'أكتاف وعضلات الوسط',
+    [DayFocus.Rest]: 'راحة',
   },
   level: {
     [ExerciseLevel.Beginner]: 'مبتدئ',
@@ -222,6 +235,32 @@ export const ar: Translation = {
     [ExerciseCategory.Strength]: 'قوة',
     [ExerciseCategory.Stretching]: 'إطالة',
     [ExerciseCategory.Strongman]: 'الرجل القوي',
+  },
+  weekday: {
+    [Weekday.Mon]: 'الإثنين',
+    [Weekday.Tue]: 'الثلاثاء',
+    [Weekday.Wed]: 'الأربعاء',
+    [Weekday.Thu]: 'الخميس',
+    [Weekday.Fri]: 'الجمعة',
+    [Weekday.Sat]: 'السبت',
+    [Weekday.Sun]: 'الأحد',
+  },
+  recoveryStatus: {
+    [RecoveryStatus.Optimal]: 'استشفاء جيّد',
+    [RecoveryStatus.Overlap]: 'تدريب في يومين متتاليين',
+  },
+  progressionStep: {
+    [ProgressionStep.Baseline]: 'حدّد أوزان العمل',
+    [ProgressionStep.AddLoad]: 'أضف وزنًا قليلًا',
+    [ProgressionStep.AddReps]: 'أضف تكرارات بنفس الوزن',
+    [ProgressionStep.AddLoadResetReps]: 'أضف وزنًا وابدأ من الأسفل',
+    [ProgressionStep.CutRest]: 'نفس الوزن مع راحة أقصر',
+    [ProgressionStep.Deload]: 'تخفيف — خفّف وتعافَ',
+  },
+  overloadCue: {
+    [OverloadCue.AddLoadAtTopReps]: 'أضف وزنًا عند بلوغ أعلى عدد تكرارات',
+    [OverloadCue.AddRepThenLoad]: 'أضف تكرارًا أسبوعيًا ثم أضف وزنًا',
+    [OverloadCue.AddRepsCutRest]: 'أضف تكرارات وقلّل الراحة',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

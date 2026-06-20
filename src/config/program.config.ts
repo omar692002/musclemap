@@ -2,6 +2,7 @@ import { SplitType } from '../domain/enums/SplitType'
 import { MuscleGroup } from '../domain/enums/MuscleGroup'
 import { TrainingGoal } from '../domain/enums/TrainingGoal'
 import { DayFocus } from '../domain/enums/DayFocus'
+import { Weekday } from '../domain/enums/Weekday'
 
 /** A day template: a focus (translation key) and the muscle groups it targets. */
 export interface DayTemplate {
@@ -52,6 +53,9 @@ export const SPLIT_PATTERNS: Readonly<Record<SplitType, readonly DayTemplate[]>>
   [SplitType.BodyPart]: [CHEST_TRICEPS, BACK_BICEPS, LEGS, SHOULDERS_CORE],
 }
 
+/** A rest day trains nothing — present so the focus map stays exhaustive (EM5). */
+const REST: DayTemplate = { focus: DayFocus.Rest, groups: [] }
+
 /** Muscle groups trained by each day focus (the quick-session launcher uses this). */
 export const TEMPLATE_BY_FOCUS: Readonly<Record<DayFocus, DayTemplate>> = {
   [DayFocus.Push]: PUSH,
@@ -63,6 +67,7 @@ export const TEMPLATE_BY_FOCUS: Readonly<Record<DayFocus, DayTemplate>> = {
   [DayFocus.ChestTriceps]: CHEST_TRICEPS,
   [DayFocus.BackBiceps]: BACK_BICEPS,
   [DayFocus.ShouldersCore]: SHOULDERS_CORE,
+  [DayFocus.Rest]: REST,
 }
 
 /** A prescription: how many sets and what rep range for one exercise. */
@@ -97,4 +102,33 @@ export const ProgramConfig = {
   defaultDays: 3,
   defaultSplit: SplitType.PushPullLegs,
   defaultGoal: TrainingGoal.Hypertrophy,
+} as const
+
+/** The week, Monday→Sunday, used to lay out training and rest days (EM5). */
+export const WEEK_ORDER: readonly Weekday[] = [
+  Weekday.Mon,
+  Weekday.Tue,
+  Weekday.Wed,
+  Weekday.Thu,
+  Weekday.Fri,
+  Weekday.Sat,
+  Weekday.Sun,
+]
+
+/**
+ * Which weekdays host the N training sessions — the gaps become rest days. The
+ * layouts spread sessions so muscle groups get ≥48h between hits (recovery
+ * logic, EM5). Keyed by the day-count options in {@link ProgramConfig.dayOptions}.
+ */
+export const WEEKLY_LAYOUTS: Readonly<Record<number, readonly Weekday[]>> = {
+  2: [Weekday.Mon, Weekday.Thu],
+  3: [Weekday.Mon, Weekday.Wed, Weekday.Fri],
+  4: [Weekday.Mon, Weekday.Tue, Weekday.Thu, Weekday.Fri],
+  5: [Weekday.Mon, Weekday.Tue, Weekday.Wed, Weekday.Fri, Weekday.Sat],
+  6: [Weekday.Mon, Weekday.Tue, Weekday.Wed, Weekday.Thu, Weekday.Fri, Weekday.Sat],
+}
+
+export const RecoveryConfig = {
+  /** A group trained with at least this calendar gap (days) is well-recovered. */
+  optimalGapDays: 2,
 } as const

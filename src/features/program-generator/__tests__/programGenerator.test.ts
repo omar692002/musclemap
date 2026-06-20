@@ -11,8 +11,10 @@ import { ExerciseMechanic } from '../../../domain/enums/ExerciseMechanic'
 import { SplitType } from '../../../domain/enums/SplitType'
 import { TrainingGoal } from '../../../domain/enums/TrainingGoal'
 import { DayFocus } from '../../../domain/enums/DayFocus'
+import { RecoveryStatus } from '../../../domain/enums/RecoveryStatus'
+import { ProgressionStrategy } from '../../../domain/enums/ProgressionStrategy'
 import { generateProgram } from '../programGenerator'
-import { GOAL_SCHEMES } from '../../../config/program.config'
+import { GOAL_SCHEMES, WEEK_ORDER } from '../../../config/program.config'
 
 const MUSCLE_INDEX: ReadonlyMap<string, Muscle> = new Map([
   [MuscleId.PectoralisMajor, { id: MuscleId.PectoralisMajor, name: 'Chest', group: MuscleGroup.Chest }],
@@ -52,15 +54,33 @@ const EXERCISES: readonly Exercise[] = [
   ex('Squat', MuscleId.Quadriceps, Equipment.Barbell),
 ]
 
+/** The non-rest days of a generated week, in calendar order. */
+function trainingDays(program: ReturnType<typeof generateProgram>) {
+  return program.days.filter((day) => !day.isRest)
+}
+
 describe('generateProgram', () => {
-  it('produces the requested number of days', () => {
+  it('lays out a full Mon→Sun week with the requested number of training days', () => {
     const program = generateProgram(
       { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
       EXERCISES,
       MUSCLE_INDEX,
     )
-    expect(program.days).toHaveLength(3)
-    expect(program.days.map((d) => d.focus)).toEqual([DayFocus.Push, DayFocus.Pull, DayFocus.Legs])
+    expect(program.days).toHaveLength(WEEK_ORDER.length)
+    const training = trainingDays(program)
+    expect(training).toHaveLength(3)
+    expect(training.map((d) => d.focus)).toEqual([DayFocus.Push, DayFocus.Pull, DayFocus.Legs])
+  })
+
+  it('inserts rest days for the remaining slots (focus = Rest, no exercises)', () => {
+    const program = generateProgram(
+      { split: SplitType.FullBody, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    const rest = program.days.filter((d) => d.isRest)
+    expect(rest).toHaveLength(WEEK_ORDER.length - 3)
+    expect(rest.every((d) => d.focus === DayFocus.Rest && d.exercises.length === 0)).toBe(true)
   })
 
   it('supports the body-part split (Chest+Tri, Back+Bi, Legs, Shoulders+Core)', () => {
@@ -69,7 +89,7 @@ describe('generateProgram', () => {
       EXERCISES,
       MUSCLE_INDEX,
     )
-    expect(program.days.map((d) => d.focus)).toEqual([
+    expect(trainingDays(program).map((d) => d.focus)).toEqual([
       DayFocus.ChestTriceps,
       DayFocus.BackBiceps,
       DayFocus.Legs,
@@ -91,7 +111,7 @@ describe('generateProgram', () => {
     const program = generateProgram(
       {
         split: SplitType.FullBody,
-        days: 1,
+        days: 2,
         goal: TrainingGoal.Hypertrophy,
         equipment: new Set([Equipment.Bodyweight]),
         seed: 0,
@@ -99,7 +119,7 @@ describe('generateProgram', () => {
       EXERCISES,
       MUSCLE_INDEX,
     )
-    const equipmentUsed = program.days[0].exercises.map((e) => e.exercise.equipment)
+    const equipmentUsed = trainingDays(program).flatMap((d) => d.exercises.map((e) => e.exercise.equipment))
     expect(equipmentUsed.every((e) => e === Equipment.Bodyweight)).toBe(true)
   })
 
@@ -124,10 +144,60 @@ describe('generateProgram', () => {
       MUSCLE_INDEX,
     )
     const compoundScheme = GOAL_SCHEMES[TrainingGoal.Strength].compound
-    for (const { sets, reps } of program.days[0].exercises) {
+    for (const { sets, reps } of trainingDays(program)[0].exercises) {
       expect(sets).toBe(compoundScheme.sets)
       expect(reps).toBe(compoundScheme.repRange)
     }
+  })
+
+  it('tags every prescribed exercise with a progressive-overload cue', () => {
+    const program = generateProgram(
+      { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Strength, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    const exercises = trainingDays(program).flatMap((d) => d.exercises)
+    expect(exercises.length).toBeGreaterThan(0)
+    expect(exercises.every((e) => e.overload != null)).toBe(true)
+  })
+
+  it('spaces a 3-day week so trained groups stay well recovered', () => {
+    const program = generateProgram(
+      { split: SplitType.FullBody, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    expect(program.recovery.length).toBeGreaterThan(0)
+    // Mon/Wed/Fri layout → ≥48h between sessions for every group.
+    expect(program.recovery.every((r) => r.status === RecoveryStatus.Optimal)).toBe(true)
+  })
+
+  it('flags an overlap when a group is trained on back-to-back days', () => {
+    // Full body 6×/week trains every group on consecutive calendar days.
+    const program = generateProgram(
+      { split: SplitType.FullBody, days: 6, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    expect(program.recovery.some((r) => r.status === RecoveryStatus.Overlap)).toBe(true)
+  })
+
+  it('derives a 4-week progression plan from the goal', () => {
+    const strength = generateProgram(
+      { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Strength, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    expect(strength.progression.strategy).toBe(ProgressionStrategy.LinearLoad)
+    expect(strength.progression.weeks).toHaveLength(4)
+    expect(strength.progression.weeks.map((w) => w.week)).toEqual([1, 2, 3, 4])
+
+    const hypertrophy = generateProgram(
+      { split: SplitType.PushPullLegs, days: 3, goal: TrainingGoal.Hypertrophy, equipment: new Set(), seed: 0 },
+      EXERCISES,
+      MUSCLE_INDEX,
+    )
+    expect(hypertrophy.progression.strategy).toBe(ProgressionStrategy.DoubleProgression)
   })
 
   it('is deterministic for a given seed', () => {

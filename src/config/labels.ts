@@ -24,6 +24,11 @@ export const EXERCISE_LEVEL_LABELS = t.level
 export const EXERCISE_MECHANIC_LABELS = t.mechanic
 export const EXERCISE_FORCE_LABELS = t.force
 export const EXERCISE_CATEGORY_LABELS = t.category
+// Smart Generator V2 (EM5).
+export const WEEKDAY_LABELS = t.weekday
+export const RECOVERY_STATUS_LABELS = t.recoveryStatus
+export const PROGRESSION_STEP_LABELS = t.progressionStep
+export const OVERLOAD_CUE_LABELS = t.overloadCue
 
 /** Standard warm-up checklist shown atop each generated training day. */
 export const WARMUP_STEPS = t.warmup

@@ -13,6 +13,10 @@ import { Gender } from '../../domain/enums/Gender'
 import { FitnessLevel } from '../../domain/enums/FitnessLevel'
 import { ProfileGoal } from '../../domain/enums/ProfileGoal'
 import { TrainingExperience } from '../../domain/enums/TrainingExperience'
+import { Weekday } from '../../domain/enums/Weekday'
+import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
+import { ProgressionStep } from '../../domain/enums/ProgressionStep'
+import { OverloadCue } from '../../domain/enums/OverloadCue'
 
 /** French. */
 export const fr: Translation = {
@@ -118,6 +122,14 @@ export const fr: Translation = {
     heightWord: 'Taille',
     weightWord: 'Poids',
     yearsUnit: 'ans',
+    recoveryTitle: 'Récupération',
+    recoveryHelp: 'Les séances sont espacées pour laisser ~48h de récupération à chaque muscle.',
+    progressionTitle: 'Progression sur 4 semaines',
+    progressionHelp: 'Répétez cette semaine en progressant un peu à chaque fois.',
+    weekWord: 'Semaine',
+    perWeekUnit: '/sem',
+    tunedToProfile: 'Adapté à votre profil',
+    restDayHint: 'Récupérer & progresser',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -199,6 +211,7 @@ export const fr: Translation = {
     [DayFocus.ChestTriceps]: 'Pectoraux & Triceps',
     [DayFocus.BackBiceps]: 'Dos & Biceps',
     [DayFocus.ShouldersCore]: 'Épaules & Tronc',
+    [DayFocus.Rest]: 'Repos',
   },
   level: {
     [ExerciseLevel.Beginner]: 'Débutant',
@@ -222,6 +235,32 @@ export const fr: Translation = {
     [ExerciseCategory.Strength]: 'Musculation',
     [ExerciseCategory.Stretching]: 'Étirement',
     [ExerciseCategory.Strongman]: 'Strongman',
+  },
+  weekday: {
+    [Weekday.Mon]: 'Lun',
+    [Weekday.Tue]: 'Mar',
+    [Weekday.Wed]: 'Mer',
+    [Weekday.Thu]: 'Jeu',
+    [Weekday.Fri]: 'Ven',
+    [Weekday.Sat]: 'Sam',
+    [Weekday.Sun]: 'Dim',
+  },
+  recoveryStatus: {
+    [RecoveryStatus.Optimal]: 'Bien récupéré',
+    [RecoveryStatus.Overlap]: 'Entraîné deux jours de suite',
+  },
+  progressionStep: {
+    [ProgressionStep.Baseline]: 'Fixez vos charges de travail',
+    [ProgressionStep.AddLoad]: 'Ajoutez un peu de charge',
+    [ProgressionStep.AddReps]: 'Ajoutez des reps à la même charge',
+    [ProgressionStep.AddLoadResetReps]: 'Ajoutez de la charge, repartez en bas',
+    [ProgressionStep.CutRest]: 'Même charge, repos plus court',
+    [ProgressionStep.Deload]: 'Décharge — relâchez & récupérez',
+  },
+  overloadCue: {
+    [OverloadCue.AddLoadAtTopReps]: 'Ajoutez de la charge une fois le haut de la fourchette atteint',
+    [OverloadCue.AddRepThenLoad]: 'Ajoutez une rep par semaine, puis de la charge',
+    [OverloadCue.AddRepsCutRest]: 'Ajoutez des reps et réduisez le repos',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

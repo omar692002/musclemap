@@ -1,14 +1,14 @@
 import { Link } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, TrendingUp } from 'lucide-react'
 import type { ProgramExercise } from '../domain/models/WorkoutProgram'
 import { MediaKind } from '../domain/enums/MediaKind'
 import { exerciseDetailPath } from '../config/routes'
 import { ExerciseImage } from './ExerciseImage'
-import { UiText } from '../config/labels'
+import { UiText, OVERLOAD_CUE_LABELS } from '../config/labels'
 
 /** One exercise row in a day/session: demo thumb + name → detail, sets × reps. */
 export function WorkoutExerciseRow({ item }: { item: ProgramExercise }) {
-  const { exercise, sets, reps } = item
+  const { exercise, sets, reps, overload } = item
   const images = exercise.media.filter((media) => media.kind === MediaKind.Image).map((media) => media.url)
 
   return (
@@ -29,6 +29,12 @@ export function WorkoutExerciseRow({ item }: { item: ProgramExercise }) {
           <span className="block text-xs tabular-nums text-zinc-400">
             {sets > 1 ? `${sets} × ${reps} ${UiText.repsWord}` : reps}
           </span>
+          {overload && (
+            <span className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-orange-600">
+              <TrendingUp className="h-3 w-3 shrink-0" aria-hidden />
+              <span className="truncate">{OVERLOAD_CUE_LABELS[overload]}</span>
+            </span>
+          )}
         </span>
         <ChevronRight
           className="h-4 w-4 shrink-0 text-zinc-300 transition group-hover:translate-x-0.5 group-hover:text-zinc-500 rtl:rotate-180"
