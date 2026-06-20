@@ -3,6 +3,7 @@ package com.musclemap.coach;
 import com.musclemap.coach.dto.CoachVideoRequest;
 import com.musclemap.coach.dto.CoachVideoResponse;
 import com.musclemap.common.exception.ResourceNotFoundException;
+import com.musclemap.subscription.PremiumRequiredException;
 import com.musclemap.user.User;
 import com.musclemap.user.UserRepository;
 import org.springframework.stereotype.Service;
@@ -76,10 +77,23 @@ public class CoachServiceImpl implements CoachService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<CoachVideoResponse> listPublished() {
+    public List<CoachVideoResponse> listPublished(boolean viewerIsPremium) {
         return videoRepository.findByPublishedTrueOrderByCreatedAtDesc().stream()
-                .map(CoachVideoResponse::from)
+                .map(video -> CoachVideoResponse.forViewer(video, viewerIsPremium))
                 .toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public CoachVideoResponse getPublishedForViewer(UUID videoId, boolean viewerIsPremium) {
+        CoachVideo video = videoRepository.findById(videoId)
+                .filter(CoachVideo::isPublished)
+                // An unpublished/missing item is indistinguishable to a consumer.
+                .orElseThrow(() -> ResourceNotFoundException.of("CoachVideo", videoId));
+        if (video.isPremium() && !viewerIsPremium) {
+            throw PremiumRequiredException.forContent();
+        }
+        return CoachVideoResponse.forViewer(video, viewerIsPremium);
     }
 
     /** Loads an item and verifies the caller authored it; 404 otherwise. */

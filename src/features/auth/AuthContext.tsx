@@ -6,6 +6,7 @@ import { clearStoredToken } from './authApi'
 import { clearLocalProfile } from '../onboarding/profileApi'
 import { clearLocalWorkouts } from '../workouts/workoutApi'
 import { clearLocalBodyweight } from '../analytics/bodyweightApi'
+import { clearLocalSubscription } from '../subscription/subscriptionApi'
 
 interface AuthContextValue {
   readonly user: AuthUser | null
@@ -55,6 +56,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearLocalProfile()
     clearLocalWorkouts()
     clearLocalBodyweight()
+    clearLocalSubscription()
     disableGoogleAutoSelect()
     setUser(null)
   }, [])

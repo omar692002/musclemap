@@ -29,6 +29,17 @@ public interface CoachService {
     /** Delete one of the coach's own items. */
     void delete(UUID coachId, UUID videoId);
 
-    /** The public content library: every published item, newest first. */
-    List<CoachVideoResponse> listPublished();
+    /**
+     * The public content library: every published item, newest first. Premium
+     * items are returned but {@code locked} (and their video url withheld) unless
+     * the viewer is entitled to premium (EM11 gate).
+     */
+    List<CoachVideoResponse> listPublished(boolean viewerIsPremium);
+
+    /**
+     * A single published item for a consumer. Throws {@link com.musclemap.subscription.PremiumRequiredException}
+     * if it is premium and the viewer is not entitled (the hard guard), or a 404
+     * if it does not exist or is not published.
+     */
+    CoachVideoResponse getPublishedForViewer(UUID videoId, boolean viewerIsPremium);
 }

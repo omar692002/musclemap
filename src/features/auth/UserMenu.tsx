@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { GraduationCap, LogOut, ShieldCheck, UserCog, Video } from 'lucide-react'
+import { Crown, GraduationCap, LogOut, ShieldCheck, UserCog, Video } from 'lucide-react'
 import { isAuthEnabled, isBackendAuthEnabled } from '../../config/auth.config'
 import { UserRole } from '../../domain/enums/UserRole'
 import { AppRoutes } from '../../config/routes'
@@ -68,6 +68,14 @@ export function UserMenu() {
           >
             <UserCog className="h-3.5 w-3.5" aria-hidden />
             {UiText.editProfile}
+          </Link>
+          <Link
+            to={AppRoutes.subscription}
+            onClick={() => setOpen(false)}
+            className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+          >
+            <Crown className="h-3.5 w-3.5" aria-hidden />
+            {UiText.navSubscription}
           </Link>
           {isBackendAuthEnabled() ? (
             <Link

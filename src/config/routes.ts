@@ -14,6 +14,7 @@ export const AppRoutes = {
   admin: '/admin',
   coach: '/coach',
   content: '/content',
+  subscription: '/subscription',
   onboarding: '/onboarding',
 } as const
 

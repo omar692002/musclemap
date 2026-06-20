@@ -22,6 +22,7 @@ import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
+import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -249,7 +250,27 @@ export const en: Translation = {
     contentLoadError: "Couldn't load content.",
     contentEmpty: 'No published content yet. Check back soon.',
     contentWatch: 'Watch',
+    contentUnlock: 'Unlock with Premium',
     contentBy: 'By',
+    // Subscription Architecture (EM11).
+    navSubscription: 'Premium',
+    subscriptionTitle: 'MuscleMap Premium',
+    subscriptionSubtitle: 'Unlock premium coach content and more.',
+    subscriptionCurrentPlan: 'Current plan',
+    subscriptionUntil: 'Active until',
+    subscriptionFreeTagline: 'Everything to train',
+    subscriptionPremiumTagline: 'Coach content unlocked',
+    subscriptionFeatureBrowse: 'Full exercise library & 3D muscle map',
+    subscriptionFeatureTracking: 'Workout tracking, analytics & muscle intel',
+    subscriptionFeaturePremiumContent: 'Premium coach videos & programs',
+    subscriptionFeatureEarlyAccess: 'Early access to new content',
+    subscriptionUpgradeCta: 'Go Premium',
+    subscriptionUpgrading: 'Upgrading…',
+    subscriptionCancelCta: 'Cancel Premium',
+    subscriptionCancelling: 'Cancelling…',
+    subscriptionMockNote: 'Demo billing — no real payment is taken.',
+    subscriptionSignInNotice: 'Sign in to manage your plan',
+    subscriptionSignInHint: 'Your subscription is tied to your account.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -408,6 +429,10 @@ export const en: Translation = {
     [CoachContentType.Technique]: 'Technique',
     [CoachContentType.Education]: 'Lesson',
     [CoachContentType.Program]: 'Program',
+  },
+  subscriptionPlan: {
+    [SubscriptionPlan.Free]: 'Free',
+    [SubscriptionPlan.Premium]: 'Premium',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

@@ -22,6 +22,7 @@ import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
+import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -249,7 +250,27 @@ export const ar: Translation = {
     contentLoadError: 'تعذّر تحميل المحتوى.',
     contentEmpty: 'لا يوجد محتوى منشور بعد. عُد قريبًا.',
     contentWatch: 'مشاهدة',
+    contentUnlock: 'افتحه مع بريميوم',
     contentBy: 'بواسطة',
+    // Subscription Architecture (EM11).
+    navSubscription: 'بريميوم',
+    subscriptionTitle: 'MuscleMap بريميوم',
+    subscriptionSubtitle: 'افتح محتوى المدرّب المميّز والمزيد.',
+    subscriptionCurrentPlan: 'الخطة الحالية',
+    subscriptionUntil: 'فعّالة حتى',
+    subscriptionFreeTagline: 'كل ما يلزم للتمرين',
+    subscriptionPremiumTagline: 'محتوى المدرّب مفتوح',
+    subscriptionFeatureBrowse: 'مكتبة التمارين الكاملة وخريطة العضلات ثلاثية الأبعاد',
+    subscriptionFeatureTracking: 'تتبّع التمارين والتحليلات وذكاء العضلات',
+    subscriptionFeaturePremiumContent: 'فيديوهات وبرامج المدرّب المميّزة',
+    subscriptionFeatureEarlyAccess: 'وصول مبكّر إلى المحتوى الجديد',
+    subscriptionUpgradeCta: 'اشترك في بريميوم',
+    subscriptionUpgrading: 'جارٍ الترقية…',
+    subscriptionCancelCta: 'إلغاء بريميوم',
+    subscriptionCancelling: 'جارٍ الإلغاء…',
+    subscriptionMockNote: 'فوترة تجريبية — لا يتم أي دفع حقيقي.',
+    subscriptionSignInNotice: 'سجّل الدخول لإدارة خطتك',
+    subscriptionSignInHint: 'اشتراكك مرتبط بحسابك.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -408,6 +429,10 @@ export const ar: Translation = {
     [CoachContentType.Technique]: 'تقنية',
     [CoachContentType.Education]: 'درس',
     [CoachContentType.Program]: 'برنامج',
+  },
+  subscriptionPlan: {
+    [SubscriptionPlan.Free]: 'مجاني',
+    [SubscriptionPlan.Premium]: 'بريميوم',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

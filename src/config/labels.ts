@@ -37,6 +37,8 @@ export const RECOVERY_ADVICE_LABELS = t.recoveryAdvice
 export const USER_ROLE_LABELS = t.userRole
 // Coach Platform (EM10).
 export const COACH_CONTENT_TYPE_LABELS = t.coachContentType
+// Subscription Architecture (EM11).
+export const SUBSCRIPTION_PLAN_LABELS = t.subscriptionPlan
 
 /** Standard warm-up checklist shown atop each generated training day. */
 export const WARMUP_STEPS = t.warmup

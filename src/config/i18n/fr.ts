@@ -22,6 +22,7 @@ import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
+import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
 
 /** French. */
 export const fr: Translation = {
@@ -249,7 +250,27 @@ export const fr: Translation = {
     contentLoadError: "Impossible de charger le contenu.",
     contentEmpty: 'Aucun contenu publié pour le moment. Revenez bientôt.',
     contentWatch: 'Regarder',
+    contentUnlock: 'Débloquer avec Premium',
     contentBy: 'Par',
+    // Subscription Architecture (EM11).
+    navSubscription: 'Premium',
+    subscriptionTitle: 'MuscleMap Premium',
+    subscriptionSubtitle: 'Débloquez le contenu coach premium et plus.',
+    subscriptionCurrentPlan: 'Formule actuelle',
+    subscriptionUntil: "Actif jusqu'au",
+    subscriptionFreeTagline: "Tout pour s'entraîner",
+    subscriptionPremiumTagline: 'Contenu coach débloqué',
+    subscriptionFeatureBrowse: 'Bibliothèque complète & carte musculaire 3D',
+    subscriptionFeatureTracking: 'Suivi, analyses & intelligence musculaire',
+    subscriptionFeaturePremiumContent: 'Vidéos et programmes coach premium',
+    subscriptionFeatureEarlyAccess: 'Accès anticipé aux nouveautés',
+    subscriptionUpgradeCta: 'Passer Premium',
+    subscriptionUpgrading: 'Mise à niveau…',
+    subscriptionCancelCta: 'Annuler Premium',
+    subscriptionCancelling: 'Annulation…',
+    subscriptionMockNote: 'Facturation de démo — aucun paiement réel.',
+    subscriptionSignInNotice: 'Connectez-vous pour gérer votre formule',
+    subscriptionSignInHint: 'Votre abonnement est lié à votre compte.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -408,6 +429,10 @@ export const fr: Translation = {
     [CoachContentType.Technique]: 'Technique',
     [CoachContentType.Education]: 'Leçon',
     [CoachContentType.Program]: 'Programme',
+  },
+  subscriptionPlan: {
+    [SubscriptionPlan.Free]: 'Gratuit',
+    [SubscriptionPlan.Premium]: 'Premium',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

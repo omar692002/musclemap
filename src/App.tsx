@@ -11,6 +11,7 @@ import { MuscleIntelPage } from './features/muscle-intel/MuscleIntelPage'
 import { AdminPage } from './features/admin/AdminPage'
 import { CoachStudioPage } from './features/coach/CoachStudioPage'
 import { ContentLibraryPage } from './features/content/ContentLibraryPage'
+import { SubscriptionPage } from './features/subscription/SubscriptionPage'
 import { OnboardingPage } from './features/onboarding/OnboardingPage'
 import { TopBar } from './components/TopBar'
 import { BottomNav } from './components/BottomNav'
@@ -38,6 +39,7 @@ function App() {
           <Route path={AppRoutes.admin} element={<AdminPage />} />
           <Route path={AppRoutes.coach} element={<CoachStudioPage />} />
           <Route path={AppRoutes.content} element={<ContentLibraryPage />} />
+          <Route path={AppRoutes.subscription} element={<SubscriptionPage />} />
           <Route path={AppRoutes.onboarding} element={<OnboardingPage />} />
           <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
           <Route path="*" element={<Navigate to={AppRoutes.home} replace />} />

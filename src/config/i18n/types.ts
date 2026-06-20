@@ -21,6 +21,7 @@ import type { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
 import type { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import type { UserRole } from '../../domain/enums/UserRole'
 import type { CoachContentType } from '../../domain/enums/CoachContentType'
+import type { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -259,7 +260,27 @@ export interface UiStrings {
   readonly contentLoadError: string
   readonly contentEmpty: string
   readonly contentWatch: string
+  readonly contentUnlock: string
   readonly contentBy: string
+  // Subscription Architecture (EM11).
+  readonly navSubscription: string
+  readonly subscriptionTitle: string
+  readonly subscriptionSubtitle: string
+  readonly subscriptionCurrentPlan: string
+  readonly subscriptionUntil: string
+  readonly subscriptionFreeTagline: string
+  readonly subscriptionPremiumTagline: string
+  readonly subscriptionFeatureBrowse: string
+  readonly subscriptionFeatureTracking: string
+  readonly subscriptionFeaturePremiumContent: string
+  readonly subscriptionFeatureEarlyAccess: string
+  readonly subscriptionUpgradeCta: string
+  readonly subscriptionUpgrading: string
+  readonly subscriptionCancelCta: string
+  readonly subscriptionCancelling: string
+  readonly subscriptionMockNote: string
+  readonly subscriptionSignInNotice: string
+  readonly subscriptionSignInHint: string
 }
 
 /**
@@ -297,6 +318,8 @@ export interface Translation {
   readonly userRole: Readonly<Record<UserRole, string>>
   /** Coach platform vocabularies (EM10). */
   readonly coachContentType: Readonly<Record<CoachContentType, string>>
+  /** Subscription vocabularies (EM11). */
+  readonly subscriptionPlan: Readonly<Record<SubscriptionPlan, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }

@@ -17,6 +17,12 @@ export interface CoachVideo {
   readonly exerciseRef: string | null
   readonly muscleGroup: string | null
   readonly premium: boolean
+  /**
+   * Whether the premium gate is closed for the current viewer (EM11). When true,
+   * `videoUrl` is withheld by the backend — a FREE user can't access the source.
+   * Always false on the authoring side (a coach sees their own content in full).
+   */
+  readonly locked: boolean
   readonly published: boolean
   readonly durationSeconds: number | null
   readonly createdAt: string

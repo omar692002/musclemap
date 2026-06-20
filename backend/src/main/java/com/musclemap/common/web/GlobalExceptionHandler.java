@@ -1,6 +1,7 @@
 package com.musclemap.common.web;
 
 import com.musclemap.common.exception.ResourceNotFoundException;
+import com.musclemap.subscription.PremiumRequiredException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +25,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
         return build(HttpStatus.NOT_FOUND, ex.getMessage(), request, List.of());
+    }
+
+    /** Premium-gated content accessed without an entitling subscription (EM11). */
+    @ExceptionHandler(PremiumRequiredException.class)
+    public ResponseEntity<ApiError> handlePremiumRequired(PremiumRequiredException ex, HttpServletRequest request) {
+        return build(HttpStatus.PAYMENT_REQUIRED, ex.getMessage(), request, List.of());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

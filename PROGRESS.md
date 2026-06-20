@@ -1,5 +1,54 @@
 # Progress Log
 
+## EM11 — Subscription Architecture (complete, 2026-06-20)
+**State:** Real FREE/PREMIUM entitlement with a **server-enforced premium guard**,
+on the `subscriptions` table seeded since EM1. No Stripe — upgrade/cancel are a
+**mock billing** flow, but the entitlement model and the content gate are real.
+
+**Backend** (`com.musclemap.subscription`). `SubscriptionService(+Impl)` resolves
+the current user's subscription, **lazily provisioning a FREE row on first access**
+(no backfill), and exposes `current` / `isPremium` / `upgrade` / `cancel`.
+`isPremium` is the single entitlement rule: plan `PREMIUM`, status `ACTIVE`/`TRIALING`,
+and (if set) the mock period not elapsed. `upgrade` sets PREMIUM + a 30-day
+`currentPeriodEnd` (named constant, `externalRef` stays null = no payment provider);
+`cancel` returns to FREE. `SubscriptionController` exposes `GET /api/v1/subscription`,
+`POST /subscription/upgrade`, `POST /subscription/cancel` — all current-user-scoped
+via the principal, under `anyRequest().authenticated()` (no `SecurityConfig` change).
+`SubscriptionRepository` gained `findByUserId`.
+
+**The premium guard** gates EM10's premium content. `ContentController` now resolves
+the caller's entitlement per request: `GET /content/videos` returns published items
+but **premium items come back `locked` with their `videoUrl` withheld** for non-premium
+viewers (`CoachVideoResponse.forViewer` — a real server-side strip, not just a UI flag),
+and a new `GET /content/videos/{id}` watch endpoint is a **hard 402 guard**
+(`PremiumRequiredException` → `402 Payment Required` in `GlobalExceptionHandler`, chosen
+over 403 so the client shows an upgrade prompt). `CoachService.listPublished` is now
+viewer-aware; the coach's own authoring library is never locked. New field
+`CoachVideoResponse.locked`.
+
+**Frontend.** New `SubscriptionPlan`/`SubscriptionStatus` enums + `Subscription` model
+(mirrors the backend, carries the derived `premium` flag). `features/subscription/`:
+`subscriptionApi.ts` is **dual-path** like the EM6/EM7 clients (backend round-trip when
+`VITE_API_BASE_URL` + token, else a localStorage mock so the upgrade flow still demos on
+the static deploy); `SubscriptionContext` (`isPremium` single source of truth, seeds from
+cache then refreshes on sign-in, cleared on sign-out — `clearLocalSubscription` added to
+`AuthContext`); `SubscriptionPage.tsx` (`/subscription`) — current-plan banner, FREE-vs-
+PREMIUM feature comparison, mock upgrade/cancel, sign-in notice when signed out.
+`ContentLibraryPage` now renders **locked** premium cards (blurred lock overlay + an
+"Unlock with Premium" CTA → `/subscription`) instead of a watch link. User-menu **Premium**
+entry for any signed-in user. New `StorageKey.Subscription`; `SubscriptionProvider` wraps
+`App` under `ProfileProvider`. 19 EN/FR/AR `ui` keys + a `subscriptionPlan` label map.
+
+**Quality.** `mvn test` **57** green (+8 `SubscriptionServiceImplTest`: lazy FREE provision,
+missing-user 404, premium-true within period, false for FREE / expired / cancelled, upgrade
+sets a future period + null ref, cancel returns to FREE; +5 `CoachServiceImplTest`: free item
+unlocked, premium locked + url stripped for free viewer, premium unlocked for premium viewer,
+402 for free viewer on watch, unpublished → 404). `npm test` **102** green, `npm run build`/
+`lint` green. App version 0.4.0→0.5.0 / milestone "EM11 - Subscription Architecture".
+
+**Next action:** EM12 — Product Polish (animations, skeletons, empty/error states, a11y,
+responsiveness, dark mode, visual consistency).
+
 ## EM10 — Coach Platform (complete, 2026-06-20)
 **State:** The two halves of one feature, both on the existing `coach_videos` table
 (created in V1, never used until now). **Authoring side** — backend package

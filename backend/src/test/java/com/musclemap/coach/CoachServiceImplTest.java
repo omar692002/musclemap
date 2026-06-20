@@ -3,6 +3,7 @@ package com.musclemap.coach;
 import com.musclemap.coach.dto.CoachVideoRequest;
 import com.musclemap.coach.dto.CoachVideoResponse;
 import com.musclemap.common.exception.ResourceNotFoundException;
+import com.musclemap.subscription.PremiumRequiredException;
 import com.musclemap.user.Role;
 import com.musclemap.user.User;
 import com.musclemap.user.UserRepository;
@@ -133,10 +134,66 @@ class CoachServiceImplTest {
         CoachVideo b = video(UUID.randomUUID(), coach(UUID.randomUUID()), true);
         when(videoRepository.findByPublishedTrueOrderByCreatedAtDesc()).thenReturn(List.of(a, b));
 
-        List<CoachVideoResponse> result = coachService.listPublished();
+        List<CoachVideoResponse> result = coachService.listPublished(true);
 
         assertThat(result).hasSize(2);
         assertThat(result).allMatch(CoachVideoResponse::published);
+    }
+
+    @Test
+    void listPublished_locksPremiumItemsAndWithholdsUrlForFreeViewer() {
+        CoachVideo free = premiumVideo(UUID.randomUUID(), false);
+        CoachVideo premium = premiumVideo(UUID.randomUUID(), true);
+        when(videoRepository.findByPublishedTrueOrderByCreatedAtDesc()).thenReturn(List.of(free, premium));
+
+        List<CoachVideoResponse> result = coachService.listPublished(false);
+
+        CoachVideoResponse freeResult = result.stream().filter(r -> !r.premium()).findFirst().orElseThrow();
+        CoachVideoResponse premiumResult = result.stream().filter(CoachVideoResponse::premium).findFirst().orElseThrow();
+        assertThat(freeResult.locked()).isFalse();
+        assertThat(freeResult.videoUrl()).isNotNull();
+        assertThat(premiumResult.locked()).isTrue();
+        assertThat(premiumResult.videoUrl()).isNull();
+    }
+
+    @Test
+    void listPublished_unlocksPremiumItemsForPremiumViewer() {
+        CoachVideo premium = premiumVideo(UUID.randomUUID(), true);
+        when(videoRepository.findByPublishedTrueOrderByCreatedAtDesc()).thenReturn(List.of(premium));
+
+        CoachVideoResponse result = coachService.listPublished(true).get(0);
+
+        assertThat(result.locked()).isFalse();
+        assertThat(result.videoUrl()).isNotNull();
+    }
+
+    @Test
+    void getPublishedForViewer_blocksPremiumContentForFreeViewer() {
+        UUID videoId = UUID.randomUUID();
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(premiumVideo(videoId, true)));
+
+        assertThatThrownBy(() -> coachService.getPublishedForViewer(videoId, false))
+                .isInstanceOf(PremiumRequiredException.class);
+    }
+
+    @Test
+    void getPublishedForViewer_returnsPremiumContentForPremiumViewer() {
+        UUID videoId = UUID.randomUUID();
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(premiumVideo(videoId, true)));
+
+        CoachVideoResponse result = coachService.getPublishedForViewer(videoId, true);
+
+        assertThat(result.locked()).isFalse();
+        assertThat(result.videoUrl()).isNotNull();
+    }
+
+    @Test
+    void getPublishedForViewer_treatsUnpublishedItemAsNotFound() {
+        UUID videoId = UUID.randomUUID();
+        when(videoRepository.findById(videoId)).thenReturn(Optional.of(video(videoId, coach(UUID.randomUUID()), false)));
+
+        assertThatThrownBy(() -> coachService.getPublishedForViewer(videoId, true))
+                .isInstanceOf(ResourceNotFoundException.class);
     }
 
     // --- fixtures -----------------------------------------------------------
@@ -164,6 +221,14 @@ class CoachServiceImplTest {
         video.setTitle("Title");
         video.setPublished(published);
         setId(video, id);
+        return video;
+    }
+
+    /** A published item with a video url, optionally premium (EM11 gate fixtures). */
+    private static CoachVideo premiumVideo(UUID id, boolean premium) {
+        CoachVideo video = video(id, coach(UUID.randomUUID()), true);
+        video.setVideoUrl("https://example.com/v.mp4");
+        video.setPremium(premium);
         return video;
     }
 

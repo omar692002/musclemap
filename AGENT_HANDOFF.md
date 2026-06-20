@@ -130,9 +130,27 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   end-to-end on dockerized Postgres (Flyway V4 applied; draft→publish→consumer flow,
   USER→`/coach` 403 / `/content` 200, blank-title 400). App version 0.3.0→0.4.0,
   milestone "EM10 - Coach Platform".
-- **NEXT = EM11 (Subscription Architecture):** FREE/PREMIUM entities, feature gates,
-  premium guards (no Stripe yet). The `subscriptions` table is seeded since EM1, and
-  EM10's premium content items already carry a `premium` flag waiting to be gated.
+- **EM11 (Subscription Architecture) is DONE** (2026-06-20). Real FREE/PREMIUM
+  entitlement + a **server-enforced premium guard**, on the `subscriptions` table
+  (seeded EM1). No Stripe: upgrade/cancel are **mock billing**, the gate is real.
+  Backend `com.musclemap.subscription`: `SubscriptionService(+Impl)` **lazily
+  provisions a FREE row** on first access; `isPremium` (plan PREMIUM + live status +
+  unexpired mock period) is the single entitlement rule; `upgrade` → PREMIUM + 30-day
+  `currentPeriodEnd` (`externalRef` null), `cancel` → FREE. `SubscriptionController`
+  → `GET /subscription`, `POST /subscription/{upgrade,cancel}` (current-user-scoped,
+  `anyRequest().authenticated()`). **Premium guard on EM10 content:** `ContentController`
+  resolves entitlement per request — `GET /content/videos` returns premium items
+  **`locked` with `videoUrl` stripped** for free viewers (`CoachVideoResponse.forViewer`),
+  and `GET /content/videos/{id}` is a hard **402** guard (`PremiumRequiredException` →
+  `402` in `GlobalExceptionHandler`). Frontend: `SubscriptionPlan`/`SubscriptionStatus`
+  enums + `Subscription` model; `features/subscription/` (`subscriptionApi.ts` dual-path
+  backend-or-localStorage, `SubscriptionContext` exposing `isPremium`, `SubscriptionPage`
+  at `/subscription`); `ContentLibraryPage` shows locked cards + "Unlock with Premium"
+  CTA; user-menu **Premium** entry; `SubscriptionProvider` wraps `App`. 19 EN/FR/AR keys
+  + `subscriptionPlan` map. `mvn test` **57** green (+8 subscription, +5 coach gating),
+  `npm test` **102** green, `build`/`lint` green. App version 0.4.0→0.5.0.
+- **NEXT = EM12 (Product Polish):** animations, skeletons, empty/error states, a11y,
+  responsiveness, dark mode, visual consistency — the final sprint milestone.
 
 ### Run the backend (verify health)
 ```powershell

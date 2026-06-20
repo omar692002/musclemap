@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
-import { Crown, PlayCircle, Video } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Crown, Lock, PlayCircle, Video } from 'lucide-react'
 import type { CoachVideo } from '../../domain/models/CoachVideo'
 import { UiText, COACH_CONTENT_TYPE_LABELS } from '../../config/labels'
+import { AppRoutes } from '../../config/routes'
 import { Skeleton } from '../../components/Skeleton'
 import { fetchPublishedContent, isCoachBackendReady } from '../coach/coachApi'
 
-/** A single published content card. */
+/** A single published content card. Premium items are locked until the EM11 gate opens. */
 function ContentCard({ video }: { video: CoachVideo }) {
   return (
     <article className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
@@ -17,6 +19,11 @@ function ContentCard({ video }: { video: CoachVideo }) {
             <Video className="h-10 w-10" aria-hidden />
           </div>
         )}
+        {video.locked ? (
+          <div className="absolute inset-0 grid place-items-center bg-black/45 text-white backdrop-blur-[2px]">
+            <Lock className="h-7 w-7" aria-hidden />
+          </div>
+        ) : null}
         <span className="absolute start-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white">
           {COACH_CONTENT_TYPE_LABELS[video.contentType]}
         </span>
@@ -38,7 +45,15 @@ function ContentCard({ video }: { video: CoachVideo }) {
         {video.description ? (
           <p className="mt-1 line-clamp-2 text-xs text-zinc-500">{video.description}</p>
         ) : null}
-        {video.videoUrl ? (
+        {video.locked ? (
+          <Link
+            to={AppRoutes.subscription}
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-orange-500 px-3 py-1 text-xs font-semibold text-white transition hover:bg-orange-600"
+          >
+            <Crown className="h-3.5 w-3.5" aria-hidden />
+            {UiText.contentUnlock}
+          </Link>
+        ) : video.videoUrl ? (
           <a
             href={video.videoUrl}
             target="_blank"
@@ -56,10 +71,11 @@ function ContentCard({ video }: { video: CoachVideo }) {
 
 /**
  * Coach Content library (EM10): the consumer side of the Coach Platform — every
- * signed-in user can browse the content coaches have published. Premium items are
- * shown here with a badge; the actual premium access gate arrives in EM11. Acts on
- * the live API; with no backend there is nothing to browse, so it shows an honest
- * notice (same pattern as the Admin platform and Coach Studio).
+ * signed-in user can browse the content coaches have published. Premium items the
+ * viewer isn't entitled to come back `locked` from the backend (EM11 gate, video
+ * url withheld) and show an upgrade CTA instead of a watch link. Acts on the live
+ * API; with no backend there is nothing to browse, so it shows an honest notice
+ * (same pattern as the Admin platform and Coach Studio).
  */
 export function ContentLibraryPage() {
   const [items, setItems] = useState<CoachVideo[]>([])
