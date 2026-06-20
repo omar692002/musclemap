@@ -13,6 +13,10 @@ import { Gender } from '../../domain/enums/Gender'
 import { FitnessLevel } from '../../domain/enums/FitnessLevel'
 import { ProfileGoal } from '../../domain/enums/ProfileGoal'
 import { TrainingExperience } from '../../domain/enums/TrainingExperience'
+import { Weekday } from '../../domain/enums/Weekday'
+import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
+import { ProgressionStep } from '../../domain/enums/ProgressionStep'
+import { OverloadCue } from '../../domain/enums/OverloadCue'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -118,6 +122,14 @@ export const en: Translation = {
     heightWord: 'Height',
     weightWord: 'Weight',
     yearsUnit: 'yrs',
+    recoveryTitle: 'Recovery',
+    recoveryHelp: 'Sessions are spaced so each muscle gets ~48h to recover.',
+    progressionTitle: '4-week progression',
+    progressionHelp: 'Repeat this week and push a little further each time.',
+    weekWord: 'Week',
+    perWeekUnit: '/wk',
+    tunedToProfile: 'Tuned to your profile',
+    restDayHint: 'Recover & grow',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -199,6 +211,7 @@ export const en: Translation = {
     [DayFocus.ChestTriceps]: 'Chest & Triceps',
     [DayFocus.BackBiceps]: 'Back & Biceps',
     [DayFocus.ShouldersCore]: 'Shoulders & Core',
+    [DayFocus.Rest]: 'Rest',
   },
   level: {
     [ExerciseLevel.Beginner]: 'Beginner',
@@ -222,6 +235,32 @@ export const en: Translation = {
     [ExerciseCategory.Strength]: 'Strength',
     [ExerciseCategory.Stretching]: 'Stretching',
     [ExerciseCategory.Strongman]: 'Strongman',
+  },
+  weekday: {
+    [Weekday.Mon]: 'Mon',
+    [Weekday.Tue]: 'Tue',
+    [Weekday.Wed]: 'Wed',
+    [Weekday.Thu]: 'Thu',
+    [Weekday.Fri]: 'Fri',
+    [Weekday.Sat]: 'Sat',
+    [Weekday.Sun]: 'Sun',
+  },
+  recoveryStatus: {
+    [RecoveryStatus.Optimal]: 'Well recovered',
+    [RecoveryStatus.Overlap]: 'Trained back-to-back',
+  },
+  progressionStep: {
+    [ProgressionStep.Baseline]: 'Set your working weights',
+    [ProgressionStep.AddLoad]: 'Add a little weight',
+    [ProgressionStep.AddReps]: 'Add reps at the same weight',
+    [ProgressionStep.AddLoadResetReps]: 'Add weight, reset reps',
+    [ProgressionStep.CutRest]: 'Keep weight, shorten rest',
+    [ProgressionStep.Deload]: 'Deload — back off & recover',
+  },
+  overloadCue: {
+    [OverloadCue.AddLoadAtTopReps]: 'Add weight once you hit the top reps',
+    [OverloadCue.AddRepThenLoad]: 'Add a rep weekly, then add weight',
+    [OverloadCue.AddRepsCutRest]: 'Add reps and trim your rest',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

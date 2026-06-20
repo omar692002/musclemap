@@ -9,4 +9,6 @@ export enum DayFocus {
   ChestTriceps = 'CHEST_TRICEPS',
   BackBiceps = 'BACK_BICEPS',
   ShouldersCore = 'SHOULDERS_CORE',
+  /** A scheduled rest day in the weekly layout (EM5). */
+  Rest = 'REST',
 }

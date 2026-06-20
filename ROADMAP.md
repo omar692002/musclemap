@@ -16,7 +16,7 @@ Supabase plan in the older docs.
 | **EM2** | Authentication & Security | Registration/login/logout, JWT, BCrypt, RBAC (USER/COACH/ADMIN), route+API protection, validation, error handling, **Google sign-in preserved** (ID-token exchange → platform JWT) | **done (2026-06-20)** |
 | **EM3** | Premium Onboarding | Collect age/gender/height/weight/level/experience/goal/frequency/equipment/injuries → persist to `user_profiles`; mobile-first flow | **done (2026-06-20)** |
 | **EM4** | Personalized Dashboard | Replace static home: welcome, profile summary, goal, recommended workout, weekly activity, streak, recent workouts, quick actions | **done (2026-06-20)** |
-| **EM5** | Smart Generator V2 | Splits (Full Body / Upper-Lower / PPL / Bro), recovery logic, progressive-overload recommendations | pending |
+| **EM5** | Smart Generator V2 | Splits (Full Body / Upper-Lower / PPL / Bro), recovery logic, progressive-overload recommendations | **done (2026-06-20)** |
 | **EM6** | Workout Tracking | Start/complete/save/review; persist sets/reps/weight/duration to `workout_sessions`/`workout_exercises` | pending |
 | **EM7** | Progress Analytics | Bodyweight evolution, frequency, PRs, volume; cards + charts + weekly summaries | pending |
 | **EM8** | Advanced Muscle Intelligence | Primary/secondary/stabilizer detail, fatigue analysis (under/over-trained), recovery recommendations | pending |

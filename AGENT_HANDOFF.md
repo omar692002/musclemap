@@ -42,9 +42,21 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   (`SessionLanding`). Streak/activity/recent have **no data source until EM6** — `dashboardData.ts`
   returns `EMPTY_ACTIVITY` (honest empty states); `getWorkoutActivity()` is the one seam EM6 swaps.
   16 new EN/FR/AR i18n keys; `npm run build`/`lint`/`test` (**74**, +3 recommendation) green.
-- **NEXT = EM5 (Smart Generator V2):** splits (Full Body / Upper-Lower / PPL / Bro), recovery
-  logic, progressive-overload recommendations. (EM6 Workout Tracking also lights up the EM4
-  dashboard's streak/activity/recent sections via the `getWorkoutActivity()` seam.)
+- **EM5 (Smart Generator V2) is DONE** (2026-06-20). Frontend-only, pure generator — no
+  backend change. The four splits already existed (Full Body / Upper-Lower / PPL / BodyPart =
+  "Bro"), so EM5 adds **recovery logic + progressive overload + profile-awareness**.
+  `generateProgram` lays the split over a **Mon→Sun calendar** (`WEEKLY_LAYOUTS`) so sessions
+  are spaced and the gaps are **rest days** (`DayFocus.Rest`, `WorkoutDay.isRest`); a per-group
+  **recovery readout** (`GroupRecovery`, Optimal ≥48h / Overlap) is computed from the layout.
+  Each lift carries a goal+mechanic **`OverloadCue`**, and `WorkoutProgram.progression` is a
+  **4-week mesocycle** (`config/progression.config.ts`, goal → `ProgressionStrategy`).
+  `config/generatorProfile.ts` pre-fills split/days/goal/equipment from the EM3 profile
+  ("Tuned to your profile" chip). New enums `Weekday`/`RecoveryStatus`/`ProgressionStrategy`/
+  `ProgressionStep`/`OverloadCue`; new EN/FR/AR i18n maps; `mvn` untouched; `npm run test`
+  **79** green, `build`/`lint` green.
+- **NEXT = EM6 (Workout Tracking):** start/complete/save/review; persist sets/reps/weight/
+  duration to `workout_sessions`/`workout_exercises`. Also lights up the EM4 dashboard's
+  streak/activity/recent sections via the `getWorkoutActivity()` seam in `dashboardData.ts`.
 
 ### Run the backend (verify health)
 ```powershell

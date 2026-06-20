@@ -12,6 +12,10 @@ import type { Gender } from '../../domain/enums/Gender'
 import type { FitnessLevel } from '../../domain/enums/FitnessLevel'
 import type { ProfileGoal } from '../../domain/enums/ProfileGoal'
 import type { TrainingExperience } from '../../domain/enums/TrainingExperience'
+import type { Weekday } from '../../domain/enums/Weekday'
+import type { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
+import type { ProgressionStep } from '../../domain/enums/ProgressionStep'
+import type { OverloadCue } from '../../domain/enums/OverloadCue'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -122,6 +126,15 @@ export interface UiStrings {
   readonly heightWord: string
   readonly weightWord: string
   readonly yearsUnit: string
+  // Smart Generator V2 (EM5).
+  readonly recoveryTitle: string
+  readonly recoveryHelp: string
+  readonly progressionTitle: string
+  readonly progressionHelp: string
+  readonly weekWord: string
+  readonly perWeekUnit: string
+  readonly tunedToProfile: string
+  readonly restDayHint: string
 }
 
 /**
@@ -146,6 +159,11 @@ export interface Translation {
   readonly mechanic: Readonly<Record<ExerciseMechanic, string>>
   readonly force: Readonly<Record<ExerciseForce, string>>
   readonly category: Readonly<Record<ExerciseCategory, string>>
+  /** Smart Generator V2 vocabularies (EM5). */
+  readonly weekday: Readonly<Record<Weekday, string>>
+  readonly recoveryStatus: Readonly<Record<RecoveryStatus, string>>
+  readonly progressionStep: Readonly<Record<ProgressionStep, string>>
+  readonly overloadCue: Readonly<Record<OverloadCue, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }
