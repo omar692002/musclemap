@@ -1,5 +1,71 @@
 # Progress Log
 
+## EM3 — Premium Onboarding (complete, 2026-06-20)
+**State:** A signed-in user can complete a mobile-first onboarding wizard that
+collects their profile (age/gender/height/weight/level/experience/goal/frequency/
+equipment/injuries) and persists it to the `user_profiles` table (which already
+existed from EM1). The flow is **gated behind auth** and degrades gracefully to
+localStorage on the static (no-backend) deploy.
+
+**Backend** (`com.musclemap.user`): new `Equipment` enum (mirrors the frontend
+vocab); `ProfileRequest`/`ProfileResponse` DTOs (`dto/**`) with bean validation
+(age 10–120, height 50–260, weight 20–400, frequency 1–7, enum-typed gender/
+level/goal/equipment); `UserProfileService(+Impl)` does a get/**upsert** keyed on
+the user, serializing the equipment list to a JSON array in
+`available_equipment` (plain text per the schema) and **deriving**
+`onboardingCompleted` server-side from whether the core fields are present (never
+trusted from the client). `ProfileController` exposes `GET /api/v1/profile`
+(returns an empty/not-onboarded view when no row exists) and `PUT /api/v1/profile`,
+both acting on the **current** user via the `@AuthenticationPrincipal
+AuthenticatedUser` (a user can only read/write their own profile). The whole
+controller sits behind `anyRequest().authenticated()` — no `SecurityConfig`
+change needed. Added a `HttpMessageNotReadableException → 400` handler so a bad
+enum / malformed body returns the uniform `ApiError` (not a 500). **No Flyway
+migration** — the `user_profiles` columns were seeded in V1.
+
+**Frontend** (`features/onboarding/**`): new domain enums (`Gender`,
+`FitnessLevel`, `ProfileGoal`, `TrainingExperience` — `ProfileGoal` is distinct
+from the generator's `TrainingGoal`) + `UserProfile` model (`emptyProfile()`).
+`profileApi.ts` mirrors the EM2 auth-client pattern: when a backend + bearer
+token are present it round-trips `GET|PUT /profile`; otherwise (static deploy) it
+reads/writes a localStorage cache (`StorageKey.UserProfile`), so onboarding never
+dead-ends. `ProfileContext` loads the profile on sign-in (cleared on sign-out)
+and exposes `needsOnboarding`. `OnboardingPage` is a 9-step wizard
+(`config/onboarding.config.ts` holds the step order + option vocabularies +
+numeric bounds in lockstep with the backend); shared inputs in
+`OnboardingFields.tsx` (single/multi option grids + clamped number field). The
+page gates on auth + profile-readiness then mounts an inner `OnboardingWizard`
+seeded from the loaded profile (so the same flow doubles as **edit profile**, no
+seeding effect). A dismiss-on-complete `OnboardingPrompt` banner nudges from
+Home; the `UserMenu` dropdown gained an **Edit profile** link. New `/onboarding`
+route; `ProfileProvider` wraps `App` under `AuthProvider`. Full i18n (EN/FR/AR):
+new onboarding UI strings + `gender`/`fitnessLevel`/`profileGoal`/`experience`
+label maps (TS `Record` keeps all three packs exhaustive).
+
+**Verified end-to-end** (dockerized Postgres, dev profile): register → token;
+`GET /profile` 401 without token, 200 + `onboardingCompleted=false` with token;
+`PUT /profile` (full body) → `onboardingCompleted=true`, equipment
+`["BARBELL","DUMBBELL"]` round-trips; `GET /profile` re-read persists age/freq/
+experience; `gender="ALIEN"` → 400; `age=5` → 400. `mvn test` green (**16**:
++5 `UserProfileServiceImplTest`). Frontend `npm run build` (tsc+vite+PWA) green,
+`npm run lint` clean, `npm run test` 71 green.
+
+**Files:** backend `user/Equipment.java`, `user/UserProfileService.java`,
+`user/UserProfileServiceImpl.java`, `user/ProfileController.java`,
+`user/dto/Profile{Request,Response}.java`, `common/web/GlobalExceptionHandler`
+(+unreadable handler), `test/.../UserProfileServiceImplTest.java`. Frontend
+`domain/enums/{Gender,FitnessLevel,ProfileGoal,TrainingExperience}.ts`,
+`domain/models/UserProfile.ts`, `domain/enums/StorageKey.ts` (+UserProfile),
+`features/onboarding/{profileApi,ProfileContext,OnboardingPage,OnboardingFields,
+OnboardingPrompt}.tsx`, `config/onboarding.config.ts`, `config/routes.ts`,
+`config/labels.ts`, `config/i18n/{types,en,fr,ar}.ts`, `App.tsx`, `main.tsx`,
+`features/auth/{AuthContext,UserMenu}.tsx`, `features/workouts/HomePage.tsx`.
+
+**Next action:** EM4 — Personalized Dashboard (replace the static Home with a
+profile-driven dashboard: welcome, profile summary, goal, recommended workout,
+weekly activity, streak, recent workouts, quick actions — building on this
+profile + the `needsOnboarding` signal).
+
 ## EM2 — Authentication & Security (complete, 2026-06-20)
 **State:** The M1 foundation now has real authentication and authorization. The
 deliberately-permissive `SecurityConfig` is locked down: **stateless JWT** (HS256 via jjwt),

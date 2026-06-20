@@ -9,6 +9,10 @@ import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+import { Gender } from '../../domain/enums/Gender'
+import { FitnessLevel } from '../../domain/enums/FitnessLevel'
+import { ProfileGoal } from '../../domain/enums/ProfileGoal'
+import { TrainingExperience } from '../../domain/enums/TrainingExperience'
 
 /** French. */
 export const fr: Translation = {
@@ -72,6 +76,32 @@ export const fr: Translation = {
     allSessions: 'Toutes les séances',
     signIn: 'Se connecter',
     signOut: 'Se déconnecter',
+    onboardingTitle: 'Configurez votre profil',
+    onboardingIntro: 'Quelques questions rapides pour adapter votre entraînement.',
+    onboardingPromptTitle: 'Complétez votre profil',
+    onboardingPromptBody: 'Personnalisez votre entraînement en moins d’une minute.',
+    onboardingPromptCta: 'Commencer',
+    editProfile: 'Modifier le profil',
+    onboardingComplete: 'Tout est prêt !',
+    ageQuestion: 'Quel âge avez-vous ?',
+    genderQuestion: 'Quel est votre sexe ?',
+    measurementsQuestion: 'Votre taille & poids',
+    heightLabel: 'Taille (cm)',
+    weightLabel: 'Poids (kg)',
+    levelQuestion: 'Votre niveau',
+    experienceQuestion: 'Depuis combien de temps vous entraînez-vous ?',
+    goalQuestion: 'Quel est votre objectif principal ?',
+    frequencyQuestion: 'Combien de jours par semaine ?',
+    frequencyUnit: 'jours / semaine',
+    equipmentQuestion: 'Quel matériel pouvez-vous utiliser ?',
+    equipmentHint: 'Sélectionnez tout ce qui s’applique',
+    injuriesQuestion: 'Des blessures ou limitations ?',
+    injuriesPlaceholder: 'Facultatif — ex. bas du dos, genou gauche',
+    nextStep: 'Suivant',
+    backStep: 'Retour',
+    skipStep: 'Passer',
+    finishOnboarding: 'Terminer',
+    savingProfile: 'Enregistrement…',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -118,6 +148,30 @@ export const fr: Translation = {
     [TrainingGoal.Strength]: 'Force',
     [TrainingGoal.Hypertrophy]: 'Hypertrophie',
     [TrainingGoal.Endurance]: 'Endurance',
+  },
+  gender: {
+    [Gender.Male]: 'Homme',
+    [Gender.Female]: 'Femme',
+    [Gender.Other]: 'Autre',
+    [Gender.Unspecified]: 'Je préfère ne pas dire',
+  },
+  fitnessLevel: {
+    [FitnessLevel.Beginner]: 'Débutant',
+    [FitnessLevel.Intermediate]: 'Intermédiaire',
+    [FitnessLevel.Advanced]: 'Avancé',
+  },
+  profileGoal: {
+    [ProfileGoal.BuildMuscle]: 'Prendre du muscle',
+    [ProfileGoal.LoseFat]: 'Perdre du gras',
+    [ProfileGoal.GainStrength]: 'Gagner en force',
+    [ProfileGoal.ImproveEndurance]: 'Améliorer l’endurance',
+    [ProfileGoal.GeneralFitness]: 'Forme générale',
+  },
+  experience: {
+    [TrainingExperience.LessThanSixMonths]: 'Moins de 6 mois',
+    [TrainingExperience.SixToTwelveMonths]: '6–12 mois',
+    [TrainingExperience.OneToThreeYears]: '1–3 ans',
+    [TrainingExperience.ThreePlusYears]: '3 ans et +',
   },
   dayFocus: {
     [DayFocus.Push]: 'Poussé',

@@ -9,6 +9,10 @@ import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+import { Gender } from '../../domain/enums/Gender'
+import { FitnessLevel } from '../../domain/enums/FitnessLevel'
+import { ProfileGoal } from '../../domain/enums/ProfileGoal'
+import { TrainingExperience } from '../../domain/enums/TrainingExperience'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -72,6 +76,32 @@ export const ar: Translation = {
     allSessions: 'كل الحصص',
     signIn: 'تسجيل الدخول',
     signOut: 'تسجيل الخروج',
+    onboardingTitle: 'إعداد ملفك الشخصي',
+    onboardingIntro: 'بضعة أسئلة سريعة لتخصيص تدريبك.',
+    onboardingPromptTitle: 'أكمل ملفك الشخصي',
+    onboardingPromptBody: 'خصّص تدريبك في أقل من دقيقة.',
+    onboardingPromptCta: 'ابدأ',
+    editProfile: 'تعديل الملف',
+    onboardingComplete: 'كل شيء جاهز!',
+    ageQuestion: 'كم عمرك؟',
+    genderQuestion: 'ما جنسك؟',
+    measurementsQuestion: 'طولك ووزنك',
+    heightLabel: 'الطول (سم)',
+    weightLabel: 'الوزن (كغ)',
+    levelQuestion: 'مستواك في التدريب',
+    experienceQuestion: 'منذ متى وأنت تتدرّب؟',
+    goalQuestion: 'ما هدفك الأساسي؟',
+    frequencyQuestion: 'كم يومًا في الأسبوع؟',
+    frequencyUnit: 'أيام / الأسبوع',
+    equipmentQuestion: 'ما المعدّات المتاحة لك؟',
+    equipmentHint: 'اختر كل ما ينطبق',
+    injuriesQuestion: 'هل لديك إصابات أو قيود؟',
+    injuriesPlaceholder: 'اختياري — مثل أسفل الظهر، الركبة اليسرى',
+    nextStep: 'التالي',
+    backStep: 'رجوع',
+    skipStep: 'تخطّي',
+    finishOnboarding: 'إنهاء',
+    savingProfile: 'جارٍ الحفظ…',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -118,6 +148,30 @@ export const ar: Translation = {
     [TrainingGoal.Strength]: 'القوة',
     [TrainingGoal.Hypertrophy]: 'التضخيم',
     [TrainingGoal.Endurance]: 'التحمّل',
+  },
+  gender: {
+    [Gender.Male]: 'ذكر',
+    [Gender.Female]: 'أنثى',
+    [Gender.Other]: 'آخر',
+    [Gender.Unspecified]: 'أفضّل عدم الإفصاح',
+  },
+  fitnessLevel: {
+    [FitnessLevel.Beginner]: 'مبتدئ',
+    [FitnessLevel.Intermediate]: 'متوسط',
+    [FitnessLevel.Advanced]: 'متقدّم',
+  },
+  profileGoal: {
+    [ProfileGoal.BuildMuscle]: 'بناء العضلات',
+    [ProfileGoal.LoseFat]: 'حرق الدهون',
+    [ProfileGoal.GainStrength]: 'زيادة القوة',
+    [ProfileGoal.ImproveEndurance]: 'تحسين التحمّل',
+    [ProfileGoal.GeneralFitness]: 'لياقة عامة',
+  },
+  experience: {
+    [TrainingExperience.LessThanSixMonths]: 'أقل من 6 أشهر',
+    [TrainingExperience.SixToTwelveMonths]: '6–12 شهرًا',
+    [TrainingExperience.OneToThreeYears]: '1–3 سنوات',
+    [TrainingExperience.ThreePlusYears]: '3 سنوات فأكثر',
   },
   dayFocus: {
     [DayFocus.Push]: 'دفع',

@@ -9,6 +9,10 @@ import { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
 import { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
 import { ExerciseForce } from '../../domain/enums/ExerciseForce'
 import { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+import { Gender } from '../../domain/enums/Gender'
+import { FitnessLevel } from '../../domain/enums/FitnessLevel'
+import { ProfileGoal } from '../../domain/enums/ProfileGoal'
+import { TrainingExperience } from '../../domain/enums/TrainingExperience'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -72,6 +76,32 @@ export const en: Translation = {
     allSessions: 'All sessions',
     signIn: 'Sign in',
     signOut: 'Sign out',
+    onboardingTitle: 'Set up your profile',
+    onboardingIntro: 'A few quick questions so we can tailor your training.',
+    onboardingPromptTitle: 'Complete your profile',
+    onboardingPromptBody: 'Personalize your training in under a minute.',
+    onboardingPromptCta: 'Get started',
+    editProfile: 'Edit profile',
+    onboardingComplete: "You're all set!",
+    ageQuestion: 'How old are you?',
+    genderQuestion: "What's your gender?",
+    measurementsQuestion: 'Your height & weight',
+    heightLabel: 'Height (cm)',
+    weightLabel: 'Weight (kg)',
+    levelQuestion: 'Your training level',
+    experienceQuestion: 'How long have you been training?',
+    goalQuestion: "What's your main goal?",
+    frequencyQuestion: 'How many days per week?',
+    frequencyUnit: 'days / week',
+    equipmentQuestion: 'What equipment can you use?',
+    equipmentHint: 'Select all that apply',
+    injuriesQuestion: 'Any injuries or limitations?',
+    injuriesPlaceholder: 'Optional — e.g. lower back, left knee',
+    nextStep: 'Next',
+    backStep: 'Back',
+    skipStep: 'Skip',
+    finishOnboarding: 'Finish',
+    savingProfile: 'Saving…',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -118,6 +148,30 @@ export const en: Translation = {
     [TrainingGoal.Strength]: 'Strength',
     [TrainingGoal.Hypertrophy]: 'Hypertrophy',
     [TrainingGoal.Endurance]: 'Endurance',
+  },
+  gender: {
+    [Gender.Male]: 'Male',
+    [Gender.Female]: 'Female',
+    [Gender.Other]: 'Other',
+    [Gender.Unspecified]: 'Prefer not to say',
+  },
+  fitnessLevel: {
+    [FitnessLevel.Beginner]: 'Beginner',
+    [FitnessLevel.Intermediate]: 'Intermediate',
+    [FitnessLevel.Advanced]: 'Advanced',
+  },
+  profileGoal: {
+    [ProfileGoal.BuildMuscle]: 'Build muscle',
+    [ProfileGoal.LoseFat]: 'Lose fat',
+    [ProfileGoal.GainStrength]: 'Gain strength',
+    [ProfileGoal.ImproveEndurance]: 'Improve endurance',
+    [ProfileGoal.GeneralFitness]: 'General fitness',
+  },
+  experience: {
+    [TrainingExperience.LessThanSixMonths]: 'Less than 6 months',
+    [TrainingExperience.SixToTwelveMonths]: '6–12 months',
+    [TrainingExperience.OneToThreeYears]: '1–3 years',
+    [TrainingExperience.ThreePlusYears]: '3+ years',
   },
   dayFocus: {
     [DayFocus.Push]: 'Push',

@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { LogOut } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { LogOut, UserCog } from 'lucide-react'
 import { isAuthEnabled } from '../../config/auth.config'
+import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { useAuth } from './AuthContext'
 import { mountGoogleSignIn } from './googleIdentity'
@@ -58,6 +60,14 @@ export function UserMenu() {
         <div className="absolute end-0 top-10 z-50 w-56 rounded-2xl border border-zinc-200 bg-white p-3 shadow-lg">
           <p className="truncate text-sm font-semibold text-zinc-900">{user.name}</p>
           <p className="truncate text-xs text-zinc-400">{user.email}</p>
+          <Link
+            to={AppRoutes.onboarding}
+            onClick={() => setOpen(false)}
+            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+          >
+            <UserCog className="h-3.5 w-3.5" aria-hidden />
+            {UiText.editProfile}
+          </Link>
           <button
             type="button"
             onClick={() => {

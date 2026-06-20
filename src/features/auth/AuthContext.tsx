@@ -3,6 +3,7 @@ import type { AuthUser } from '../../domain/models/AuthUser'
 import { StorageKey } from '../../domain/enums/StorageKey'
 import { disableGoogleAutoSelect } from './googleIdentity'
 import { clearStoredToken } from './authApi'
+import { clearLocalProfile } from '../onboarding/profileApi'
 
 interface AuthContextValue {
   readonly user: AuthUser | null
@@ -49,6 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Nothing stored / storage unavailable — still clear the session.
     }
     clearStoredToken()
+    clearLocalProfile()
     disableGoogleAutoSelect()
     setUser(null)
   }, [])

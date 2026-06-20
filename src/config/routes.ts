@@ -9,6 +9,7 @@ export const AppRoutes = {
   session: '/session/:id',
   muscleMap: '/map',
   program: '/program',
+  onboarding: '/onboarding',
 } as const
 
 /**

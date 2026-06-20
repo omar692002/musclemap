@@ -6,6 +6,7 @@ import { ExerciseBrowserPage } from './features/exercise-browser/ExerciseBrowser
 import { ExerciseDetailPage } from './features/exercise-browser/ExerciseDetailPage'
 import { MuscleMapPage } from './features/muscle-map/MuscleMapPage'
 import { ProgramGeneratorPage } from './features/program-generator/ProgramGeneratorPage'
+import { OnboardingPage } from './features/onboarding/OnboardingPage'
 import { TopBar } from './components/TopBar'
 import { BottomNav } from './components/BottomNav'
 
@@ -27,6 +28,7 @@ function App() {
           <Route path={AppRoutes.browser} element={<ExerciseBrowserPage />} />
           <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />
           <Route path={AppRoutes.program} element={<ProgramGeneratorPage />} />
+          <Route path={AppRoutes.onboarding} element={<OnboardingPage />} />
           <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
           <Route path="*" element={<Navigate to={AppRoutes.home} replace />} />
         </Routes>

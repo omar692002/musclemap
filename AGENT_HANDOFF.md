@@ -24,9 +24,19 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   Postgres: register 201, `/auth/me` 401→200, wrong password 401, validation 400, duplicate 400,
   `/auth/google` 503 until configured, public routes still 200; `mvn test` green (11), `npm run
   build` green. New env for prod: `MUSCLEMAP_JWT_SECRET` (≥32 bytes), `MUSCLEMAP_GOOGLE_CLIENT_ID`.
-- **NEXT = EM3 (Premium Onboarding):** collect age/gender/height/weight/level/experience/goal/
-  frequency/equipment/injuries → persist to `user_profiles` (table already exists); mobile-first
-  flow, gated behind the new auth. Build on `AuthenticatedUser` principal + `/auth/me`.
+- **EM3 (Premium Onboarding) is DONE** (2026-06-20). A mobile-first onboarding wizard
+  (`features/onboarding/**`) collects age/gender/height/weight/level/experience/goal/frequency/
+  equipment/injuries and persists them to `user_profiles` via `GET|PUT /api/v1/profile`
+  (`com.musclemap.user.ProfileController` + `UserProfileService`, gated by the `AuthenticatedUser`
+  principal; `onboardingCompleted` derived server-side). Frontend degrades to localStorage on the
+  static deploy (no backend) — same pattern as EM2. New `ProfileContext` (`needsOnboarding`),
+  `/onboarding` route, Home prompt + UserMenu "Edit profile", full EN/FR/AR i18n. Verified
+  end-to-end on dockerized Postgres (401 unauth, empty→completed, equipment JSON round-trip, 400 on
+  bad enum/range); `mvn test` 16 green, `npm run build`/`lint`/`test` (71) green. No Flyway
+  migration (columns existed since V1).
+- **NEXT = EM4 (Personalized Dashboard):** replace the static Home with a profile-driven dashboard
+  (welcome, profile summary, goal, recommended workout, weekly activity, streak, recent workouts,
+  quick actions). Build on the EM3 `UserProfile` + `useProfile()`/`needsOnboarding` signal.
 
 ### Run the backend (verify health)
 ```powershell

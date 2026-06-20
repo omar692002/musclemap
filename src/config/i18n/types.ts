@@ -8,6 +8,10 @@ import type { ExerciseLevel } from '../../domain/enums/ExerciseLevel'
 import type { ExerciseMechanic } from '../../domain/enums/ExerciseMechanic'
 import type { ExerciseForce } from '../../domain/enums/ExerciseForce'
 import type { ExerciseCategory } from '../../domain/enums/ExerciseCategory'
+import type { Gender } from '../../domain/enums/Gender'
+import type { FitnessLevel } from '../../domain/enums/FitnessLevel'
+import type { ProfileGoal } from '../../domain/enums/ProfileGoal'
+import type { TrainingExperience } from '../../domain/enums/TrainingExperience'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -74,6 +78,33 @@ export interface UiStrings {
   // Auth.
   readonly signIn: string
   readonly signOut: string
+  // Onboarding (EM3).
+  readonly onboardingTitle: string
+  readonly onboardingIntro: string
+  readonly onboardingPromptTitle: string
+  readonly onboardingPromptBody: string
+  readonly onboardingPromptCta: string
+  readonly editProfile: string
+  readonly onboardingComplete: string
+  readonly ageQuestion: string
+  readonly genderQuestion: string
+  readonly measurementsQuestion: string
+  readonly heightLabel: string
+  readonly weightLabel: string
+  readonly levelQuestion: string
+  readonly experienceQuestion: string
+  readonly goalQuestion: string
+  readonly frequencyQuestion: string
+  readonly frequencyUnit: string
+  readonly equipmentQuestion: string
+  readonly equipmentHint: string
+  readonly injuriesQuestion: string
+  readonly injuriesPlaceholder: string
+  readonly nextStep: string
+  readonly backStep: string
+  readonly skipStep: string
+  readonly finishOnboarding: string
+  readonly savingProfile: string
 }
 
 /**
@@ -88,6 +119,11 @@ export interface Translation {
   readonly role: Readonly<Record<MuscleRole, string>>
   readonly split: Readonly<Record<SplitType, string>>
   readonly goal: Readonly<Record<TrainingGoal, string>>
+  /** Onboarding profile vocabularies (EM3). */
+  readonly gender: Readonly<Record<Gender, string>>
+  readonly fitnessLevel: Readonly<Record<FitnessLevel, string>>
+  readonly profileGoal: Readonly<Record<ProfileGoal, string>>
+  readonly experience: Readonly<Record<TrainingExperience, string>>
   readonly dayFocus: Readonly<Record<DayFocus, string>>
   readonly level: Readonly<Record<ExerciseLevel, string>>
   readonly mechanic: Readonly<Record<ExerciseMechanic, string>>

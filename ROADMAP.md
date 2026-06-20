@@ -14,7 +14,7 @@ Supabase plan in the older docs.
 |---|---------------------|-------------|--------|
 | **EM1** | Backend Foundation | Spring Boot 3 `/backend`, layered (controller→service→repo), JPA, Flyway schema (users, user_profiles, generated_programs, workout_sessions, workout_exercises, coach_videos, subscriptions), role taxonomy, Docker, OpenAPI | **done (2026-06-20)** |
 | **EM2** | Authentication & Security | Registration/login/logout, JWT, BCrypt, RBAC (USER/COACH/ADMIN), route+API protection, validation, error handling, **Google sign-in preserved** (ID-token exchange → platform JWT) | **done (2026-06-20)** |
-| **EM3** | Premium Onboarding | Collect age/gender/height/weight/level/experience/goal/frequency/equipment/injuries → persist to `user_profiles`; mobile-first flow | pending |
+| **EM3** | Premium Onboarding | Collect age/gender/height/weight/level/experience/goal/frequency/equipment/injuries → persist to `user_profiles`; mobile-first flow | **done (2026-06-20)** |
 | **EM4** | Personalized Dashboard | Replace static home: welcome, profile summary, goal, recommended workout, weekly activity, streak, recent workouts, quick actions | pending |
 | **EM5** | Smart Generator V2 | Splits (Full Body / Upper-Lower / PPL / Bro), recovery logic, progressive-overload recommendations | pending |
 | **EM6** | Workout Tracking | Start/complete/save/review; persist sets/reps/weight/duration to `workout_sessions`/`workout_exercises` | pending |

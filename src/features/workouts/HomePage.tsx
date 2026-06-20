@@ -7,6 +7,7 @@ import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { getActiveLanguage } from '../../config/i18n'
 import { useAuth } from '../auth/AuthContext'
+import { OnboardingPrompt } from '../onboarding/OnboardingPrompt'
 
 /** Today's date in the active language, e.g. "Wednesday, June 10". */
 function todayLabel(): string {
@@ -54,6 +55,8 @@ export function HomePage() {
           {firstName ? `, ${firstName}` : ''} 💪
         </h1>
       </header>
+
+      <OnboardingPrompt />
 
       <SessionHeroCard session={featured} />
 
