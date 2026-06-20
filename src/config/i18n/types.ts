@@ -140,6 +140,31 @@ export interface UiStrings {
   readonly cancelWorkout: string
   readonly savingWorkout: string
   readonly doneLabel: string
+  // Progress analytics (EM7).
+  readonly navProgress: string
+  readonly analyticsTitle: string
+  readonly analyticsSubtitle: string
+  readonly noStatsYet: string
+  readonly noStatsYetHint: string
+  readonly statTotalWorkouts: string
+  readonly statTotalVolume: string
+  readonly statTotalSets: string
+  readonly weeklyVolumeTitle: string
+  readonly weeklyFrequencyTitle: string
+  readonly weeklySummaryTitle: string
+  readonly vsLastWeek: string
+  readonly personalRecordsTitle: string
+  readonly noPrsYet: string
+  readonly noPrsYetHint: string
+  readonly est1RmLabel: string
+  readonly bodyweightTitle: string
+  readonly bodyweightEmptyHint: string
+  readonly logWeightCta: string
+  readonly weightKgPlaceholder: string
+  readonly saveWord: string
+  readonly viewProgress: string
+  readonly viewProgressHint: string
+  readonly volumeUnitKg: string
 }
 
 /**

@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom'
-import { CalendarDays, Dumbbell, House, PersonStanding } from 'lucide-react'
+import { CalendarDays, Dumbbell, House, PersonStanding, TrendingUp } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { AppRoutes } from '../config/routes'
 import { UiText } from '../config/labels'
@@ -17,13 +17,14 @@ const ITEMS: readonly NavItem[] = [
   { to: AppRoutes.browser, icon: Dumbbell, label: UiText.navExercises },
   { to: AppRoutes.muscleMap, icon: PersonStanding, label: UiText.navBody },
   { to: AppRoutes.program, icon: CalendarDays, label: UiText.navPlan },
+  { to: AppRoutes.progress, icon: TrendingUp, label: UiText.navProgress },
 ]
 
 /** Fixed mobile-style tab bar — the app's primary navigation. */
 export function BottomNav() {
   return (
     <nav className="sticky bottom-0 z-40 border-t border-zinc-200/70 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur">
-      <div className="mx-auto grid max-w-2xl grid-cols-4">
+      <div className="mx-auto grid max-w-2xl grid-cols-5">
         {ITEMS.map((item) => (
           <NavLink
             key={item.to}

@@ -65,8 +65,22 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   derives from real logs via pure `computeActivity(logs, now)` (streak / weekly strip / recent),
   surfaced through a new `useWorkoutActivity()` hook. **No Flyway migration** (V1 columns).
   `mvn test` **22** green, `npm run test` **86** green, `build`/`lint` green.
-- **NEXT = EM7 (Progress Analytics):** bodyweight evolution, frequency, PRs, volume; cards +
-  charts + weekly summaries — built on the EM6 session history.
+- **EM7 (Progress Analytics) is DONE** (2026-06-20). A new **Progress** tab (5th bottom-nav
+  tab, `TrendingUp`) → `features/analytics/AnalyticsPage.tsx`: this-week summary (volume +
+  sessions, % delta vs last week), overview tiles (total workouts/volume/sets), weekly-volume
+  and workouts-per-week **bar charts** (last 8 weeks), a **personal-records** list (best Epley
+  1RM per exercise), and a **bodyweight-evolution** line chart with an inline weigh-in logger.
+  All charts are hand-rolled inline **SVG** (`charts.tsx`) — no charting dependency. The
+  workout analytics are a **pure** `computeAnalytics(logs, now)` (`analytics.ts`, fully unit-
+  tested); the page seeds from the local cache then refreshes from the backend (EM6 dual-path).
+  **Bodyweight is the one new data source → full-stack**: Flyway **V3** `bodyweight_entries`
+  (UNIQUE per user/day), `com.musclemap.bodyweight` (`POST|GET|DELETE /api/v1/bodyweight`,
+  **upsert by day**, current-user scoped, ownership→404), frontend `bodyweightApi.ts` mirrors
+  `workoutApi` (backend-or-localStorage, cleared on sign-out). 25 EN/FR/AR i18n keys. `mvn test`
+  **28** green, `npm test` **93** green, `build`/`lint` green; verified end-to-end on dockerized
+  Postgres (Flyway V3 applied, 401/201/upsert/400 all correct).
+- **NEXT = EM8 (Advanced Muscle Intelligence):** primary/secondary/stabilizer detail, fatigue
+  analysis (under/over-trained), recovery recommendations.
 
 ### Run the backend (verify health)
 ```powershell

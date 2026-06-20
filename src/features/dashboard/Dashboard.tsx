@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { CalendarDays, ChevronRight, Dumbbell, Flame, Map, Pencil, Search } from 'lucide-react'
+import { CalendarDays, ChevronRight, Dumbbell, Flame, Map, Pencil, Search, TrendingUp } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 import { SessionHeroCard } from '../workouts/SessionCard'
 import { recommendedSessionFor } from '../../config/recommendation.config'
@@ -220,6 +220,7 @@ export function Dashboard() {
 
       <SectionHeading>{UiText.quickActionsTitle}</SectionHeading>
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <QuickTile to={AppRoutes.progress} icon={TrendingUp} title={UiText.viewProgress} hint={UiText.viewProgressHint} />
         <QuickTile to={AppRoutes.program} icon={CalendarDays} title={UiText.buildYourOwn} hint={UiText.buildYourOwnHint} />
         <QuickTile to={AppRoutes.browser} icon={Search} title={UiText.browseAll} />
         <QuickTile to={AppRoutes.muscleMap} icon={Map} title={UiText.openMap} />

@@ -1,5 +1,60 @@
 # Progress Log
 
+## EM7 — Progress Analytics (complete, 2026-06-20)
+**State:** A new **Progress** tab (5th in the bottom nav, `TrendingUp`) surfaces a
+full analytics screen built on the EM6 session history: a **this-week summary**
+(volume + sessions, with a % delta vs last week), **overview** stat tiles (total
+workouts / volume / sets), **weekly volume** and **workouts-per-week** bar charts
+(last 8 weeks), a **personal-records** list (best estimated 1RM per exercise), and
+a **bodyweight-evolution** line chart you can log new weigh-ins into. All charts
+are hand-rolled inline SVG — **no charting dependency** added. The workout-derived
+sections show an honest empty state until the first session is tracked; bodyweight
+logging is always available.
+
+**Analytics are pure & tested.** `features/analytics/analytics.ts` exposes a pure
+`computeAnalytics(logs, now)` → `AnalyticsSummary` (injectable `now`): tonnage =
+Σ sets×reps×weight over **completed** exercises in **completed** sessions; sets the
+same; weeks rolled into the last `WEEKS_WINDOW` (8) Monday-anchored buckets,
+zero-filled for gaps; PRs = best **Epley** 1RM (`w×(1+reps/30)`) per exercise,
+weighted sets only, capped at `PR_LIMIT` (6), strongest first. `charts.tsx` holds
+presentational `BarChart`/`LineChart` (fixed `viewBox`, `w-full h-auto`, ember
+accent). `AnalyticsPage.tsx` seeds from the local cache then refreshes from the
+backend (same dual-path hook pattern as the EM6 dashboard).
+
+**Bodyweight tracking is full-stack** (new data source; the only backend change).
+Flyway **V3** adds `bodyweight_entries` (one row per user per **day** via a
+`UNIQUE (user_id, recorded_on)` constraint). Backend `com.musclemap.bodyweight`:
+`BodyweightController` (`POST|GET|DELETE /api/v1/bodyweight`) + `BodyweightService(+Impl)`
+— **upsert by day** (a same-day log replaces the value, never stacks points),
+current-user scoped, ownership→404; DTOs `dto/Bodyweight{Request,Response}`
+(`@NotNull @DecimalMin(1.0) @DecimalMax(999.99)` weight, `recordedOn` defaults to
+server today). Frontend `features/analytics/bodyweightApi.ts` mirrors `workoutApi`
+(backend when `VITE_API_BASE_URL` + token, else `StorageKey.BodyweightLogs`
+localStorage, upsert-by-day both paths); `domain/models/BodyweightEntry.ts`.
+Sign-out clears the cache (`clearLocalBodyweight` in `AuthContext`).
+
+**i18n:** 25 new EN/FR/AR `ui` keys (nav + analytics + bodyweight logger). **Tests:**
+`mvn test` **28** green (+6 `BodyweightServiceImplTest`: upsert-create, upsert-update-
+same-day, recordedOn-defaults-today, missing-user, ownership 404, delete-missing);
+`npm test` **93** green (+7 `analytics.test.ts`: empty/zero-filled window, ignore-not-
+completed, tonnage/sets over completed only, this-vs-last-week bucketing, window-drop
+keeps totals, best-1RM PR, bodyweight-only excluded); `build` + `lint` green.
+**Verified end-to-end** on dockerized Postgres: Flyway V3 applied (`success=t`),
+401 unauth, 201 create (date→today), same-day **upsert** (same id, value replaced,
+list stays length 1), negative weight → 400.
+
+**Files:** backend `db/migration/V3__bodyweight_entries.sql`, `bodyweight/BodyweightEntry.java`,
+`bodyweight/BodyweightEntryRepository.java`, `bodyweight/BodyweightService(+Impl).java`,
+`bodyweight/BodyweightController.java`, `bodyweight/dto/Bodyweight{Request,Response}.java`,
+`test/.../bodyweight/BodyweightServiceImplTest.java`. Frontend `domain/models/BodyweightEntry.ts`,
+`domain/enums/StorageKey.ts`, `features/analytics/{analytics.ts,charts.tsx,bodyweightApi.ts,
+AnalyticsPage.tsx,__tests__/analytics.test.ts}`, `App.tsx`, `components/BottomNav.tsx`,
+`config/routes.ts`, `features/dashboard/Dashboard.tsx`, `features/auth/AuthContext.tsx`,
+`config/i18n/{types,en,fr,ar}.ts`.
+
+**Next action:** EM8 — Advanced Muscle Intelligence (primary/secondary/stabilizer
+detail, fatigue analysis under/over-trained, recovery recommendations).
+
 ## EM6 — Workout Tracking (complete, 2026-06-20)
 **State:** A signed-in user can now **start, run, finish and save** a workout, and the
 EM4 dashboard's streak / weekly-activity / recent sections light up from that real
