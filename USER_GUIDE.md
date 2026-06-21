@@ -650,6 +650,19 @@ sequenceDiagram
 - **Caveat:** the role lives in the JWT, so after any role change the affected user must **sign out
   and back in** to receive a token carrying the new role.
 
+#### Demo accounts (for the defense)
+Three email/password accounts exist in production so the jury can exercise every role without a
+Google login. Created via `POST /api/v1/auth/register` (BCrypt-hashed), then `admin@`/`coach@`
+promoted. Shared password — **demo only**, disable or delete after the defense.
+
+| Email | Password | Role |
+|---|---|---|
+| `admin@musclemap.app` | `Muscle2026!` | ADMIN |
+| `coach@musclemap.app` | `Muscle2026!` | COACH |
+| `user@musclemap.app`  | `Muscle2026!` | USER |
+
+The owner's real Google account `omarmnif123@gmail.com` is also ADMIN (auto-elevated on sign-in).
+
 ### The relationship: Google OAuth ↔ OAuth2 ↔ JWT ↔ Spring Security
 - **OAuth2** is the *authorization framework*. **"Sign in with Google" (OIDC)** is an OAuth2-based
   protocol where Google, the **identity provider**, issues a signed **ID token** proving "this is

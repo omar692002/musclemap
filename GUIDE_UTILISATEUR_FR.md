@@ -1187,6 +1187,27 @@ UPDATE users SET role = 'COACH' WHERE email = 'coach@demo.com';
 (Pense à te reconnecter ensuite pour rafraîchir le jeton.) Mais avec la désignation par email
 (11.1), tu n'en as normalement plus besoin.
 
+### 11.5 Comptes de démonstration (pour la soutenance)
+
+Trois comptes **email / mot de passe** ont été créés en production pour que le jury puisse tester
+**chaque rôle immédiatement**, sans avoir besoin de ton compte Google. Ils ont été inscrits via le
+vrai endpoint `POST /api/v1/auth/register` (donc mots de passe hachés correctement en BCrypt), puis
+`admin@` et `coach@` ont été promus.
+
+| Email | Mot de passe | Rôle | Ce qu'on peut démontrer |
+|---|---|---|---|
+| `admin@musclemap.app` | `Muscle2026!` | **ADMIN** | Tableau de bord `/admin`, métriques, gestion des utilisateurs/rôles |
+| `coach@musclemap.app` | `Muscle2026!` | **COACH** | Coach Studio `/coach` : créer vidéos/programmes/contenus, publication |
+| `user@musclemap.app`  | `Muscle2026!` | **USER**  | Parcours standard : profil, séances, poids de corps, abonnement |
+
+> 🔐 **Sécurité.** Ce sont des comptes de **démo** avec un mot de passe partagé connu : à n'utiliser
+> que pour la présentation. Après la soutenance, tu peux les désactiver (`/admin` → désactiver) ou les
+> supprimer en base (`DELETE FROM users WHERE email LIKE '%@musclemap.app';`).
+
+> ℹ️ **Comptes réels existants.** En plus des comptes démo, la base contient tes comptes Google :
+> `omarmnif123@gmail.com` (**ADMIN**, le propriétaire) et `mnifomar123@gmail.com` (USER). Le rôle
+> admin du propriétaire est appliqué automatiquement à la connexion (voir 11.1).
+
 ---
 
 ## Annexe — Questions probables du jury
