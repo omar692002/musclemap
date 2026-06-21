@@ -1,0 +1,61 @@
+{
+  "splitPatterns": {
+    "FULL_BODY": [
+      { "focus": "FULL_BODY", "groups": ["CHEST", "BACK", "SHOULDERS", "QUADRICEPS", "HAMSTRINGS", "CORE"] }
+    ],
+    "UPPER_LOWER": [
+      { "focus": "UPPER", "groups": ["CHEST", "BACK", "SHOULDERS", "BICEPS", "TRICEPS"] },
+      { "focus": "LOWER", "groups": ["QUADRICEPS", "HAMSTRINGS", "GLUTES", "CALVES"] }
+    ],
+    "PUSH_PULL_LEGS": [
+      { "focus": "PUSH", "groups": ["CHEST", "SHOULDERS", "TRICEPS"] },
+      { "focus": "PULL", "groups": ["BACK", "BICEPS", "FOREARMS"] },
+      { "focus": "LEGS", "groups": ["QUADRICEPS", "HAMSTRINGS", "GLUTES", "CALVES"] }
+    ],
+    "BODY_PART": [
+      { "focus": "CHEST_TRICEPS", "groups": ["CHEST", "TRICEPS"] },
+      { "focus": "BACK_BICEPS", "groups": ["BACK", "BICEPS", "FOREARMS"] },
+      { "focus": "LEGS", "groups": ["QUADRICEPS", "HAMSTRINGS", "GLUTES", "CALVES"] },
+      { "focus": "SHOULDERS_CORE", "groups": ["SHOULDERS", "CORE"] }
+    ]
+  },
+  "goalSchemes": {
+    "strength": {
+      "compound": { "sets": 5, "repRange": "3–5" },
+      "isolation": { "sets": 3, "repRange": "6–8" }
+    },
+    "hypertrophy": {
+      "compound": { "sets": 4, "repRange": "6–10" },
+      "isolation": { "sets": 3, "repRange": "10–15" }
+    },
+    "endurance": {
+      "compound": { "sets": 3, "repRange": "12–15" },
+      "isolation": { "sets": 2, "repRange": "15–20" }
+    }
+  },
+  "weekOrder": ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"],
+  "weeklyLayouts": {
+    "2": ["MON", "THU"],
+    "3": ["MON", "WED", "FRI"],
+    "4": ["MON", "TUE", "THU", "FRI"],
+    "5": ["MON", "TUE", "WED", "FRI", "SAT"],
+    "6": ["MON", "TUE", "WED", "THU", "FRI", "SAT"]
+  },
+  "strategyByGoal": {
+    "strength": "LINEAR_LOAD",
+    "hypertrophy": "DOUBLE_PROGRESSION",
+    "endurance": "REPS_AND_DENSITY"
+  },
+  "mesocycleByStrategy": {
+    "LINEAR_LOAD": ["BASELINE", "ADD_LOAD", "ADD_LOAD", "DELOAD"],
+    "DOUBLE_PROGRESSION": ["BASELINE", "ADD_REPS", "ADD_LOAD_RESET_REPS", "DELOAD"],
+    "REPS_AND_DENSITY": ["BASELINE", "ADD_REPS", "CUT_REST", "DELOAD"]
+  },
+  "overloadCue": {
+    "LINEAR_LOAD": { "COMPOUND": "ADD_LOAD_AT_TOP_REPS", "ISOLATION": "ADD_REP_THEN_LOAD" },
+    "DOUBLE_PROGRESSION": { "COMPOUND": "ADD_REP_THEN_LOAD", "ISOLATION": "ADD_REP_THEN_LOAD" },
+    "REPS_AND_DENSITY": { "COMPOUND": "ADD_REPS_CUT_REST", "ISOLATION": "ADD_REPS_CUT_REST" }
+  },
+  "exercisesPerGroup": 1,
+  "optimalGapDays": 2
+}

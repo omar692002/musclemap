@@ -16,16 +16,8 @@ import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { DayFocus } from '../../domain/enums/DayFocus'
 import { Weekday } from '../../domain/enums/Weekday'
 import { RecoveryStatus } from '../../domain/enums/RecoveryStatus'
-import {
-  SPLIT_PATTERNS,
-  ProgramConfig,
-  GOAL_SCHEMES,
-  WEEK_ORDER,
-  WEEKLY_LAYOUTS,
-  RecoveryConfig,
-  type DayTemplate,
-} from '../../config/program.config'
-import { STRATEGY_BY_GOAL, MESOCYCLE_BY_STRATEGY, overloadCueFor } from '../../config/progression.config'
+import { type DayTemplate } from '../../config/program.config'
+import { BUNDLED_GENERATOR_CONFIG, type GeneratorConfig } from '../../config/generator.config'
 
 export interface ProgramParams {
   readonly split: SplitType
@@ -52,8 +44,12 @@ function seededRank(id: string, seed: number): number {
 }
 
 /** The set/rep prescription for an exercise under the chosen goal. */
-export function schemeFor(exercise: Exercise, goal: TrainingGoal) {
-  const schemes = GOAL_SCHEMES[goal]
+export function schemeFor(
+  exercise: Exercise,
+  goal: TrainingGoal,
+  config: GeneratorConfig = BUNDLED_GENERATOR_CONFIG,
+) {
+  const schemes = config.goalSchemes[goal]
   return exercise.mechanic === ExerciseMechanic.Compound ? schemes.compound : schemes.isolation
 }
 
@@ -104,6 +100,7 @@ export function pickExercises(
   goal: TrainingGoal,
   perGroup: number,
   used: Set<string>,
+  config: GeneratorConfig = BUNDLED_GENERATOR_CONFIG,
 ): ProgramExercise[] {
   const chosen: ProgramExercise[] = []
   for (const group of groups) {
@@ -113,7 +110,7 @@ export function pickExercises(
       if (picked >= perGroup) break
       if (used.has(exercise.id)) continue
       used.add(exercise.id)
-      const scheme = schemeFor(exercise, goal)
+      const scheme = schemeFor(exercise, goal, config)
       chosen.push({ exercise, sets: scheme.sets, reps: scheme.repRange })
       picked += 1
     }
@@ -129,22 +126,22 @@ type TrainingSchedule = ReadonlyMap<Weekday, DayTemplate>
  * cycling the split's templates across the training slots (EM5 recovery logic).
  * Falls back to the first N weekdays if a layout is missing.
  */
-function scheduleTrainingDays(split: SplitType, days: number): TrainingSchedule {
-  const pattern = SPLIT_PATTERNS[split]
-  const layout = WEEKLY_LAYOUTS[days] ?? WEEK_ORDER.slice(0, days)
+function scheduleTrainingDays(split: SplitType, days: number, config: GeneratorConfig): TrainingSchedule {
+  const pattern = config.splitPatterns[split]
+  const layout = config.weeklyLayouts[days] ?? config.weekOrder.slice(0, days)
   const schedule = new Map<Weekday, DayTemplate>()
   layout.forEach((weekday, i) => schedule.set(weekday, pattern[i % pattern.length]))
   return schedule
 }
 
-/** Smallest gap (in days) between consecutive entries on a 7-day cycle. */
-function minCyclicGap(dayIndices: readonly number[]): number {
-  if (dayIndices.length <= 1) return WEEK_ORDER.length
+/** Smallest gap (in days) between consecutive entries on a `weekLength`-day cycle. */
+function minCyclicGap(dayIndices: readonly number[], weekLength: number): number {
+  if (dayIndices.length <= 1) return weekLength
   const sorted = [...dayIndices].sort((a, b) => a - b)
-  let min = WEEK_ORDER.length
+  let min = weekLength
   for (let i = 1; i < sorted.length; i += 1) min = Math.min(min, sorted[i] - sorted[i - 1])
   // Wrap-around gap from the last session back to the first next week.
-  min = Math.min(min, sorted[0] + WEEK_ORDER.length - sorted[sorted.length - 1])
+  min = Math.min(min, sorted[0] + weekLength - sorted[sorted.length - 1])
   return min
 }
 
@@ -153,9 +150,9 @@ function minCyclicGap(dayIndices: readonly number[]): number {
  * gap between its sessions, flagged Optimal (≥48h) or Overlap (back-to-back).
  * Ordered by the MuscleGroup enum for a stable readout.
  */
-function computeRecovery(schedule: TrainingSchedule): GroupRecovery[] {
+function computeRecovery(schedule: TrainingSchedule, config: GeneratorConfig): GroupRecovery[] {
   const daysByGroup = new Map<MuscleGroup, number[]>()
-  WEEK_ORDER.forEach((weekday, dayIndex) => {
+  config.weekOrder.forEach((weekday, dayIndex) => {
     const template = schedule.get(weekday)
     if (!template) return
     for (const group of template.groups) {
@@ -169,21 +166,21 @@ function computeRecovery(schedule: TrainingSchedule): GroupRecovery[] {
   for (const group of Object.values(MuscleGroup)) {
     const dayIndices = daysByGroup.get(group)
     if (!dayIndices) continue
-    const minGapDays = minCyclicGap(dayIndices)
+    const minGapDays = minCyclicGap(dayIndices, config.weekOrder.length)
     recovery.push({
       group,
       sessionsPerWeek: dayIndices.length,
       minGapDays,
-      status: minGapDays >= RecoveryConfig.optimalGapDays ? RecoveryStatus.Optimal : RecoveryStatus.Overlap,
+      status: minGapDays >= config.optimalGapDays ? RecoveryStatus.Optimal : RecoveryStatus.Overlap,
     })
   }
   return recovery
 }
 
 /** The 4-week progression plan implied by the training goal. */
-function buildProgressionPlan(goal: TrainingGoal): ProgressionPlan {
-  const strategy = STRATEGY_BY_GOAL[goal]
-  const weeks = MESOCYCLE_BY_STRATEGY[strategy].map((step, i) => ({ week: i + 1, step }))
+function buildProgressionPlan(goal: TrainingGoal, config: GeneratorConfig): ProgressionPlan {
+  const strategy = config.strategyByGoal[goal]
+  const weeks = config.mesocycleByStrategy[strategy].map((step, i) => ({ week: i + 1, step }))
   return { strategy, weeks }
 }
 
@@ -200,13 +197,14 @@ export function generateProgram(
   params: ProgramParams,
   exercises: readonly Exercise[],
   muscleIndex: ReadonlyMap<string, Muscle>,
+  config: GeneratorConfig = BUNDLED_GENERATOR_CONFIG,
 ): WorkoutProgram {
-  const schedule = scheduleTrainingDays(params.split, params.days)
+  const schedule = scheduleTrainingDays(params.split, params.days, config)
   const candidates = candidatesByGroup(exercises, params.equipment, muscleIndex, params.seed)
-  const strategy = STRATEGY_BY_GOAL[params.goal]
+  const strategy = config.strategyByGoal[params.goal]
   const used = new Set<string>()
 
-  const days: WorkoutDay[] = WEEK_ORDER.map((weekday, i) => {
+  const days: WorkoutDay[] = config.weekOrder.map((weekday, i) => {
     const template = schedule.get(weekday)
     if (!template) {
       return { index: i + 1, weekday, focus: DayFocus.Rest, isRest: true, exercises: [] }
@@ -215,11 +213,12 @@ export function generateProgram(
       template.groups,
       candidates,
       params.goal,
-      ProgramConfig.exercisesPerGroup,
+      config.exercisesPerGroup,
       used,
+      config,
     ).map((item) => ({
       ...item,
-      overload: overloadCueFor(strategy, item.exercise.mechanic ?? ExerciseMechanic.Isolation),
+      overload: config.overloadCue[strategy][item.exercise.mechanic ?? ExerciseMechanic.Isolation],
     }))
     return { index: i + 1, weekday, focus: template.focus, isRest: false, exercises: chosen }
   })
@@ -238,7 +237,7 @@ export function generateProgram(
   return {
     days,
     volumeByGroup,
-    recovery: computeRecovery(schedule),
-    progression: buildProgressionPlan(params.goal),
+    recovery: computeRecovery(schedule, config),
+    progression: buildProgressionPlan(params.goal, config),
   }
 }

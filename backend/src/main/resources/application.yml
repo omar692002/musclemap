@@ -38,6 +38,13 @@ musclemap:
     bootstrap-emails: ${MUSCLEMAP_ADMIN_EMAILS:omarmnif123@gmail.com}
   api:
     base-path: /api/v1
+  catalog:
+    # Media URLs used when seeding the catalogue (mirrors the frontend config).
+    # Exercise images live on the upstream free-exercise-db CDN; YouTube
+    # thumbnails are derived from the curated video ids.
+    image-base-url: https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/
+    youtube-thumbnail-base-url: https://img.youtube.com/vi/
+    youtube-thumbnail-suffix: /hqdefault.jpg
   cors:
     # Comma-separated allowed origins. Overridden per-environment.
     allowed-origins: http://localhost:5173,http://localhost:4173

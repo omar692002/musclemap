@@ -18,10 +18,10 @@ backend domain models. (Snapshot after EM12 — sprint complete.)
 |-------|------|-------------|
 | `/` | `HomePage` → `Dashboard` (onboarded) or session launcher | **Backend** (profile + workouts) for the dashboard; static session cards |
 | `/session/:id` | `SessionPage` | **Static** plan (dataset + pure generator); "Start workout" → backend |
-| `/exercises` | `ExerciseBrowserPage` | **Static** (bundled exercise DB) |
-| `/exercise/:id` | `ExerciseDetailPage` | **Static** |
-| `/map` | `MuscleMapPage` (3D anatomy) | **Static** (taxonomy + `.glb` model) |
-| `/program` | `ProgramGeneratorPage` | **Static / pure** generator (prefilled from profile if signed in) |
+| `/exercises` | `ExerciseBrowserPage` | **Backend** catalogue API (EM13), bundled DB fallback |
+| `/exercise/:id` | `ExerciseDetailPage` | **Backend** catalogue API (EM13), bundled DB fallback |
+| `/map` | `MuscleMapPage` (3D anatomy) | **Backend** muscle taxonomy (EM13) + **static** `.glb` model/heads |
+| `/program` | `ProgramGeneratorPage` | **Pure** client generator; **config from backend** (EM13, dual-path), prefilled from profile if signed in |
 | `/progress` | `AnalyticsPage` | **Backend** (workouts + bodyweight), localStorage fallback |
 | `/intel` | `MuscleIntelPage` | **Frontend-pure**, computed from backend workout logs + static taxonomy |
 | `/admin` | `AdminPage` | **Backend only** (no fallback) |
@@ -30,10 +30,17 @@ backend domain models. (Snapshot after EM12 — sprint complete.)
 | `/subscription` | `SubscriptionPage` | **Backend** (dual-path: localStorage mock if no backend) |
 | `/onboarding` | `OnboardingPage` | **Backend** (profile), localStorage fallback |
 
-**Static = bundled, never hits the API:** the whole exercise catalogue (873
-exercises from free-exercise-db), the muscle taxonomy/heads, and the 3D model.
-Served through repository *interfaces* (`StaticExerciseRepository` /
-`StaticMuscleRepository`) so they could be swapped for an API later with no UI change.
+**Catalogue migrated to the backend (EM13).** The 873-exercise catalogue (incl.
+the curated video mapping) and the muscle taxonomy now live in the database
+(`exercises`/`muscles` + child tables, Flyway `V5`), seeded idempotently on
+startup from `backend/.../resources/catalog/*.json` by `CatalogBootstrap` and
+served read-only at `GET /api/v1/catalog/**`. The frontend consumes them through
+the **same** `IExerciseRepository`/`IMuscleRepository` interfaces — now
+`ApiExerciseRepository`/`ApiMuscleRepository` (in `src/data/api/`) when
+`VITE_API_BASE_URL` is set, with the bundled `Static*` repositories as a
+transparent **fallback** (dual-path), so the offline / GitHub-Pages deploy keeps
+working with no backend. **Still static:** the 3D `.glb` model + head→mesh
+mapping (inherently tied to the asset) and the muscle *heads* taxonomy used by it.
 
 ---
 
@@ -43,6 +50,12 @@ Behaviour depends on `VITE_API_BASE_URL` (+ a stored JWT):
 
 - **Dual-path** (backend when wired, else localStorage so the static GH-Pages
   deploy still works): `profileApi`, `workoutApi`, `bodyweightApi`, `subscriptionApi`.
+- **Catalogue** (`catalogApi`, EM13): public `GET /catalog/**`, memoised one-shot
+  fetch; falls back to the bundled dataset (not localStorage) when absent/offline.
+- **Generator config** (`generatorConfigApi`, EM13): public `GET /generator/config`,
+  memoised; the generator runs on it via `useGeneratorConfig`, falling back to the
+  bundled `BUNDLED_GENERATOR_CONFIG`. The *algorithm* stays client-side; only its
+  tuning is server-owned. A parity test keeps the served JSON == the bundled config.
 - **Backend-only** (shared server state, nothing meaningful to fake locally):
   `adminApi`, `coachApi` (coach studio + content library).
 - **Auth** (`authApi`): exchanges Google credential for a platform JWT when a
@@ -50,7 +63,7 @@ Behaviour depends on `VITE_API_BASE_URL` (+ a stored JWT):
 
 ---
 
-## Backend domain models (`@Entity`, 8 tables — Flyway-managed, UUID PKs)
+## Backend domain models (`@Entity` — Flyway-managed; user data has UUID PKs, the catalogue uses natural string PKs)
 
 | Entity | Table | Holds | Written via |
 |--------|-------|-------|-------------|
@@ -62,6 +75,8 @@ Behaviour depends on `VITE_API_BASE_URL` (+ a stored JWT):
 | `BodyweightEntry` | `bodyweight_entries` | weigh-in per day (upsert by date) | `/bodyweight` |
 | `CoachVideo` | `coach_videos` | coach content (type, urls, premium, published) | `/coach/videos` |
 | `Subscription` | `subscriptions` | plan (FREE/PREMIUM), status, period, external ref | `/subscription` |
+| `Muscle` / `MuscleHead` | `muscles` / `muscle_heads` | taxonomy (kebab string ids) | seeded (EM13) |
+| `Exercise` (+ `exercise_{instructions,muscles,media}`) | `exercises` (+ child) | catalogue: enums, involvements, media | seeded (EM13) |
 
 > Enum-like columns are stored as `VARCHAR + CHECK` kept in lock-step with Java
 > enums (`Role`, `Gender`, `FitnessLevel`, `TrainingGoal`, `SplitType`,
@@ -81,6 +96,8 @@ Behaviour depends on `VITE_API_BASE_URL` (+ a stored JWT):
 | `/coach/videos` (CRUD + publish) | `CoachController` | COACH or ADMIN, owner-scoped |
 | `/content/videos` (GET, `/{id}`) | `ContentController` | any signed-in user; premium-gated (402) |
 | `/admin/**` | `AdminController` | ADMIN |
+| `/catalog/{exercises,muscles}` (+`/{id}`) | `CatalogController` | public (GET, reference data) |
+| `/generator/config` | `GeneratorController` | public (GET, reference data) |
 | `/meta` | `MetaController` | public |
 
 Layering everywhere: **Controller → Service → Repository**, uniform `ApiError`
@@ -134,7 +151,10 @@ split, days and equipment and it builds a balanced, non-redundant week with a
 weekly volume readout, recovery spacing and a 4-week progression plan. The only
 backend touch is convenience — if you're signed in it reads your profile to
 pre-fill the form ("Tuned to your profile"). The generation itself never leaves
-the browser.
+the browser — but since EM13 its **tuning** (splits, goal schemes, weekly layouts,
+progression) is fetched from `GET /api/v1/generator/config` (dual-path), so the
+rules are server-owned while the algorithm stays client-side; offline it uses the
+bundled config.
 
 **Progress (`/progress`).** This is **backend-driven analytics**. It reads
 `GET /api/v1/workouts` to compute volume, sets, weekly bar charts and personal

@@ -7,6 +7,7 @@ import { TrainingGoal } from '../../domain/enums/TrainingGoal'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { useProfile } from '../onboarding/ProfileContext'
 import { generateProgram } from './programGenerator'
+import { useGeneratorConfig } from './useGeneratorConfig'
 import { ProgramControls } from './components/ProgramControls'
 import { ProgramDayCard } from './components/ProgramDayCard'
 import { VolumeReadout } from './components/VolumeReadout'
@@ -18,6 +19,7 @@ import { UiText } from '../../config/labels'
 /** EM5: a recovery-aware, profile-tuned week + overload guidance + progression plan. */
 export function ProgramGeneratorPage() {
   const { exercises, muscleIndex, loading } = useExerciseData()
+  const generatorConfig = useGeneratorConfig()
   const { profile } = useProfile()
   const [split, setSplit] = useState<SplitType>(DEFAULT_PREFILL.split)
   const [days, setDays] = useState<number>(DEFAULT_PREFILL.days)
@@ -51,8 +53,8 @@ export function ProgramGeneratorPage() {
   }
 
   const program = useMemo(
-    () => generateProgram({ split, days, goal, equipment, seed }, exercises, muscleIndex),
-    [split, days, goal, equipment, seed, exercises, muscleIndex],
+    () => generateProgram({ split, days, goal, equipment, seed }, exercises, muscleIndex, generatorConfig),
+    [split, days, goal, equipment, seed, exercises, muscleIndex, generatorConfig],
   )
 
   return (

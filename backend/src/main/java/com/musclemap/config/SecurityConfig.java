@@ -68,6 +68,10 @@ public class SecurityConfig {
                                 base + "/auth/google").permitAll()
                         // Public platform metadata.
                         .requestMatchers(base + "/meta").permitAll()
+                        // Public reference data: the exercise + muscle catalogue (EM13).
+                        .requestMatchers(HttpMethod.GET, base + "/catalog/**").permitAll()
+                        // Public reference data: the program-generator config (EM13).
+                        .requestMatchers(HttpMethod.GET, base + "/generator/**").permitAll()
                         // Health + docs.
                         .requestMatchers("/actuator/health", "/actuator/health/**", "/actuator/info").permitAll()
                         .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
