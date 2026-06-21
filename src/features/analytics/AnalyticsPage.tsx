@@ -8,6 +8,7 @@ import { BarChart, LineChart, type ChartPoint } from './charts'
 import { listWorkouts, readLocalWorkouts } from '../workouts/workoutApi'
 import { listBodyweight, logBodyweight, readLocalBodyweight } from './bodyweightApi'
 import { useProfile } from '../onboarding/ProfileContext'
+import { EmptyState } from '../../components/StateMessage'
 import { UiText } from '../../config/labels'
 import { getActiveLanguage } from '../../config/i18n'
 
@@ -59,24 +60,24 @@ function useProgressData(): { logs: WorkoutLog[]; bodyweight: BodyweightEntry[];
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-2.5 mt-6 text-xs font-semibold uppercase tracking-widest text-zinc-400">{children}</h2>
+    <h2 className="mb-2.5 mt-6 text-xs font-semibold uppercase tracking-widest text-faint">{children}</h2>
   )
 }
 
 function StatTile({ icon: Icon, value, label }: { icon: LucideIcon; value: string; label: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-      <span className="grid h-9 w-9 place-items-center rounded-xl bg-orange-50 text-orange-600" aria-hidden>
+    <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
+      <span className="grid h-9 w-9 place-items-center rounded-xl bg-orange-500/10 text-orange-600" aria-hidden>
         <Icon className="h-4.5 w-4.5" />
       </span>
-      <p className="mt-3 text-2xl font-extrabold tracking-tight text-zinc-900">{value}</p>
-      <p className="text-xs font-medium text-zinc-400">{label}</p>
+      <p className="mt-3 text-2xl font-extrabold tracking-tight text-ink">{value}</p>
+      <p className="text-xs font-medium text-faint">{label}</p>
     </div>
   )
 }
 
 function ChartCard({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">{children}</div>
+  return <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">{children}</div>
 }
 
 /** This-week summary with a volume delta vs last week. */
@@ -86,25 +87,25 @@ function WeeklySummary({ summary }: { summary: AnalyticsSummary }) {
     lastWeek.volumeKg > 0 ? Math.round(((thisWeek.volumeKg - lastWeek.volumeKg) / lastWeek.volumeKg) * 100) : null
   const up = delta != null && delta >= 0
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-[11px] font-medium uppercase tracking-wide text-zinc-400">{UiText.weeklySummaryTitle}</p>
-          <p className="mt-1 text-2xl font-extrabold tracking-tight text-zinc-900">
-            {compact(thisWeek.volumeKg)} <span className="text-sm font-semibold text-zinc-400">{UiText.volumeUnitKg}</span>
+          <p className="text-[11px] font-medium uppercase tracking-wide text-faint">{UiText.weeklySummaryTitle}</p>
+          <p className="mt-1 text-2xl font-extrabold tracking-tight text-ink">
+            {compact(thisWeek.volumeKg)} <span className="text-sm font-semibold text-faint">{UiText.volumeUnitKg}</span>
           </p>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-faint">
             {thisWeek.sessions} · {thisWeek.sets} {UiText.setsWord.toLowerCase()}
           </p>
         </div>
         {delta != null ? (
           <span
             className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-semibold ${
-              up ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'
+              up ? 'bg-emerald-500/10 text-emerald-600' : 'bg-rose-500/10 text-rose-600'
             }`}
           >
             {up ? '+' : ''}
-            {delta}% <span className="font-normal text-zinc-400">{UiText.vsLastWeek}</span>
+            {delta}% <span className="font-normal text-faint">{UiText.vsLastWeek}</span>
           </span>
         ) : null}
       </div>
@@ -145,13 +146,13 @@ function BodyweightSection({ entries, onLogged }: { entries: BodyweightEntry[]; 
   }
 
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
       <div className="flex items-baseline justify-between">
-        <p className="text-2xl font-extrabold tracking-tight text-zinc-900">
+        <p className="text-2xl font-extrabold tracking-tight text-ink">
           {latest ? `${latest.weightKg}` : '—'}
-          {latest ? <span className="ms-1 text-sm font-semibold text-zinc-400">{UiText.volumeUnitKg}</span> : null}
+          {latest ? <span className="ms-1 text-sm font-semibold text-faint">{UiText.volumeUnitKg}</span> : null}
         </p>
-        {latest ? <span className="text-xs text-zinc-400">{shortDate(parseDay(latest.recordedOn))}</span> : null}
+        {latest ? <span className="text-xs text-faint">{shortDate(parseDay(latest.recordedOn))}</span> : null}
       </div>
 
       {points.length >= 2 ? (
@@ -159,7 +160,7 @@ function BodyweightSection({ entries, onLogged }: { entries: BodyweightEntry[]; 
           <LineChart data={points} formatValue={(v) => `${v} ${UiText.volumeUnitKg}`} />
         </div>
       ) : (
-        <p className="mt-2 text-xs text-zinc-400">{UiText.bodyweightEmptyHint}</p>
+        <p className="mt-2 text-xs text-faint">{UiText.bodyweightEmptyHint}</p>
       )}
 
       <form onSubmit={submit} className="mt-3 flex gap-2">
@@ -172,7 +173,7 @@ function BodyweightSection({ entries, onLogged }: { entries: BodyweightEntry[]; 
           onChange={(e) => setWeight(e.target.value)}
           placeholder={UiText.weightKgPlaceholder}
           aria-label={UiText.weightKgPlaceholder}
-          className="min-w-0 flex-1 rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm font-medium text-zinc-900 outline-none focus:border-orange-300 focus:bg-white"
+          className="min-w-0 flex-1 rounded-xl border border-line bg-subtle px-3 py-2 text-sm font-medium text-ink outline-none focus:border-orange-500/40 focus:bg-surface"
         />
         <button
           type="submit"
@@ -189,9 +190,9 @@ function BodyweightSection({ entries, onLogged }: { entries: BodyweightEntry[]; 
 function PersonalRecords({ summary }: { summary: AnalyticsSummary }) {
   if (summary.prs.length === 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-6 text-center">
-        <p className="text-sm font-semibold text-zinc-500">{UiText.noPrsYet}</p>
-        <p className="mt-0.5 text-xs text-zinc-400">{UiText.noPrsYetHint}</p>
+      <div className="rounded-2xl border border-dashed border-line bg-surface/60 p-6 text-center">
+        <p className="text-sm font-semibold text-muted">{UiText.noPrsYet}</p>
+        <p className="mt-0.5 text-xs text-faint">{UiText.noPrsYetHint}</p>
       </div>
     )
   }
@@ -200,22 +201,22 @@ function PersonalRecords({ summary }: { summary: AnalyticsSummary }) {
       {summary.prs.map((pr) => (
         <div
           key={pr.exerciseRef}
-          className="flex items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white p-3.5 shadow-sm"
+          className="flex items-center gap-3 rounded-2xl border border-line/80 bg-surface p-3.5 shadow-sm"
         >
-          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-50 text-orange-600" aria-hidden>
+          <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-500/10 text-orange-600" aria-hidden>
             <Trophy className="h-5 w-5" />
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate font-semibold text-zinc-900">{pr.exerciseName}</span>
-            <span className="block text-sm text-zinc-400">
+            <span className="block truncate font-semibold text-ink">{pr.exerciseName}</span>
+            <span className="block text-sm text-faint">
               {pr.maxWeightKg} {UiText.volumeUnitKg} × {pr.repsAtBest} {UiText.repsWord.toLowerCase()}
             </span>
           </span>
           <span className="shrink-0 text-right">
-            <span className="block text-sm font-bold text-zinc-900">
+            <span className="block text-sm font-bold text-ink">
               {Math.round(pr.estimatedOneRepMaxKg)} {UiText.volumeUnitKg}
             </span>
-            <span className="block text-[11px] text-zinc-400">{UiText.est1RmLabel}</span>
+            <span className="block text-[11px] text-faint">{UiText.est1RmLabel}</span>
           </span>
         </div>
       ))}
@@ -245,12 +246,12 @@ export function AnalyticsPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <TrendingUp className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.analyticsTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.analyticsSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.analyticsTitle}</h1>
+          <p className="text-sm text-faint">{UiText.analyticsSubtitle}</p>
         </div>
       </header>
 
@@ -278,11 +279,7 @@ export function AnalyticsPage() {
           <PersonalRecords summary={summary} />
         </>
       ) : (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <Dumbbell className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.noStatsYet}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.noStatsYetHint}</p>
-        </div>
+        <EmptyState icon={Dumbbell} title={UiText.noStatsYet} description={UiText.noStatsYetHint} />
       )}
 
       <SectionHeading>{UiText.bodyweightTitle}</SectionHeading>

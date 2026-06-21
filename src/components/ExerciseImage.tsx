@@ -38,7 +38,7 @@ export function ExerciseImage({
   if (!first) return null
 
   return (
-    <div className={`relative overflow-hidden bg-white ${className}`}>
+    <div className={`relative overflow-hidden bg-surface ${className}`}>
       <img src={first} alt={alt} loading="lazy" className={`absolute inset-0 h-full w-full ${fitClass}`} />
       {animate && second ? (
         <img

@@ -14,7 +14,7 @@ interface FilterBarProps {
 }
 
 const SELECT_CLASS =
-  'w-full appearance-none rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-800 shadow-sm ' +
+  'w-full appearance-none rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink shadow-sm ' +
   'focus:outline-none focus:ring-2 focus:ring-orange-500/60'
 
 /** Search box + muscle-group and equipment dropdowns. Options come from enums. */
@@ -30,7 +30,7 @@ export function FilterBar({
     <div className="flex flex-col gap-2 sm:flex-row">
       <div className="relative sm:flex-1">
         <Search
-          className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+          className="pointer-events-none absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-faint"
           aria-hidden
         />
         <input

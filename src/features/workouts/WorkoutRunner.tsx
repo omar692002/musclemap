@@ -108,14 +108,14 @@ export function WorkoutRunner({
   const doneCount = rows.filter((row) => row.completed).length
 
   return (
-    <section className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+    <section className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
       {/* Sticky timer + finish bar. */}
-      <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-2xl border-b border-zinc-100 bg-white/95 px-4 py-3 backdrop-blur">
-        <span className="inline-flex items-center gap-1.5 text-lg font-bold tabular-nums text-zinc-900">
+      <div className="-mx-4 -mt-4 mb-3 flex items-center justify-between gap-3 rounded-t-2xl border-b border-line bg-surface/95 px-4 py-3 backdrop-blur">
+        <span className="inline-flex items-center gap-1.5 text-lg font-bold tabular-nums text-ink">
           <Clock className="h-4.5 w-4.5 text-orange-600" aria-hidden />
           {formatElapsed(elapsed)}
         </span>
-        <span className="text-xs font-medium text-zinc-400">
+        <span className="text-xs font-medium text-faint">
           {doneCount}/{rows.length}
         </span>
         <button
@@ -133,7 +133,7 @@ export function WorkoutRunner({
         </button>
       </div>
 
-      <ul className="flex flex-col divide-y divide-zinc-100">
+      <ul className="flex flex-col divide-y divide-line">
         {items.map((item, i) => {
           const row = rows[i]
           const images = item.exercise.media
@@ -144,29 +144,29 @@ export function WorkoutRunner({
               <ExerciseImage
                 images={images}
                 alt={item.exercise.name}
-                className={`h-12 w-12 shrink-0 rounded-xl border border-zinc-200/80 transition ${row.completed ? 'opacity-50' : ''}`}
+                className={`h-12 w-12 shrink-0 rounded-xl border border-line/80 transition ${row.completed ? 'opacity-50' : ''}`}
               />
               <div className="min-w-0 flex-1">
-                <p className={`truncate text-sm font-medium ${row.completed ? 'text-zinc-400 line-through' : 'text-zinc-800'}`}>
+                <p className={`truncate text-sm font-medium ${row.completed ? 'text-faint line-through' : 'text-ink'}`}>
                   {item.exercise.name}
                 </p>
                 <div className="mt-1.5 flex items-center gap-2">
-                  <label className="flex items-center gap-1 text-xs text-zinc-400">
+                  <label className="flex items-center gap-1 text-xs text-faint">
                     <input
                       type="number"
                       inputMode="numeric"
                       min={0}
                       value={row.reps}
                       onChange={(e) => update(i, { reps: e.target.value })}
-                      className="w-12 rounded-lg border border-zinc-200 px-2 py-1 text-center text-sm font-semibold text-zinc-800 tabular-nums focus:border-orange-400 focus:outline-none"
+                      className="w-12 rounded-lg border border-line px-2 py-1 text-center text-sm font-semibold text-ink tabular-nums focus:border-orange-400 focus:outline-none"
                       aria-label={UiText.repsWord}
                     />
                     {UiText.repsWord}
                   </label>
-                  <span className="text-xs text-zinc-300" aria-hidden>
+                  <span className="text-xs text-faint" aria-hidden>
                     ×{item.sets}
                   </span>
-                  <label className="flex items-center gap-1 text-xs text-zinc-400">
+                  <label className="flex items-center gap-1 text-xs text-faint">
                     <input
                       type="number"
                       inputMode="decimal"
@@ -175,7 +175,7 @@ export function WorkoutRunner({
                       value={row.weight}
                       onChange={(e) => update(i, { weight: e.target.value })}
                       placeholder="—"
-                      className="w-16 rounded-lg border border-zinc-200 px-2 py-1 text-center text-sm font-semibold text-zinc-800 tabular-nums focus:border-orange-400 focus:outline-none"
+                      className="w-16 rounded-lg border border-line px-2 py-1 text-center text-sm font-semibold text-ink tabular-nums focus:border-orange-400 focus:outline-none"
                       aria-label={UiText.weightWord}
                     />
                     kg
@@ -190,7 +190,7 @@ export function WorkoutRunner({
                 className={`grid h-9 w-9 shrink-0 place-items-center rounded-full border-2 transition active:scale-90 ${
                   row.completed
                     ? 'border-orange-600 bg-orange-600 text-white'
-                    : 'border-zinc-200 text-transparent hover:border-orange-300'
+                    : 'border-line text-transparent hover:border-orange-500/40'
                 }`}
               >
                 <Check className="h-4.5 w-4.5" aria-hidden />
@@ -204,7 +204,7 @@ export function WorkoutRunner({
         type="button"
         onClick={onCancel}
         disabled={saving}
-        className="mt-3 w-full rounded-xl border border-zinc-200 py-2 text-sm font-medium text-zinc-500 transition hover:bg-zinc-50 disabled:opacity-60"
+        className="mt-3 w-full rounded-xl border border-line py-2 text-sm font-medium text-muted transition hover:bg-subtle disabled:opacity-60"
       >
         {UiText.cancelWorkout}
       </button>

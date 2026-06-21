@@ -1,5 +1,52 @@
 # Progress Log
 
+## EM12 — Product Polish (complete, 2026-06-21) — FINAL milestone of the sprint
+**State:** The app-wide polish pass: a real **dark mode**, a unified visual language,
+consistent empty/error/loading states, entrance animations, and accessibility +
+reduced-motion support. **Frontend-only** (one backend touch: version/milestone bump).
+
+**Dark mode — a semantic token layer (no per-component `dark:` duplication).** `index.css`
+now expresses colour through **meaning-named tokens** (`canvas`/`surface`/`subtle`/`elevated`/
+`ink`/`muted`/`faint`/`line`/`line-strong`/`accent`), each a CSS custom property defined once
+for light (`:root`) and once for dark (`.dark`) and exposed as Tailwind utilities via
+`@theme inline` (so `bg-surface`/`text-ink`/`border-line` resolve to the live var). A component
+states *what a colour is*, and the theme flips every screen from one place. **No raw palette
+classes remain** in the UI (the old `bg-white`/`text-zinc-*`/`border-zinc-*` were migrated to
+tokens across all components + feature pages; accent tints moved from light-only `-50/-100`
+fills to theme-safe `/10`/`/15` opacities). The lone dark CTA became an inverted `bg-ink
+text-surface` button; image-overlay scrims stay intentionally dark in both themes.
+
+**Theme switching.** New `Theme` enum (`Light`/`Dark`/`System`) + `StorageKey.Theme`.
+`features/theme/`: pure `themeStorage.ts` (read/persist + `resolveTheme` + `applyResolvedTheme`
+toggling `.dark` on `<html>`; `applyStoredTheme()` runs **before first paint** in `main.tsx`,
+so a dark user never sees a light flash), `ThemeContext` (preference + derived `resolved`;
+follows the OS `prefers-color-scheme` live while on `System` — `resolved` is derived in render,
+no setState-in-effect), and a `ThemeToggle` in the top bar (cycles light → dark → system with
+a matching Sun/Moon/Monitor icon, screen-reader labelled). `ThemeProvider` wraps `App` outermost.
+
+**Consistent states.** New shared `components/StateMessage.tsx`: `EmptyState` (icon + title +
+hint + optional action) and `ErrorState` (`role="status"`, default copy, optional retry). The
+ad-hoc empty/error blocks on the data screens (Admin, Coach, Content) and the empty states on
+Dashboard / Analytics / Intel now route through these — one consistent look + a11y.
+
+**Animations & a11y.** Route screens already replay `animate-fade-up`; added a `pop-in` entrance
+for the state panels and `animate-fade-up` on the content grid. `index.css` adds a global
+`:focus-visible` ring (keyboard users only) and a `prefers-reduced-motion` guard that disables
+entrance/looping animations. The 3D canvas background is now token-based (`bg-subtle`) so it no
+longer glows as a bright box in dark mode (dropped the dead `model3d.background` config).
+
+**i18n:** 4 new EN/FR/AR `ui` keys (`themeLabel`/`retry`/`errorTitle`/`genericError`) + a new
+`theme` enum label map (`THEME_LABELS`); TS keeps all three packs exhaustive.
+
+**Quality.** `npm run lint` clean, `npm run build` (tsc + vite + PWA) green, `npm test` **102**
+green (no engine logic changed — EM12 is presentational; the built CSS verifiably carries the
+`.dark` token overrides + semantic utilities + reduced-motion guard). App version 0.5.0→0.6.0 /
+milestone "EM12 - Product Polish".
+
+**Next action:** PFA Evolution Sprint is **complete (EM1–EM12)**. Candidates beyond the sprint:
+per-exercise i18n (dataset is English-only), native iOS/Android via Capacitor, model
+compression, Stripe (real billing), and the academic strengthening items in ROADMAP.
+
 ## EM11 — Subscription Architecture (complete, 2026-06-20)
 **State:** Real FREE/PREMIUM entitlement with a **server-enforced premium guard**,
 on the `subscriptions` table seeded since EM1. No Stripe — upgrade/cancel are a

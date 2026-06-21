@@ -39,6 +39,8 @@ export const USER_ROLE_LABELS = t.userRole
 export const COACH_CONTENT_TYPE_LABELS = t.coachContentType
 // Subscription Architecture (EM11).
 export const SUBSCRIPTION_PLAN_LABELS = t.subscriptionPlan
+// Product polish (EM12).
+export const THEME_LABELS = t.theme
 
 /** Standard warm-up checklist shown atop each generated training day. */
 export const WARMUP_STEPS = t.warmup

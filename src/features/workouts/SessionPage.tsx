@@ -39,9 +39,9 @@ export function SessionPage() {
       >
         <span
           aria-hidden
-          className="pointer-events-none absolute -end-10 -top-14 h-40 w-40 rounded-full bg-white/15 blur-2xl"
+          className="pointer-events-none absolute -end-10 -top-14 h-40 w-40 rounded-full bg-surface/15 blur-2xl"
         />
-        <span className="grid h-13 w-13 shrink-0 place-items-center rounded-2xl bg-white/20 p-3" aria-hidden>
+        <span className="grid h-13 w-13 shrink-0 place-items-center rounded-2xl bg-surface/20 p-3" aria-hidden>
           <session.icon className="h-7 w-7" />
         </span>
         <div className="min-w-0">
@@ -67,25 +67,25 @@ export function SessionPage() {
           {loading ? (
             <RowListSkeleton count={6} />
           ) : (
-            <section className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+            <section className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
               <div className="mb-1 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-zinc-900">
+                <h2 className="text-sm font-semibold text-ink">
                   {UiText.exercisesHeading}
-                  <span className="ms-1.5 text-xs font-normal text-zinc-400">{items.length}</span>
+                  <span className="ms-1.5 text-xs font-normal text-faint">{items.length}</span>
                 </h2>
                 <button
                   type="button"
                   onClick={() => setSeed((value) => value + 1)}
-                  className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100 active:scale-95"
+                  className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-500/15 active:scale-95"
                 >
                   <RefreshCw className="h-3.5 w-3.5" aria-hidden />
                   {UiText.regenerate}
                 </button>
               </div>
               {items.length === 0 ? (
-                <p className="py-2 text-sm text-zinc-400">{UiText.emptyDay}</p>
+                <p className="py-2 text-sm text-faint">{UiText.emptyDay}</p>
               ) : (
-                <ul className="flex flex-col divide-y divide-zinc-100">
+                <ul className="flex flex-col divide-y divide-line">
                   {items.map((item) => (
                     <WorkoutExerciseRow key={item.exercise.id} item={item} />
                   ))}

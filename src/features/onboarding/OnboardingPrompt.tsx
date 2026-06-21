@@ -16,14 +16,14 @@ export function OnboardingPrompt() {
   return (
     <Link
       to={AppRoutes.onboarding}
-      className="group mb-5 flex items-center gap-3 rounded-2xl border border-orange-200 bg-gradient-to-r from-amber-50 to-orange-50 p-4 shadow-sm transition hover:border-orange-300 active:scale-[0.99]"
+      className="group mb-5 flex items-center gap-3 rounded-2xl border border-orange-500/30 bg-gradient-to-r from-amber-500/10 to-orange-500/10 p-4 shadow-sm transition hover:border-orange-500/40 active:scale-[0.99]"
     >
-      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-100 text-orange-600" aria-hidden>
+      <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-orange-500/15 text-orange-600" aria-hidden>
         <Sparkles className="h-5 w-5" />
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block text-sm font-bold text-zinc-900">{UiText.onboardingPromptTitle}</span>
-        <span className="block truncate text-xs text-zinc-500">{UiText.onboardingPromptBody}</span>
+        <span className="block text-sm font-bold text-ink">{UiText.onboardingPromptTitle}</span>
+        <span className="block truncate text-xs text-muted">{UiText.onboardingPromptBody}</span>
       </span>
       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-orange-600 px-3 py-1.5 text-xs font-bold text-white">
         {UiText.onboardingPromptCta}

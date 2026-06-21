@@ -12,4 +12,5 @@ export enum StorageKey {
   WorkoutLogs = 'musclemap.workoutLogs',
   BodyweightLogs = 'musclemap.bodyweightLogs',
   Subscription = 'musclemap.subscription',
+  Theme = 'musclemap.theme',
 }

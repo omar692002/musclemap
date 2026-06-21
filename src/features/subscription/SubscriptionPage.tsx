@@ -55,39 +55,39 @@ export function SubscriptionPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <Crown className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.subscriptionTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.subscriptionSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.subscriptionTitle}</h1>
+          <p className="text-sm text-faint">{UiText.subscriptionSubtitle}</p>
         </div>
       </header>
 
       {!isAuthEnabled() || !user ? (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <Crown className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.subscriptionSignInNotice}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.subscriptionSignInHint}</p>
+        <div className="rounded-2xl border border-dashed border-line bg-surface/60 p-8 text-center">
+          <Crown className="mx-auto h-8 w-8 text-faint" aria-hidden />
+          <p className="mt-2 text-sm font-semibold text-muted">{UiText.subscriptionSignInNotice}</p>
+          <p className="mt-0.5 text-xs text-faint">{UiText.subscriptionSignInHint}</p>
         </div>
       ) : (
         <>
           {/* Current plan banner. */}
           <div
             className={`flex items-center justify-between rounded-2xl border p-4 ${
-              isPremium ? 'border-orange-200 bg-orange-50' : 'border-zinc-200 bg-white'
+              isPremium ? 'border-orange-500/30 bg-orange-500/10' : 'border-line bg-surface'
             }`}
           >
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+              <p className="text-xs font-semibold uppercase tracking-wide text-faint">
                 {UiText.subscriptionCurrentPlan}
               </p>
-              <p className="mt-0.5 flex items-center gap-1.5 text-lg font-extrabold text-zinc-900">
+              <p className="mt-0.5 flex items-center gap-1.5 text-lg font-extrabold text-ink">
                 {isPremium ? <Crown className="h-4 w-4 text-orange-500" aria-hidden /> : null}
                 {SUBSCRIPTION_PLAN_LABELS[subscription.plan]}
               </p>
               {isPremium && periodEnd ? (
-                <p className="mt-0.5 text-xs text-zinc-500">
+                <p className="mt-0.5 text-xs text-muted">
                   {UiText.subscriptionUntil} {periodEnd}
                 </p>
               ) : null}
@@ -119,7 +119,7 @@ export function SubscriptionPage() {
                 type="button"
                 disabled={busy}
                 onClick={() => void run(cancel)}
-                className="w-full rounded-full border border-zinc-200 bg-white px-4 py-2.5 text-sm font-semibold text-zinc-700 transition hover:bg-zinc-50 disabled:opacity-60"
+                className="w-full rounded-full border border-line bg-surface px-4 py-2.5 text-sm font-semibold text-muted transition hover:bg-subtle disabled:opacity-60"
               >
                 {busy ? UiText.subscriptionCancelling : UiText.subscriptionCancelCta}
               </button>
@@ -134,7 +134,7 @@ export function SubscriptionPage() {
                 {busy ? UiText.subscriptionUpgrading : UiText.subscriptionUpgradeCta}
               </button>
             )}
-            <p className="mt-2 text-center text-xs text-zinc-400">{UiText.subscriptionMockNote}</p>
+            <p className="mt-2 text-center text-xs text-faint">{UiText.subscriptionMockNote}</p>
           </div>
         </>
       )}
@@ -159,24 +159,24 @@ function PlanCard({
   return (
     <article
       className={`rounded-2xl border p-4 ${
-        highlighted ? 'border-orange-300 bg-orange-50/40' : 'border-zinc-200 bg-white'
+        highlighted ? 'border-orange-500/40 bg-orange-500/10' : 'border-line bg-surface'
       }`}
     >
-      <h2 className="flex items-center gap-1.5 text-sm font-extrabold text-zinc-900">
+      <h2 className="flex items-center gap-1.5 text-sm font-extrabold text-ink">
         {column === 'premium' ? <Crown className="h-4 w-4 text-orange-500" aria-hidden /> : null}
         {name}
       </h2>
-      <p className="mt-0.5 text-xs text-zinc-400">{tagline}</p>
+      <p className="mt-0.5 text-xs text-faint">{tagline}</p>
       <ul className="mt-3 space-y-2">
         {features.map((feature) => {
           const included = column === 'premium' ? feature.premium : feature.free
           return (
             <li
               key={feature.label}
-              className={`flex items-start gap-2 text-xs ${included ? 'text-zinc-700' : 'text-zinc-300 line-through'}`}
+              className={`flex items-start gap-2 text-xs ${included ? 'text-muted' : 'text-faint line-through'}`}
             >
               <Check
-                className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${included ? 'text-emerald-500' : 'text-zinc-300'}`}
+                className={`mt-0.5 h-3.5 w-3.5 shrink-0 ${included ? 'text-emerald-500' : 'text-faint'}`}
                 aria-hidden
               />
               {feature.label}

@@ -9,7 +9,6 @@ import { AnatomyModel } from './AnatomyModel'
 import { ModelErrorBoundary } from './ModelErrorBoundary'
 import { MuscleMapLegend } from '../MuscleMapLegend'
 import { rolesInHighlight } from '../highlight'
-import { MuscleMapConfig } from '../../../config/muscleMap.config'
 import { AnatomyModelConfig } from '../../../config/anatomyModel.config'
 import { UiText } from '../../../config/labels'
 
@@ -42,8 +41,7 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
   return (
     <div className="flex w-full flex-col items-center gap-2">
       <div
-        className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-zinc-200/80 shadow-sm"
-        style={{ background: MuscleMapConfig.model3d.background }}
+        className="aspect-[3/4] w-full max-w-[380px] overflow-hidden rounded-2xl border border-line/80 bg-subtle shadow-sm"
       >
         <Canvas camera={{ position: [0, 0, 5.0], fov: 40 }} dpr={[1, 2]}>
           <ambientLight intensity={0.75} />
@@ -57,9 +55,9 @@ export default function Muscle3DView({ muscleIndex, highlight, selected, onSelec
           <OrbitControls enablePan={false} enableDamping minDistance={2.6} maxDistance={6} />
         </Canvas>
       </div>
-      <p className="h-5 text-center text-sm text-zinc-500">{caption}</p>
+      <p className="h-5 text-center text-sm text-muted">{caption}</p>
       {highlight ? <MuscleMapLegend roles={rolesInHighlight(highlight)} /> : null}
-      <p className="text-center text-[11px] text-zinc-400">{AnatomyModelConfig.attribution}</p>
+      <p className="text-center text-[11px] text-faint">{AnatomyModelConfig.attribution}</p>
     </div>
   )
 }

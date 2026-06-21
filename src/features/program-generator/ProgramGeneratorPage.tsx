@@ -58,17 +58,17 @@ export function ProgramGeneratorPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
       <header className="mb-1 flex flex-wrap items-center gap-2">
-        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.programTitle}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.programTitle}</h1>
         {tuned && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-orange-50 px-2.5 py-0.5 text-[11px] font-semibold text-orange-700">
+          <span className="inline-flex items-center gap-1 rounded-full bg-orange-500/10 px-2.5 py-0.5 text-[11px] font-semibold text-orange-600">
             <Sparkles className="h-3 w-3" aria-hidden />
             {UiText.tunedToProfile}
           </span>
         )}
       </header>
-      <p className="mb-5 text-sm text-zinc-500">{UiText.programHelp}</p>
+      <p className="mb-5 text-sm text-muted">{UiText.programHelp}</p>
 
-      <div className="mb-6 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+      <div className="mb-6 rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
         <ProgramControls
           split={split}
           days={days}
@@ -93,7 +93,7 @@ export function ProgramGeneratorPage() {
           <button
             type="button"
             onClick={() => setSeed((value) => value + 1)}
-            className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-4 py-2 text-sm font-semibold text-orange-700 transition hover:bg-orange-100 active:scale-95"
+            className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-4 py-2 text-sm font-semibold text-orange-600 transition hover:bg-orange-500/15 active:scale-95"
           >
             <RefreshCw className="h-4 w-4" aria-hidden />
             {UiText.regenerate}

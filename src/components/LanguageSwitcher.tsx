@@ -13,8 +13,8 @@ import { UiText } from '../config/labels'
 export function LanguageSwitcher() {
   const current = getActiveLanguage()
   return (
-    <label className="relative flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-1.5 text-xs font-semibold text-zinc-600 transition hover:border-zinc-300">
-      <Globe className="h-3.5 w-3.5 text-zinc-400" aria-hidden />
+    <label className="relative flex items-center gap-1.5 rounded-full border border-line bg-subtle px-2.5 py-1.5 text-xs font-semibold text-muted transition hover:border-line-strong">
+      <Globe className="h-3.5 w-3.5 text-faint" aria-hidden />
       <span aria-hidden className="uppercase">
         {current}
       </span>

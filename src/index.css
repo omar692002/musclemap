@@ -2,15 +2,32 @@
 @import "@fontsource-variable/inter";
 
 /*
- * MuscleMap design system.
+ * MuscleMap design system (EM12).
  *
- * Clean, light "training app" look: soft neutral canvas, white cards, near-black
- * ink, and an energetic ember (orange→red) accent. Components use the standard
- * Tailwind palettes (zinc neutrals, orange accent) directly — no scale remapping.
- * 3D / SVG board colours live in config/muscleMap.config.ts.
+ * Colour is expressed through SEMANTIC tokens (surface / ink / muted / line …),
+ * not raw palette classes. Each token is a CSS custom property defined once for
+ * light and once for dark (`:root` vs `.dark`), and `@theme inline` turns each
+ * into a real Tailwind utility (bg-surface, text-ink, border-line …). So a
+ * component states *meaning* ("this is a surface"), and switching theme flips
+ * every screen from a single place — no per-component `dark:` duplication.
+ *
+ * 3D / SVG board colours still live in config/muscleMap.config.ts.
  */
-@theme {
+@theme inline {
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  /* Semantic surfaces & ink — values come from the :root / .dark blocks below. */
+  --color-canvas: var(--canvas); /* app background behind cards */
+  --color-surface: var(--surface); /* card / panel face */
+  --color-subtle: var(--subtle); /* inputs, chips, raised fills */
+  --color-elevated: var(--elevated); /* faint zebra / hover fills */
+  --color-ink: var(--ink); /* primary text */
+  --color-muted: var(--muted); /* secondary text */
+  --color-faint: var(--faint); /* tertiary text & icons */
+  --color-line: var(--line); /* hairline borders */
+  --color-line-strong: var(--line-strong); /* hover / emphasised borders */
+  --color-accent: var(--accent); /* brand ember */
+  --color-accent-strong: var(--accent-strong);
 
   /* Two-frame exercise demo: hold frame A, then frame B (steps, no crossfade). */
   --animate-demo-frame: demo-frame 1.8s steps(1) infinite;
@@ -37,6 +54,51 @@
       transform: translateY(0);
     }
   }
+
+  /* Staggered card/list entrance. */
+  --animate-pop-in: pop-in 0.28s cubic-bezier(0.21, 1.02, 0.73, 1) both;
+  @keyframes pop-in {
+    from {
+      opacity: 0;
+      transform: translateY(6px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+}
+
+/* Light theme (default). */
+:root {
+  color-scheme: light;
+  --canvas: #f4f4f5;
+  --surface: #ffffff;
+  --subtle: #f4f4f5;
+  --elevated: #fafafa;
+  --ink: #18181b;
+  --muted: #52525b;
+  --faint: #a1a1aa;
+  --line: #e4e4e7;
+  --line-strong: #d4d4d8;
+  --accent: #f97316;
+  --accent-strong: #ea580c;
+}
+
+/* Dark theme — applied by ThemeContext via `.dark` on <html>. */
+.dark {
+  color-scheme: dark;
+  --canvas: #09090b;
+  --surface: #18181b;
+  --subtle: #27272a;
+  --elevated: #212124;
+  --ink: #fafafa;
+  --muted: #a1a1aa;
+  --faint: #71717a;
+  --line: #27272a;
+  --line-strong: #3f3f46;
+  --accent: #fb923c;
+  --accent-strong: #f97316;
 }
 
 /* Hide scrollbars on horizontal chip rows (still scrollable). */
@@ -48,10 +110,6 @@
   }
 }
 
-:root {
-  color-scheme: light;
-}
-
 html,
 body,
 #root {
@@ -60,8 +118,32 @@ body,
 
 body {
   margin: 0;
-  background: #f6f6f7; /* app canvas behind cards / safe areas */
+  background: var(--canvas); /* app canvas behind cards / safe areas */
+  color: var(--ink);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Keep the theme flip from flashing during paint. */
+html {
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Visible keyboard focus everywhere (a11y) without affecting mouse users. */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Honour the OS "reduce motion" setting: drop entrance/looping animations. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

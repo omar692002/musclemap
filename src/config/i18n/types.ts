@@ -22,6 +22,7 @@ import type { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import type { UserRole } from '../../domain/enums/UserRole'
 import type { CoachContentType } from '../../domain/enums/CoachContentType'
 import type { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
+import type { Theme } from '../../domain/enums/Theme'
 
 /** Static UI copy. One implementation per language keeps the set in lock-step. */
 export interface UiStrings {
@@ -281,6 +282,11 @@ export interface UiStrings {
   readonly subscriptionMockNote: string
   readonly subscriptionSignInNotice: string
   readonly subscriptionSignInHint: string
+  // Product polish (EM12).
+  readonly themeLabel: string
+  readonly retry: string
+  readonly errorTitle: string
+  readonly genericError: string
 }
 
 /**
@@ -320,6 +326,8 @@ export interface Translation {
   readonly coachContentType: Readonly<Record<CoachContentType, string>>
   /** Subscription vocabularies (EM11). */
   readonly subscriptionPlan: Readonly<Record<SubscriptionPlan, string>>
+  /** Appearance preference labels (EM12). */
+  readonly theme: Readonly<Record<Theme, string>>
   /** Warm-up checklist shown atop each training day. */
   readonly warmup: readonly string[]
 }

@@ -18,8 +18,8 @@ export function WarmupBlock() {
     })
 
   return (
-    <div className="rounded-2xl border border-amber-200/70 bg-amber-50/70 p-3">
-      <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-amber-700">
+    <div className="rounded-2xl border border-amber-500/25 bg-amber-500/10 p-3">
+      <p className="mb-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-amber-600">
         <Flame className="h-3.5 w-3.5" aria-hidden />
         {UiText.warmupTitle}
       </p>
@@ -28,14 +28,14 @@ export function WarmupBlock() {
           const checked = done.has(index)
           return (
             <li key={step}>
-              <label className="flex cursor-pointer items-start gap-2 rounded-lg px-1 py-0.5 text-sm text-zinc-600 transition hover:bg-amber-100/60">
+              <label className="flex cursor-pointer items-start gap-2 rounded-lg px-1 py-0.5 text-sm text-muted transition hover:bg-amber-500/10">
                 <input
                   type="checkbox"
                   checked={checked}
                   onChange={() => toggle(index)}
                   className="mt-0.5 h-4 w-4 shrink-0 accent-amber-600"
                 />
-                <span className={checked ? 'text-zinc-400 line-through' : ''}>{step}</span>
+                <span className={checked ? 'text-faint line-through' : ''}>{step}</span>
               </label>
             </li>
           )

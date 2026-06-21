@@ -9,7 +9,7 @@ export function BackButton() {
     <button
       type="button"
       onClick={() => navigate(-1)}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-zinc-200 bg-white text-zinc-700 shadow-sm transition hover:bg-zinc-50 active:scale-95"
+      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-line bg-surface text-muted shadow-sm transition hover:bg-subtle hover:text-ink active:scale-95"
       aria-label={UiText.back}
     >
       <ChevronLeft className="h-5 w-5 rtl:rotate-180" aria-hidden />

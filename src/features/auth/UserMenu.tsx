@@ -35,13 +35,13 @@ export function UserMenu() {
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className="block h-8 w-8 overflow-hidden rounded-full border border-zinc-200 shadow-sm transition active:scale-95"
+        className="block h-8 w-8 overflow-hidden rounded-full border border-line shadow-sm transition active:scale-95"
         aria-expanded={open}
       >
         {user.avatarUrl ? (
           <img src={user.avatarUrl} alt={user.name} referrerPolicy="no-referrer" className="h-full w-full object-cover" />
         ) : (
-          <span className="grid h-full w-full place-items-center bg-orange-100 text-xs font-bold text-orange-700">
+          <span className="grid h-full w-full place-items-center bg-orange-500/15 text-xs font-bold text-orange-600">
             {user.name.charAt(0).toUpperCase()}
           </span>
         )}
@@ -52,19 +52,19 @@ export function UserMenu() {
         onClick={signOut}
         aria-label={UiText.signOut}
         title={UiText.signOut}
-        className="grid h-8 w-8 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-500 shadow-sm transition hover:bg-zinc-50 hover:text-zinc-700 active:scale-95"
+        className="grid h-8 w-8 place-items-center rounded-full border border-line bg-surface text-muted shadow-sm transition hover:bg-subtle hover:text-muted active:scale-95"
       >
         <LogOut className="h-4 w-4" aria-hidden />
       </button>
 
       {open ? (
-        <div className="absolute end-0 top-10 z-50 w-56 rounded-2xl border border-zinc-200 bg-white p-3 shadow-lg">
-          <p className="truncate text-sm font-semibold text-zinc-900">{user.name}</p>
-          <p className="truncate text-xs text-zinc-400">{user.email}</p>
+        <div className="absolute end-0 top-10 z-50 w-56 rounded-2xl border border-line bg-surface p-3 shadow-lg">
+          <p className="truncate text-sm font-semibold text-ink">{user.name}</p>
+          <p className="truncate text-xs text-faint">{user.email}</p>
           <Link
             to={AppRoutes.onboarding}
             onClick={() => setOpen(false)}
-            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
           >
             <UserCog className="h-3.5 w-3.5" aria-hidden />
             {UiText.editProfile}
@@ -72,7 +72,7 @@ export function UserMenu() {
           <Link
             to={AppRoutes.subscription}
             onClick={() => setOpen(false)}
-            className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+            className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
           >
             <Crown className="h-3.5 w-3.5" aria-hidden />
             {UiText.navSubscription}
@@ -81,7 +81,7 @@ export function UserMenu() {
             <Link
               to={AppRoutes.content}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
             >
               <Video className="h-3.5 w-3.5" aria-hidden />
               {UiText.navContent}
@@ -91,7 +91,7 @@ export function UserMenu() {
             <Link
               to={AppRoutes.coach}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100"
+              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-500/15"
             >
               <GraduationCap className="h-3.5 w-3.5" aria-hidden />
               {UiText.navCoach}
@@ -101,7 +101,7 @@ export function UserMenu() {
             <Link
               to={AppRoutes.admin}
               onClick={() => setOpen(false)}
-              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1.5 text-xs font-semibold text-orange-700 transition hover:bg-orange-100"
+              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1.5 text-xs font-semibold text-orange-600 transition hover:bg-orange-500/15"
             >
               <ShieldCheck className="h-3.5 w-3.5" aria-hidden />
               {UiText.navAdmin}
@@ -113,7 +113,7 @@ export function UserMenu() {
               setOpen(false)
               signOut()
             }}
-            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100"
+            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
           >
             <LogOut className="h-3.5 w-3.5" aria-hidden />
             {UiText.signOut}

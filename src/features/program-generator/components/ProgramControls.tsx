@@ -17,14 +17,14 @@ interface ProgramControlsProps {
 }
 
 const FIELD_CLASS =
-  'w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-800 shadow-sm ' +
+  'w-full rounded-xl border border-line bg-surface px-3 py-2 text-sm text-ink shadow-sm ' +
   'focus:outline-none focus:ring-2 focus:ring-orange-500/60'
 
 function chipClass(active: boolean): string {
   return `rounded-full border px-3 py-1.5 text-xs font-medium transition active:scale-95 ${
     active
       ? 'border-orange-500 bg-orange-500 text-white shadow-sm'
-      : 'border-zinc-200 bg-white text-zinc-600 hover:border-zinc-300 hover:bg-zinc-50'
+      : 'border-line bg-surface text-muted hover:border-line-strong hover:bg-subtle'
   }`
 }
 
@@ -43,7 +43,7 @@ export function ProgramControls({
   return (
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-faint">
           {UiText.splitLabel}
           <select
             value={split}
@@ -58,7 +58,7 @@ export function ProgramControls({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-faint">
           {UiText.goalLabel}
           <select
             value={goal}
@@ -73,7 +73,7 @@ export function ProgramControls({
           </select>
         </label>
 
-        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-zinc-400">
+        <label className="flex flex-col gap-1 text-xs font-semibold uppercase tracking-wide text-faint">
           {UiText.daysLabel}
           <select
             value={days}
@@ -90,7 +90,7 @@ export function ProgramControls({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs font-semibold uppercase tracking-wide text-zinc-400">{UiText.equipmentLabel}</span>
+        <span className="text-xs font-semibold uppercase tracking-wide text-faint">{UiText.equipmentLabel}</span>
         <div className="flex flex-wrap gap-1.5">
           <button type="button" onClick={onClearEquipment} className={chipClass(equipment.size === 0)}>
             {UiText.allEquipmentShort}

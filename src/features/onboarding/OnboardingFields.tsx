@@ -28,8 +28,8 @@ export function OptionGrid<T extends string>({ options, value, label, onSelect }
             aria-pressed={selected}
             className={`flex items-center justify-between rounded-2xl border px-4 py-3.5 text-start text-sm font-semibold transition active:scale-[0.99] ${
               selected
-                ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-sm'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'
+                ? 'border-orange-500 bg-orange-500/10 text-orange-600 shadow-sm'
+                : 'border-line bg-surface text-muted hover:border-line-strong'
             }`}
           >
             <span>{label(option)}</span>
@@ -62,8 +62,8 @@ export function MultiOptionGrid<T extends string>({ options, selected, label, on
             aria-pressed={on}
             className={`flex items-center justify-between gap-2 rounded-2xl border px-3.5 py-3 text-start text-sm font-semibold transition active:scale-[0.99] ${
               on
-                ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-sm'
-                : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'
+                ? 'border-orange-500 bg-orange-500/10 text-orange-600 shadow-sm'
+                : 'border-line bg-surface text-muted hover:border-line-strong'
             }`}
           >
             <span className="truncate">{label(option)}</span>
@@ -88,7 +88,7 @@ interface NumberFieldProps {
 export function NumberField({ value, min, max, label, placeholder, onChange }: NumberFieldProps) {
   return (
     <label className="flex flex-col gap-1.5">
-      <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500">{label}</span>
+      <span className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</span>
       <input
         type="number"
         inputMode="numeric"
@@ -100,7 +100,7 @@ export function NumberField({ value, min, max, label, placeholder, onChange }: N
           const raw = event.target.value
           onChange(raw === '' ? null : Number(raw))
         }}
-        className="rounded-2xl border border-zinc-200 bg-white px-4 py-3.5 text-base font-semibold text-zinc-900 shadow-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+        className="rounded-2xl border border-line bg-surface px-4 py-3.5 text-base font-semibold text-ink shadow-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30"
       />
     </label>
   )

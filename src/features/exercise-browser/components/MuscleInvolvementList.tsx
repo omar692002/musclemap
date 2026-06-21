@@ -34,7 +34,7 @@ export function MuscleInvolvementList({ exercise, muscleIndex }: MuscleInvolveme
         if (entries.length === 0) return null
         return (
           <div key={role} className="flex flex-col gap-1.5">
-            <span className="text-xs font-semibold uppercase tracking-wide text-zinc-400">
+            <span className="text-xs font-semibold uppercase tracking-wide text-faint">
               {MUSCLE_ROLE_LABELS[role]}
             </span>
             <div className="flex flex-wrap gap-1.5">

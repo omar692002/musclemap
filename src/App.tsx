@@ -24,7 +24,7 @@ import { BottomNav } from './components/BottomNav'
 function App() {
   const location = useLocation()
   return (
-    <div className="flex min-h-dvh flex-col bg-zinc-50 text-zinc-900">
+    <div className="flex min-h-dvh flex-col bg-canvas text-ink">
       <TopBar />
       {/* Keyed by path so each screen replays the entrance animation. */}
       <main key={location.pathname} className="flex-1 animate-fade-up">

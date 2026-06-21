@@ -5,17 +5,18 @@ import type { CoachVideo } from '../../domain/models/CoachVideo'
 import { UiText, COACH_CONTENT_TYPE_LABELS } from '../../config/labels'
 import { AppRoutes } from '../../config/routes'
 import { Skeleton } from '../../components/Skeleton'
+import { EmptyState, ErrorState } from '../../components/StateMessage'
 import { fetchPublishedContent, isCoachBackendReady } from '../coach/coachApi'
 
 /** A single published content card. Premium items are locked until the EM11 gate opens. */
 function ContentCard({ video }: { video: CoachVideo }) {
   return (
-    <article className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
-      <div className="relative aspect-video bg-zinc-100">
+    <article className="overflow-hidden rounded-2xl border border-line/80 bg-surface shadow-sm">
+      <div className="relative aspect-video bg-subtle">
         {video.thumbnailUrl ? (
           <img src={video.thumbnailUrl} alt={video.title} className="h-full w-full object-cover" />
         ) : (
-          <div className="grid h-full w-full place-items-center text-zinc-300">
+          <div className="grid h-full w-full place-items-center text-faint">
             <Video className="h-10 w-10" aria-hidden />
           </div>
         )}
@@ -36,14 +37,14 @@ function ContentCard({ video }: { video: CoachVideo }) {
       </div>
 
       <div className="p-3">
-        <h3 className="truncate text-sm font-semibold text-zinc-900">{video.title}</h3>
+        <h3 className="truncate text-sm font-semibold text-ink">{video.title}</h3>
         {video.coachName ? (
-          <p className="mt-0.5 text-xs text-zinc-400">
+          <p className="mt-0.5 text-xs text-faint">
             {UiText.contentBy} {video.coachName}
           </p>
         ) : null}
         {video.description ? (
-          <p className="mt-1 line-clamp-2 text-xs text-zinc-500">{video.description}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-muted">{video.description}</p>
         ) : null}
         {video.locked ? (
           <Link
@@ -58,7 +59,7 @@ function ContentCard({ video }: { video: CoachVideo }) {
             href={video.videoUrl}
             target="_blank"
             rel="noreferrer"
-            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-zinc-900 px-3 py-1 text-xs font-semibold text-white transition hover:bg-zinc-700"
+            className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-ink px-3 py-1 text-xs font-semibold text-surface transition hover:opacity-90"
           >
             <PlayCircle className="h-3.5 w-3.5" aria-hidden />
             {UiText.contentWatch}
@@ -106,21 +107,17 @@ export function ContentLibraryPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <Video className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.contentTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.contentSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.contentTitle}</h1>
+          <p className="text-sm text-faint">{UiText.contentSubtitle}</p>
         </div>
       </header>
 
       {!ready ? (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <Video className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.contentUnavailable}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.contentUnavailableHint}</p>
-        </div>
+        <EmptyState icon={Video} title={UiText.contentUnavailable} description={UiText.contentUnavailableHint} />
       ) : loading ? (
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -128,22 +125,11 @@ export function ContentLibraryPage() {
           ))}
         </div>
       ) : error ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center">
-          <p className="text-sm font-semibold text-rose-700">{UiText.contentLoadError}</p>
-          <button
-            type="button"
-            onClick={reload}
-            className="mt-3 rounded-full bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-700"
-          >
-            {UiText.coachRetry}
-          </button>
-        </div>
+        <ErrorState title={UiText.contentLoadError} onRetry={reload} />
       ) : items.length === 0 ? (
-        <p className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-6 text-center text-sm text-zinc-400">
-          {UiText.contentEmpty}
-        </p>
+        <EmptyState icon={Video} title={UiText.contentEmpty} />
       ) : (
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+        <div className="grid animate-fade-up grid-cols-1 gap-3 sm:grid-cols-2">
           {items.map((video) => (
             <ContentCard key={video.id} video={video} />
           ))}

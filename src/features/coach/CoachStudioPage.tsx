@@ -7,6 +7,7 @@ import type { CoachVideo, CoachVideoDraft } from '../../domain/models/CoachVideo
 import { AppRoutes } from '../../config/routes'
 import { UiText, COACH_CONTENT_TYPE_LABELS } from '../../config/labels'
 import { Skeleton } from '../../components/Skeleton'
+import { EmptyState, ErrorState } from '../../components/StateMessage'
 import { useAuth } from '../auth/AuthContext'
 import {
   createContent,
@@ -71,15 +72,15 @@ function ContentForm({
   }
 
   const fieldClass =
-    'mt-1 w-full rounded-xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-800 outline-none focus:border-orange-300'
+    'mt-1 w-full rounded-xl border border-line bg-subtle px-3 py-2 text-sm text-ink outline-none focus:border-orange-500/40'
 
   return (
-    <form onSubmit={submit} className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-      <h2 className="mb-3 text-sm font-bold text-zinc-900">
+    <form onSubmit={submit} className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
+      <h2 className="mb-3 text-sm font-bold text-ink">
         {isEdit ? UiText.coachFormEditTitle : UiText.coachFormNewTitle}
       </h2>
 
-      <label className="block text-xs font-semibold text-zinc-500">
+      <label className="block text-xs font-semibold text-muted">
         {UiText.coachFieldType}
         <select
           value={draft.contentType}
@@ -94,7 +95,7 @@ function ContentForm({
         </select>
       </label>
 
-      <label className="mt-3 block text-xs font-semibold text-zinc-500">
+      <label className="mt-3 block text-xs font-semibold text-muted">
         {UiText.coachFieldTitle}
         <input
           type="text"
@@ -106,7 +107,7 @@ function ContentForm({
         />
       </label>
 
-      <label className="mt-3 block text-xs font-semibold text-zinc-500">
+      <label className="mt-3 block text-xs font-semibold text-muted">
         {UiText.coachFieldDescription}
         <textarea
           value={draft.description}
@@ -117,11 +118,11 @@ function ContentForm({
       </label>
 
       <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <label className="block text-xs font-semibold text-zinc-500">
+        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldVideoUrl}
           <input type="url" value={draft.videoUrl} onChange={(e) => set('videoUrl', e.target.value)} className={fieldClass} />
         </label>
-        <label className="block text-xs font-semibold text-zinc-500">
+        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldThumbnailUrl}
           <input
             type="url"
@@ -130,7 +131,7 @@ function ContentForm({
             className={fieldClass}
           />
         </label>
-        <label className="block text-xs font-semibold text-zinc-500">
+        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldExercise}
           <input
             type="text"
@@ -139,7 +140,7 @@ function ContentForm({
             className={fieldClass}
           />
         </label>
-        <label className="block text-xs font-semibold text-zinc-500">
+        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldMuscle}
           <input
             type="text"
@@ -148,7 +149,7 @@ function ContentForm({
             className={fieldClass}
           />
         </label>
-        <label className="block text-xs font-semibold text-zinc-500">
+        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldDuration}
           <input
             type="number"
@@ -160,12 +161,12 @@ function ContentForm({
         </label>
       </div>
 
-      <label className="mt-3 flex items-center gap-2 text-sm font-medium text-zinc-700">
+      <label className="mt-3 flex items-center gap-2 text-sm font-medium text-muted">
         <input
           type="checkbox"
           checked={draft.premium}
           onChange={(e) => set('premium', e.target.checked)}
-          className="h-4 w-4 rounded border-zinc-300 text-orange-600"
+          className="h-4 w-4 rounded border-line-strong text-orange-600"
         />
         {UiText.coachFieldPremium}
       </label>
@@ -182,7 +183,7 @@ function ContentForm({
           type="button"
           onClick={onCancel}
           disabled={busy}
-          className="rounded-full border border-zinc-200 bg-zinc-50 px-4 py-1.5 text-xs font-semibold text-zinc-700 transition hover:bg-zinc-100 disabled:opacity-50"
+          className="rounded-full border border-line bg-subtle px-4 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle disabled:opacity-50"
         >
           {UiText.coachFormCancel}
         </button>
@@ -206,22 +207,22 @@ function ContentRow({
   onDelete: () => void
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white p-3 shadow-sm">
+    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line/80 bg-surface p-3 shadow-sm">
       <div className="min-w-0 flex-1">
-        <p className="truncate text-sm font-semibold text-zinc-900">{video.title}</p>
+        <p className="truncate text-sm font-semibold text-ink">{video.title}</p>
         <div className="mt-1 flex flex-wrap items-center gap-1.5">
-          <span className="rounded-full bg-zinc-100 px-1.5 py-0.5 text-[10px] font-bold text-zinc-500">
+          <span className="rounded-full bg-subtle px-1.5 py-0.5 text-[10px] font-bold text-muted">
             {COACH_CONTENT_TYPE_LABELS[video.contentType]}
           </span>
           <span
             className={`rounded-full px-1.5 py-0.5 text-[10px] font-bold ${
-              video.published ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'
+              video.published ? 'bg-emerald-500/15 text-emerald-600' : 'bg-amber-500/15 text-amber-600'
             }`}
           >
             {video.published ? UiText.coachPublishedBadge : UiText.coachDraftBadge}
           </span>
           {video.premium ? (
-            <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold text-orange-700">
+            <span className="rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">
               {UiText.coachPremiumBadge}
             </span>
           ) : null}
@@ -234,8 +235,8 @@ function ContentRow({
         disabled={busy}
         className={`rounded-full px-3 py-1 text-xs font-semibold transition disabled:opacity-50 ${
           video.published
-            ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
-            : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+            ? 'bg-amber-500/10 text-amber-600 hover:bg-amber-500/15'
+            : 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/15'
         }`}
       >
         {video.published ? UiText.coachUnpublish : UiText.coachPublish}
@@ -246,7 +247,7 @@ function ContentRow({
         disabled={busy}
         aria-label={UiText.coachEdit}
         title={UiText.coachEdit}
-        className="grid h-8 w-8 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-500 transition hover:bg-zinc-50 disabled:opacity-50"
+        className="grid h-8 w-8 place-items-center rounded-full border border-line bg-surface text-muted transition hover:bg-subtle disabled:opacity-50"
       >
         <Pencil className="h-3.5 w-3.5" aria-hidden />
       </button>
@@ -256,7 +257,7 @@ function ContentRow({
         disabled={busy}
         aria-label={UiText.coachDelete}
         title={UiText.coachDelete}
-        className="grid h-8 w-8 place-items-center rounded-full border border-rose-200 bg-white text-rose-500 transition hover:bg-rose-50 disabled:opacity-50"
+        className="grid h-8 w-8 place-items-center rounded-full border border-rose-500/30 bg-surface text-rose-500 transition hover:bg-rose-500/10 disabled:opacity-50"
       >
         <Trash2 className="h-3.5 w-3.5" aria-hidden />
       </button>
@@ -357,12 +358,12 @@ export function CoachStudioPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <GraduationCap className="h-6 w-6" />
         </span>
         <div className="flex-1">
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.coachTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.coachSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.coachTitle}</h1>
+          <p className="text-sm text-faint">{UiText.coachSubtitle}</p>
         </div>
         {ready && !formOpen ? (
           <button
@@ -377,17 +378,13 @@ export function CoachStudioPage() {
       </header>
 
       {!ready ? (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <GraduationCap className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.coachUnavailable}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.coachUnavailableHint}</p>
-        </div>
+        <EmptyState icon={GraduationCap} title={UiText.coachUnavailable} description={UiText.coachUnavailableHint} />
       ) : (
         <>
           {formOpen ? (
             <div className="mb-5">
               {saveError ? (
-                <p className="mb-2 rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">
+                <p className="mb-2 rounded-lg bg-rose-500/10 px-3 py-2 text-xs font-medium text-rose-600">
                   {UiText.coachSaveError}
                 </p>
               ) : null}
@@ -408,24 +405,13 @@ export function CoachStudioPage() {
               ))}
             </div>
           ) : error && items.length === 0 ? (
-            <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center">
-              <p className="text-sm font-semibold text-rose-700">{UiText.coachLoadError}</p>
-              <button
-                type="button"
-                onClick={reload}
-                className="mt-3 rounded-full bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-700"
-              >
-                {UiText.coachRetry}
-              </button>
-            </div>
+            <ErrorState title={UiText.coachLoadError} onRetry={reload} />
           ) : items.length === 0 ? (
-            <p className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-6 text-center text-sm text-zinc-400">
-              {UiText.coachEmpty}
-            </p>
+            <EmptyState icon={GraduationCap} title={UiText.coachEmpty} />
           ) : (
             <div className="flex flex-col gap-2">
               {error ? (
-                <p className="rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">{UiText.coachSaveError}</p>
+                <p className="rounded-lg bg-rose-500/10 px-3 py-2 text-xs font-medium text-rose-600">{UiText.coachSaveError}</p>
               ) : null}
               {items.map((video) => (
                 <ContentRow

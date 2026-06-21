@@ -4,10 +4,10 @@ import type { ReactNode } from 'react'
 export type BadgeTone = 'neutral' | 'primary' | 'secondary' | 'accent'
 
 const TONE_CLASSES: Readonly<Record<BadgeTone, string>> = {
-  neutral: 'bg-zinc-100 text-zinc-600 border border-zinc-200/80',
-  primary: 'bg-orange-50 text-orange-700 border border-orange-200/70',
-  secondary: 'bg-violet-50 text-violet-700 border border-violet-200/70',
-  accent: 'bg-emerald-50 text-emerald-700 border border-emerald-200/70',
+  neutral: 'bg-subtle text-muted border border-line',
+  primary: 'bg-orange-500/10 text-orange-600 border border-orange-500/20',
+  secondary: 'bg-violet-500/10 text-violet-600 border border-violet-500/25',
+  accent: 'bg-emerald-500/10 text-emerald-600 border border-emerald-500/25',
 }
 
 interface BadgeProps {

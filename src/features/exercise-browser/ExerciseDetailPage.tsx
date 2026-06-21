@@ -43,8 +43,8 @@ export function ExerciseDetailPage() {
   if (!exercise) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-6">
-        <p className="mb-3 text-zinc-600">{UiText.notFound}</p>
-        <Link to={AppRoutes.browser} className="inline-block text-sm font-medium text-orange-600 hover:text-orange-700">
+        <p className="mb-3 text-muted">{UiText.notFound}</p>
+        <Link to={AppRoutes.browser} className="inline-block text-sm font-medium text-orange-600 hover:text-orange-600">
           {UiText.backToBrowser}
         </Link>
       </div>
@@ -57,7 +57,7 @@ export function ExerciseDetailPage() {
         <BackButton />
       </div>
 
-      <h1 className="mb-3 text-2xl font-extrabold tracking-tight text-zinc-900">{exercise.name}</h1>
+      <h1 className="mb-3 text-2xl font-extrabold tracking-tight text-ink">{exercise.name}</h1>
 
       <div className="mb-5 flex flex-wrap gap-1.5">
         <Badge tone="accent">{EXERCISE_CATEGORY_LABELS[exercise.category]}</Badge>
@@ -69,9 +69,9 @@ export function ExerciseDetailPage() {
 
       <ExerciseMediaGallery media={exercise.media} title={exercise.name} />
 
-      <section className="mb-6 rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+      <section className="mb-6 rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
         <div className="mb-3 flex items-center justify-between gap-2">
-          <h2 className="text-base font-bold text-zinc-900">{UiText.musclesWorked}</h2>
+          <h2 className="text-base font-bold text-ink">{UiText.musclesWorked}</h2>
         </div>
         <div className="mb-4">
           {/* Head-level: a lateral raise lights only the side delt. */}
@@ -82,24 +82,24 @@ export function ExerciseDetailPage() {
         <MuscleInvolvementList exercise={exercise} muscleIndex={muscleIndex} />
       </section>
 
-      <section className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-        <h2 className="mb-3 text-base font-bold text-zinc-900">{UiText.instructions}</h2>
+      <section className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
+        <h2 className="mb-3 text-base font-bold text-ink">{UiText.instructions}</h2>
         {exercise.instructions.length > 0 ? (
           <ol className="flex flex-col gap-3">
             {exercise.instructions.map((step, index) => (
               <li key={index} className="flex gap-3">
                 <span
                   aria-hidden
-                  className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-50 text-xs font-bold text-orange-600"
+                  className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-orange-500/10 text-xs font-bold text-orange-600"
                 >
                   {index + 1}
                 </span>
-                <span className="text-sm leading-relaxed text-zinc-600">{step}</span>
+                <span className="text-sm leading-relaxed text-muted">{step}</span>
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-sm text-zinc-400">{UiText.noInstructions}</p>
+          <p className="text-sm text-faint">{UiText.noInstructions}</p>
         )}
       </section>
     </div>

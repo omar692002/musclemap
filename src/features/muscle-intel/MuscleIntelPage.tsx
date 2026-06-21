@@ -9,6 +9,7 @@ import { computeMuscleIntel, type MuscleGroupIntel } from './muscleIntel'
 import { useExerciseData } from '../exercise-browser/useExerciseData'
 import { listWorkouts, readLocalWorkouts } from '../workouts/workoutApi'
 import { Skeleton } from '../../components/Skeleton'
+import { EmptyState } from '../../components/StateMessage'
 import {
   UiText,
   MUSCLE_GROUP_LABELS,
@@ -40,15 +41,15 @@ function num(value: number): string {
 
 /** Tailwind tone per training status (text / bg pairs for the badge). */
 const STATUS_TONE: Readonly<Record<TrainingStatus, string>> = {
-  [TrainingStatus.Untrained]: 'bg-zinc-100 text-zinc-500',
-  [TrainingStatus.Undertrained]: 'bg-amber-50 text-amber-700',
-  [TrainingStatus.Optimal]: 'bg-emerald-50 text-emerald-700',
-  [TrainingStatus.Overtrained]: 'bg-rose-50 text-rose-700',
+  [TrainingStatus.Untrained]: 'bg-subtle text-muted',
+  [TrainingStatus.Undertrained]: 'bg-amber-500/10 text-amber-600',
+  [TrainingStatus.Optimal]: 'bg-emerald-500/10 text-emerald-600',
+  [TrainingStatus.Overtrained]: 'bg-rose-500/10 text-rose-600',
 }
 
 /** Bar/dot fill per training status. */
 const STATUS_FILL: Readonly<Record<TrainingStatus, string>> = {
-  [TrainingStatus.Untrained]: 'bg-zinc-300',
+  [TrainingStatus.Untrained]: 'bg-line',
   [TrainingStatus.Undertrained]: 'bg-amber-400',
   [TrainingStatus.Optimal]: 'bg-emerald-500',
   [TrainingStatus.Overtrained]: 'bg-rose-500',
@@ -68,7 +69,7 @@ function LandmarkBar({ intel }: { intel: MuscleGroupIntel }) {
   const pct = (v: number) => `${Math.min(100, (v / scaleMax) * 100)}%`
   const markers = [landmarks.mev, landmarks.mav, landmarks.mrv]
   return (
-    <div className="relative h-2.5 rounded-full bg-zinc-100">
+    <div className="relative h-2.5 rounded-full bg-subtle">
       <div
         className={`absolute inset-y-0 start-0 rounded-full ${STATUS_FILL[trainingStatus]}`}
         style={{ width: pct(weekly) }}
@@ -76,7 +77,7 @@ function LandmarkBar({ intel }: { intel: MuscleGroupIntel }) {
       {markers.map((m) => (
         <span
           key={m}
-          className="absolute inset-y-0 w-px bg-white/90"
+          className="absolute inset-y-0 w-px bg-surface/90"
           style={{ insetInlineStart: pct(m) }}
           aria-hidden
         />
@@ -88,7 +89,7 @@ function LandmarkBar({ intel }: { intel: MuscleGroupIntel }) {
 /** A thin recovery-progress bar tinted by readiness. */
 function RecoveryBar({ intel }: { intel: MuscleGroupIntel }) {
   return (
-    <div className="h-1.5 rounded-full bg-zinc-100">
+    <div className="h-1.5 rounded-full bg-subtle">
       <div
         className={`h-full rounded-full ${READINESS_DOT[intel.readiness]}`}
         style={{ width: `${Math.round(intel.recoveryPct)}%` }}
@@ -107,11 +108,11 @@ function lastTrainedLabel(intel: MuscleGroupIntel): string {
 function GroupCard({ intel }: { intel: MuscleGroupIntel }) {
   const { roleBreakdown: roles } = intel
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+    <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
       <div className="flex items-center justify-between gap-2">
         <span className="flex items-center gap-2">
           <span className={`h-2.5 w-2.5 rounded-full ${READINESS_DOT[intel.readiness]}`} aria-hidden />
-          <span className="font-semibold text-zinc-900">{MUSCLE_GROUP_LABELS[intel.group]}</span>
+          <span className="font-semibold text-ink">{MUSCLE_GROUP_LABELS[intel.group]}</span>
         </span>
         <span className={`rounded-full px-2.5 py-1 text-[11px] font-semibold ${STATUS_TONE[intel.trainingStatus]}`}>
           {TRAINING_STATUS_LABELS[intel.trainingStatus]}
@@ -119,11 +120,11 @@ function GroupCard({ intel }: { intel: MuscleGroupIntel }) {
       </div>
 
       <div className="mt-3 flex items-baseline justify-between">
-        <p className="text-lg font-extrabold tracking-tight text-zinc-900">
+        <p className="text-lg font-extrabold tracking-tight text-ink">
           {num(intel.weeklyEffectiveSets)}{' '}
-          <span className="text-xs font-semibold text-zinc-400">{UiText.intelWeeklySets}</span>
+          <span className="text-xs font-semibold text-faint">{UiText.intelWeeklySets}</span>
         </p>
-        <p className="text-[11px] text-zinc-400">
+        <p className="text-[11px] text-faint">
           {UiText.intelMev} {intel.landmarks.mev} · {UiText.intelMav} {intel.landmarks.mav} · {UiText.intelMrv} {intel.landmarks.mrv}
         </p>
       </div>
@@ -131,9 +132,9 @@ function GroupCard({ intel }: { intel: MuscleGroupIntel }) {
         <LandmarkBar intel={intel} />
       </div>
 
-      <div className="mt-3 flex items-center justify-between text-[11px] text-zinc-400">
+      <div className="mt-3 flex items-center justify-between text-[11px] text-faint">
         <span>
-          <span className="font-semibold text-zinc-600">{MUSCLE_READINESS_LABELS[intel.readiness]}</span> ·{' '}
+          <span className="font-semibold text-muted">{MUSCLE_READINESS_LABELS[intel.readiness]}</span> ·{' '}
           {Math.round(intel.recoveryPct)}% {UiText.intelRecovered}
         </span>
         <span>{lastTrainedLabel(intel)}</span>
@@ -142,13 +143,13 @@ function GroupCard({ intel }: { intel: MuscleGroupIntel }) {
         <RecoveryBar intel={intel} />
       </div>
 
-      <p className="mt-3 text-[11px] text-zinc-400">
+      <p className="mt-3 text-[11px] text-faint">
         {UiText.intelRoleVolume}: {MUSCLE_ROLE_LABELS[MuscleRole.Primary]} {num(roles.primary)} ·{' '}
         {MUSCLE_ROLE_LABELS[MuscleRole.Secondary]} {num(roles.secondary)} ·{' '}
         {MUSCLE_ROLE_LABELS[MuscleRole.Stabilizer]} {num(roles.stabilizer)}
       </p>
 
-      <p className="mt-2 rounded-lg bg-zinc-50 px-2.5 py-1.5 text-xs font-medium text-zinc-600">
+      <p className="mt-2 rounded-lg bg-subtle px-2.5 py-1.5 text-xs font-medium text-muted">
         {RECOVERY_ADVICE_LABELS[intel.advice]}
       </p>
     </div>
@@ -177,12 +178,12 @@ export function MuscleIntelPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <Gauge className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.intelTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.intelSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.intelTitle}</h1>
+          <p className="text-sm text-faint">{UiText.intelSubtitle}</p>
         </div>
       </header>
 
@@ -195,13 +196,13 @@ export function MuscleIntelPage() {
       ) : summary.hasData ? (
         <>
           <div className="grid grid-cols-2 gap-3">
-            <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+            <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
               <p className="text-2xl font-extrabold tracking-tight text-emerald-600">{summary.readyCount}</p>
-              <p className="text-xs font-medium text-zinc-400">{UiText.intelReadyCount}</p>
+              <p className="text-xs font-medium text-faint">{UiText.intelReadyCount}</p>
             </div>
-            <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
+            <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
               <p className="text-2xl font-extrabold tracking-tight text-rose-600">{summary.overtrainedCount}</p>
-              <p className="text-xs font-medium text-zinc-400">{UiText.intelAttentionCount}</p>
+              <p className="text-xs font-medium text-faint">{UiText.intelAttentionCount}</p>
             </div>
           </div>
 
@@ -212,11 +213,7 @@ export function MuscleIntelPage() {
           </div>
         </>
       ) : (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <Gauge className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.intelNoData}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.intelNoDataHint}</p>
-        </div>
+        <EmptyState icon={Gauge} title={UiText.intelNoData} description={UiText.intelNoDataHint} />
       )}
     </div>
   )

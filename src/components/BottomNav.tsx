@@ -24,7 +24,7 @@ const ITEMS: readonly NavItem[] = [
 /** Fixed mobile-style tab bar — the app's primary navigation. */
 export function BottomNav() {
   return (
-    <nav className="sticky bottom-0 z-40 border-t border-zinc-200/70 bg-white/90 pb-[env(safe-area-inset-bottom)] backdrop-blur">
+    <nav className="sticky bottom-0 z-40 border-t border-line/70 bg-surface/90 pb-[env(safe-area-inset-bottom)] backdrop-blur">
       <div className="mx-auto grid max-w-2xl grid-cols-6">
         {ITEMS.map((item) => (
           <NavLink
@@ -33,7 +33,7 @@ export function BottomNav() {
             end={item.end}
             className={({ isActive }) =>
               `group flex flex-col items-center gap-0.5 py-2 text-[11px] font-medium transition ${
-                isActive ? 'text-orange-600' : 'text-zinc-400 hover:text-zinc-600'
+                isActive ? 'text-accent' : 'text-faint hover:text-muted'
               }`
             }
           >
@@ -41,7 +41,7 @@ export function BottomNav() {
               <>
                 <span
                   className={`grid h-7 w-14 place-items-center rounded-full transition ${
-                    isActive ? 'bg-orange-100/80' : 'group-hover:bg-zinc-100'
+                    isActive ? 'bg-accent/15' : 'group-hover:bg-subtle'
                   }`}
                 >
                   <item.icon className="h-5 w-5" aria-hidden />

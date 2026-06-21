@@ -20,24 +20,24 @@ export function WorkoutExerciseRow({ item }: { item: ProgramExercise }) {
         <ExerciseImage
           images={images}
           alt={exercise.name}
-          className="h-14 w-14 shrink-0 rounded-xl border border-zinc-200/80"
+          className="h-14 w-14 shrink-0 rounded-xl border border-line"
         />
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-sm font-medium text-zinc-800 group-hover:text-orange-700">
+          <span className="block truncate text-sm font-medium text-ink group-hover:text-accent">
             {exercise.name}
           </span>
-          <span className="block text-xs tabular-nums text-zinc-400">
+          <span className="block text-xs tabular-nums text-faint">
             {sets > 1 ? `${sets} × ${reps} ${UiText.repsWord}` : reps}
           </span>
           {overload && (
-            <span className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-orange-600">
+            <span className="mt-0.5 flex items-center gap-1 text-[11px] font-medium text-accent">
               <TrendingUp className="h-3 w-3 shrink-0" aria-hidden />
               <span className="truncate">{OVERLOAD_CUE_LABELS[overload]}</span>
             </span>
           )}
         </span>
         <ChevronRight
-          className="h-4 w-4 shrink-0 text-zinc-300 transition group-hover:translate-x-0.5 group-hover:text-zinc-500 rtl:rotate-180"
+          className="h-4 w-4 shrink-0 text-faint transition group-hover:translate-x-0.5 group-hover:text-muted rtl:rotate-180"
           aria-hidden
         />
       </Link>

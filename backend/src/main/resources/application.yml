@@ -30,8 +30,8 @@ spring:
 musclemap:
   app:
     name: MuscleMap
-    version: 0.5.0
-    milestone: "EM11 - Subscription Architecture"
+    version: 0.6.0
+    milestone: "EM12 - Product Polish"
   admin:
     # First-admin bootstrap (EM9): comma-separated emails elevated to ADMIN on
     # startup. Defaults to the platform owner so there is always a way in.

@@ -23,6 +23,7 @@ import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
 import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
+import { Theme } from '../../domain/enums/Theme'
 
 /** French. */
 export const fr: Translation = {
@@ -271,6 +272,10 @@ export const fr: Translation = {
     subscriptionMockNote: 'Facturation de démo — aucun paiement réel.',
     subscriptionSignInNotice: 'Connectez-vous pour gérer votre formule',
     subscriptionSignInHint: 'Votre abonnement est lié à votre compte.',
+    themeLabel: 'Apparence',
+    retry: 'Réessayer',
+    errorTitle: 'Une erreur est survenue',
+    genericError: 'Impossible de charger ceci. Veuillez réessayer.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Pectoraux',
@@ -433,6 +438,11 @@ export const fr: Translation = {
   subscriptionPlan: {
     [SubscriptionPlan.Free]: 'Gratuit',
     [SubscriptionPlan.Premium]: 'Premium',
+  },
+  theme: {
+    [Theme.Light]: 'Clair',
+    [Theme.Dark]: 'Sombre',
+    [Theme.System]: 'Système',
   },
   warmup: [
     '5–10 min de tapis / cardio léger',

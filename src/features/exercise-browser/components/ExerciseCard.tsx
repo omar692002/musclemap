@@ -23,9 +23,9 @@ export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
   return (
     <Link
       to={exerciseDetailPath(exercise.id)}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm transition hover:-translate-y-0.5 hover:border-zinc-300 hover:shadow-md active:scale-[0.99]"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-line/80 bg-surface shadow-sm transition hover:-translate-y-0.5 hover:border-line-strong hover:shadow-md active:scale-[0.99]"
     >
-      <div className="relative aspect-[4/3] overflow-hidden border-b border-zinc-100 bg-white">
+      <div className="relative aspect-[4/3] overflow-hidden border-b border-line bg-surface">
         <ExerciseImage images={images} alt="" className="h-full w-full" />
         {video ? (
           <span
@@ -37,7 +37,7 @@ export function ExerciseCard({ exercise, muscleIndex }: ExerciseCardProps) {
         ) : null}
       </div>
       <div className="flex flex-1 flex-col gap-2 p-3">
-        <h2 className="line-clamp-2 text-sm font-semibold leading-snug text-zinc-900">{exercise.name}</h2>
+        <h2 className="line-clamp-2 text-sm font-semibold leading-snug text-ink">{exercise.name}</h2>
         <div className="mt-auto flex flex-wrap gap-1.5">
           {primaryGroups.map((group) => (
             <Badge key={group} tone="primary">

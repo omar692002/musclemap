@@ -149,8 +149,23 @@ EM1–EM12) to become a production-ready fitness platform on a **real backend**.
   CTA; user-menu **Premium** entry; `SubscriptionProvider` wraps `App`. 19 EN/FR/AR keys
   + `subscriptionPlan` map. `mvn test` **57** green (+8 subscription, +5 coach gating),
   `npm test` **102** green, `build`/`lint` green. App version 0.4.0→0.5.0.
-- **NEXT = EM12 (Product Polish):** animations, skeletons, empty/error states, a11y,
-  responsiveness, dark mode, visual consistency — the final sprint milestone.
+- **EM12 (Product Polish) is DONE** (2026-06-21). Frontend-only (one backend touch: version
+  bump). **Dark mode via a semantic token layer** — `index.css` defines meaning-named tokens
+  (`canvas`/`surface`/`subtle`/`ink`/`muted`/`faint`/`line`/`accent`…) as CSS vars for light
+  (`:root`) + dark (`.dark`), exposed as Tailwind utilities through `@theme inline`; the whole
+  UI was migrated off raw palette classes onto these tokens, so the theme flips from one place
+  (no per-component `dark:`). New `Theme` enum + `StorageKey.Theme`; `features/theme/`
+  (`themeStorage.ts` pure helpers + pre-paint `applyStoredTheme()` in main.tsx, `ThemeContext`
+  following `System` live, `ThemeToggle` in the top bar). Shared `components/StateMessage.tsx`
+  (`EmptyState`/`ErrorState` with `role="status"` + retry) replaces the ad-hoc empty/error
+  blocks on Admin/Coach/Content/Dashboard/Analytics/Intel. Global `:focus-visible` ring +
+  `prefers-reduced-motion` guard; `pop-in`/`fade-up` entrances; the 3D canvas bg is now
+  token-based. 4 new EN/FR/AR keys + `THEME_LABELS`. `lint`/`build` green, `npm test` **102**
+  green. Version 0.5.0→0.6.0.
+- **🎉 PFA EVOLUTION SPRINT COMPLETE (EM1–EM12).** The MVP PWA is now a production-ready
+  fitness platform on a real Spring Boot 3 + PostgreSQL backend, muscle-visualization moat
+  intact. Beyond-sprint candidates: per-exercise i18n, Capacitor (iOS/Android), `.glb`
+  compression, real Stripe billing, and the academic strengthening items in ROADMAP.
 
 ### Run the backend (verify health)
 ```powershell

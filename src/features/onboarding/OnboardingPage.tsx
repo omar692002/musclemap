@@ -107,7 +107,7 @@ export function OnboardingPage() {
 
   if (isAuthEnabled() && !user) return null
   if (loading || (user != null && profile == null)) {
-    return <div className="mx-auto h-40 max-w-xl animate-pulse rounded-2xl bg-zinc-100" />
+    return <div className="mx-auto h-40 max-w-xl animate-pulse rounded-2xl bg-subtle" />
   }
 
   return <OnboardingWizard initial={profile ?? emptyProfile()} onComplete={reload} />
@@ -176,25 +176,25 @@ function OnboardingWizard({ initial, onComplete }: OnboardingWizardProps) {
           type="button"
           onClick={goBack}
           aria-label={UiText.backStep}
-          className="grid h-9 w-9 place-items-center rounded-full border border-zinc-200 bg-white text-zinc-600 shadow-sm transition active:scale-95"
+          className="grid h-9 w-9 place-items-center rounded-full border border-line bg-surface text-muted shadow-sm transition active:scale-95"
         >
           <ChevronLeft className="h-5 w-5" aria-hidden />
         </button>
-        <div className="h-2 flex-1 overflow-hidden rounded-full bg-zinc-200">
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-line">
           <div
             className="h-full rounded-full bg-gradient-to-r from-amber-400 to-orange-500 transition-[width] duration-300"
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="w-10 text-end text-xs font-semibold text-zinc-400">
+        <span className="w-10 text-end text-xs font-semibold text-faint">
           {index + 1}/{ONBOARDING_STEPS.length}
         </span>
       </div>
 
       {/* Question. */}
-      <h1 className="mt-6 text-2xl font-bold tracking-tight text-zinc-900">{questionFor(step)}</h1>
+      <h1 className="mt-6 text-2xl font-bold tracking-tight text-ink">{questionFor(step)}</h1>
       {step === OnboardingStep.Equipment ? (
-        <p className="mt-1 text-sm text-zinc-500">{UiText.equipmentHint}</p>
+        <p className="mt-1 text-sm text-muted">{UiText.equipmentHint}</p>
       ) : null}
 
       {/* Step body. */}
@@ -276,15 +276,15 @@ function OnboardingWizard({ initial, onComplete }: OnboardingWizardProps) {
                   aria-pressed={selected}
                   className={`grid aspect-square place-items-center rounded-2xl border text-lg font-bold transition active:scale-95 ${
                     selected
-                      ? 'border-orange-500 bg-orange-50 text-orange-700 shadow-sm'
-                      : 'border-zinc-200 bg-white text-zinc-700 hover:border-zinc-300'
+                      ? 'border-orange-500 bg-orange-500/10 text-orange-600 shadow-sm'
+                      : 'border-line bg-surface text-muted hover:border-line-strong'
                   }`}
                 >
                   {days}
                 </button>
               )
             })}
-            <p className="col-span-4 mt-1 text-center text-xs font-medium text-zinc-400">{UiText.frequencyUnit}</p>
+            <p className="col-span-4 mt-1 text-center text-xs font-medium text-faint">{UiText.frequencyUnit}</p>
           </div>
         ) : null}
 
@@ -304,7 +304,7 @@ function OnboardingWizard({ initial, onComplete }: OnboardingWizardProps) {
             rows={4}
             maxLength={2000}
             onChange={(event) => patch({ injuryLimitations: event.target.value || null })}
-            className="w-full resize-none rounded-2xl border border-zinc-200 bg-white px-4 py-3.5 text-base text-zinc-900 shadow-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100"
+            className="w-full resize-none rounded-2xl border border-line bg-surface px-4 py-3.5 text-base text-ink shadow-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-500/30"
           />
         ) : null}
       </div>

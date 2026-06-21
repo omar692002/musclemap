@@ -53,7 +53,7 @@ function DemoItem({ images, title }: { images: readonly string[]; title: string 
   if (images.length === 0) return null
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
+    <div className="relative overflow-hidden rounded-2xl border border-line/80 bg-surface shadow-sm">
       <ExerciseImage images={images} alt={title} fit="contain" className="aspect-[4/3] w-full" paused={paused} />
       <span className="absolute start-3 top-3 rounded-full bg-zinc-900/70 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white backdrop-blur">
         {UiText.demoLabel}
@@ -75,14 +75,14 @@ function DemoItem({ images, title }: { images: readonly string[]; title: string 
 /** The curated form-guide video (YouTube embed or hosted file). */
 function VideoItem({ item, title }: { item: ExerciseMedia; title: string }) {
   return (
-    <div className="overflow-hidden rounded-2xl border border-zinc-200/80 bg-white shadow-sm">
-      <p className="flex items-center gap-1.5 px-3.5 pt-3 text-[11px] font-semibold uppercase tracking-wide text-zinc-500">
+    <div className="overflow-hidden rounded-2xl border border-line/80 bg-surface shadow-sm">
+      <p className="flex items-center gap-1.5 px-3.5 pt-3 text-[11px] font-semibold uppercase tracking-wide text-muted">
         <Video className="h-3.5 w-3.5 text-red-500" aria-hidden />
         {UiText.videoGuideLabel}
       </p>
       <div className="p-3">
         {item.source === MediaSource.YouTube ? (
-          <div className="aspect-video overflow-hidden rounded-xl bg-zinc-100">
+          <div className="aspect-video overflow-hidden rounded-xl bg-subtle">
             <iframe
               src={youTubeEmbedUrl(item.url)}
               title={title}
@@ -98,7 +98,7 @@ function VideoItem({ item, title }: { item: ExerciseMedia; title: string }) {
             poster={item.thumbnailUrl}
             controls
             playsInline
-            className="aspect-video w-full overflow-hidden rounded-xl bg-zinc-100 object-cover"
+            className="aspect-video w-full overflow-hidden rounded-xl bg-subtle object-cover"
           />
         )}
       </div>

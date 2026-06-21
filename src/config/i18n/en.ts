@@ -23,6 +23,7 @@ import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
 import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
+import { Theme } from '../../domain/enums/Theme'
 
 /** English — the canonical pack other languages mirror. */
 export const en: Translation = {
@@ -271,6 +272,10 @@ export const en: Translation = {
     subscriptionMockNote: 'Demo billing — no real payment is taken.',
     subscriptionSignInNotice: 'Sign in to manage your plan',
     subscriptionSignInHint: 'Your subscription is tied to your account.',
+    themeLabel: 'Appearance',
+    retry: 'Try again',
+    errorTitle: 'Something went wrong',
+    genericError: 'We couldn’t load this. Please try again.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'Chest',
@@ -433,6 +438,11 @@ export const en: Translation = {
   subscriptionPlan: {
     [SubscriptionPlan.Free]: 'Free',
     [SubscriptionPlan.Premium]: 'Premium',
+  },
+  theme: {
+    [Theme.Light]: 'Light',
+    [Theme.Dark]: 'Dark',
+    [Theme.System]: 'System',
   },
   warmup: [
     '5–10 min treadmill / light cardio',

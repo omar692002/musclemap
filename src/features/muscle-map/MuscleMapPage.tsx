@@ -38,10 +38,10 @@ export function MuscleMapPage() {
   return (
     <div className="mx-auto max-w-3xl px-4 py-6">
       <header className="mb-4">
-        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.mapTitle}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.mapTitle}</h1>
       </header>
 
-      <p className="mb-5 text-sm text-zinc-500">{UiText.mapHelp}</p>
+      <p className="mb-5 text-sm text-muted">{UiText.mapHelp}</p>
 
       {loading ? (
         <div className="flex justify-center">
@@ -52,7 +52,7 @@ export function MuscleMapPage() {
           fallback={
             <div className="flex flex-col items-center gap-2">
               <Skeleton className="aspect-[3/4] w-full max-w-[380px] rounded-2xl" />
-              <p className="text-sm text-zinc-400">{UiText.loading3d}</p>
+              <p className="text-sm text-faint">{UiText.loading3d}</p>
             </div>
           }
         >

@@ -5,6 +5,7 @@ import { UserRole } from '../../domain/enums/UserRole'
 import { AppRoutes } from '../../config/routes'
 import { UiText, USER_ROLE_LABELS } from '../../config/labels'
 import { Skeleton } from '../../components/Skeleton'
+import { EmptyState, ErrorState } from '../../components/StateMessage'
 import { useAuth } from '../auth/AuthContext'
 import {
   fetchMetrics,
@@ -19,9 +20,9 @@ import {
 /** One labelled number in the platform-metrics grid. */
 function Metric({ label, value, tone }: { label: string; value: number; tone?: string }) {
   return (
-    <div className="rounded-2xl border border-zinc-200/80 bg-white p-4 shadow-sm">
-      <p className={`text-2xl font-extrabold tracking-tight ${tone ?? 'text-zinc-900'}`}>{value}</p>
-      <p className="text-xs font-medium text-zinc-400">{label}</p>
+    <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
+      <p className={`text-2xl font-extrabold tracking-tight ${tone ?? 'text-ink'}`}>{value}</p>
+      <p className="text-xs font-medium text-faint">{label}</p>
     </div>
   )
 }
@@ -58,17 +59,17 @@ function UserRow({
   onToggle: () => void
 }) {
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-zinc-200/80 bg-white p-3 shadow-sm">
+    <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-line/80 bg-surface p-3 shadow-sm">
       <div className="min-w-0 flex-1">
-        <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-zinc-900">
+        <p className="flex items-center gap-1.5 truncate text-sm font-semibold text-ink">
           {user.displayName || user.email}
           {isSelf ? (
-            <span className="rounded-full bg-orange-100 px-1.5 py-0.5 text-[10px] font-bold text-orange-700">
+            <span className="rounded-full bg-orange-500/15 px-1.5 py-0.5 text-[10px] font-bold text-orange-600">
               {UiText.adminYou}
             </span>
           ) : null}
         </p>
-        <p className="truncate text-xs text-zinc-400">{user.email}</p>
+        <p className="truncate text-xs text-faint">{user.email}</p>
       </div>
 
       <select
@@ -76,7 +77,7 @@ function UserRow({
         disabled={isSelf || busy}
         onChange={(e) => onRole(e.target.value as UserRole)}
         aria-label={UiText.adminColRole}
-        className="rounded-lg border border-zinc-200 bg-zinc-50 px-2 py-1 text-xs font-semibold text-zinc-700 disabled:opacity-50"
+        className="rounded-lg border border-line bg-subtle px-2 py-1 text-xs font-semibold text-muted disabled:opacity-50"
       >
         {Object.values(UserRole).map((role) => (
           <option key={role} value={role}>
@@ -91,8 +92,8 @@ function UserRow({
         onClick={onToggle}
         className={`rounded-full px-3 py-1 text-xs font-semibold transition disabled:opacity-50 ${
           user.enabled
-            ? 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-            : 'bg-rose-50 text-rose-700 hover:bg-rose-100'
+            ? 'bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/15'
+            : 'bg-rose-500/10 text-rose-600 hover:bg-rose-500/15'
         }`}
       >
         {user.enabled ? UiText.adminEnabled : UiText.adminDisabled}
@@ -166,21 +167,17 @@ export function AdminPage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5 flex items-center gap-3">
-        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-50 text-orange-600" aria-hidden>
+        <span className="grid h-11 w-11 place-items-center rounded-2xl bg-orange-500/10 text-orange-600" aria-hidden>
           <ShieldCheck className="h-6 w-6" />
         </span>
         <div>
-          <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.adminTitle}</h1>
-          <p className="text-sm text-zinc-400">{UiText.adminSubtitle}</p>
+          <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.adminTitle}</h1>
+          <p className="text-sm text-faint">{UiText.adminSubtitle}</p>
         </div>
       </header>
 
       {!ready ? (
-        <div className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-8 text-center">
-          <ShieldCheck className="mx-auto h-8 w-8 text-zinc-300" aria-hidden />
-          <p className="mt-2 text-sm font-semibold text-zinc-500">{UiText.adminUnavailable}</p>
-          <p className="mt-0.5 text-xs text-zinc-400">{UiText.adminUnavailableHint}</p>
-        </div>
+        <EmptyState icon={ShieldCheck} title={UiText.adminUnavailable} description={UiText.adminUnavailableHint} />
       ) : loading ? (
         <div className="flex flex-col gap-3">
           <Skeleton className="h-24 w-full rounded-2xl" />
@@ -189,21 +186,12 @@ export function AdminPage() {
           ))}
         </div>
       ) : error && !metrics ? (
-        <div className="rounded-2xl border border-rose-200 bg-rose-50 p-6 text-center">
-          <p className="text-sm font-semibold text-rose-700">{UiText.adminLoadError}</p>
-          <button
-            type="button"
-            onClick={reload}
-            className="mt-3 rounded-full bg-rose-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-rose-700"
-          >
-            {UiText.adminRetry}
-          </button>
-        </div>
+        <ErrorState title={UiText.adminLoadError} onRetry={reload} />
       ) : (
         <>
           {metrics ? (
             <section className="mb-5">
-              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-400">
+              <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-faint">
                 {UiText.adminSectionPlatform}
               </h2>
               <MetricsGrid metrics={metrics} />
@@ -211,18 +199,16 @@ export function AdminPage() {
           ) : null}
 
           <section>
-            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-zinc-400">
+            <h2 className="mb-2 text-xs font-bold uppercase tracking-wide text-faint">
               {UiText.adminSectionUsers}
             </h2>
             {error ? (
-              <p className="mb-2 rounded-lg bg-rose-50 px-3 py-2 text-xs font-medium text-rose-700">
+              <p className="mb-2 rounded-lg bg-rose-500/10 px-3 py-2 text-xs font-medium text-rose-600">
                 {UiText.adminUpdateError}
               </p>
             ) : null}
             {users.length === 0 ? (
-              <p className="rounded-2xl border border-dashed border-zinc-200 bg-white/60 p-6 text-center text-sm text-zinc-400">
-                {UiText.adminNoUsers}
-              </p>
+              <EmptyState title={UiText.adminNoUsers} />
             ) : (
               <div className="flex flex-col gap-2">
                 {users.map((u) => (

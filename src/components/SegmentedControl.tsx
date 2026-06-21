@@ -15,7 +15,7 @@ interface SegmentedControlProps<T extends string> {
 
 export function SegmentedControl<T extends string>({ options, value, onChange }: SegmentedControlProps<T>) {
   return (
-    <div className="inline-flex rounded-full border border-zinc-200 bg-zinc-100 p-0.5" role="group">
+    <div className="inline-flex rounded-full border border-line bg-subtle p-0.5" role="group">
       {options.map((option) => (
         <button
           key={option.value}
@@ -24,8 +24,8 @@ export function SegmentedControl<T extends string>({ options, value, onChange }:
           aria-pressed={option.value === value}
           className={`rounded-full px-3.5 py-1 text-sm font-medium transition ${
             option.value === value
-              ? 'bg-white text-zinc-900 shadow-sm'
-              : 'text-zinc-500 hover:text-zinc-800'
+              ? 'bg-surface text-ink shadow-sm'
+              : 'text-muted hover:text-ink'
           }`}
         >
           {option.label}

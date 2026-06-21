@@ -23,6 +23,7 @@ import { RecoveryAdvice } from '../../domain/enums/RecoveryAdvice'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
 import { SubscriptionPlan } from '../../domain/enums/SubscriptionPlan'
+import { Theme } from '../../domain/enums/Theme'
 
 /** Arabic (MSA). Rendered right-to-left — see dirFor() in ./index. */
 export const ar: Translation = {
@@ -271,6 +272,10 @@ export const ar: Translation = {
     subscriptionMockNote: 'فوترة تجريبية — لا يتم أي دفع حقيقي.',
     subscriptionSignInNotice: 'سجّل الدخول لإدارة خطتك',
     subscriptionSignInHint: 'اشتراكك مرتبط بحسابك.',
+    themeLabel: 'المظهر',
+    retry: 'إعادة المحاولة',
+    errorTitle: 'حدث خطأ ما',
+    genericError: 'تعذّر تحميل هذا. يُرجى المحاولة مرة أخرى.',
   },
   muscleGroup: {
     [MuscleGroup.Chest]: 'الصدر',
@@ -433,6 +438,11 @@ export const ar: Translation = {
   subscriptionPlan: {
     [SubscriptionPlan.Free]: 'مجاني',
     [SubscriptionPlan.Premium]: 'بريميوم',
+  },
+  theme: {
+    [Theme.Light]: 'فاتح',
+    [Theme.Dark]: 'داكن',
+    [Theme.System]: 'النظام',
   },
   warmup: [
     '5–10 دقائق على المشاية / كارديو خفيف',

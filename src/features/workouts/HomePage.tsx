@@ -26,7 +26,7 @@ function SessionLanding() {
     <>
       <SessionHeroCard session={featured} />
 
-      <h2 className="mb-2.5 mt-6 text-xs font-semibold uppercase tracking-widest text-zinc-400">
+      <h2 className="mb-2.5 mt-6 text-xs font-semibold uppercase tracking-widest text-faint">
         {UiText.allSessions}
       </h2>
       <div className="flex flex-col gap-2.5">
@@ -57,8 +57,8 @@ export function HomePage() {
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
       <header className="mb-5">
-        <p className="text-sm font-medium capitalize text-zinc-400">{todayLabel()}</p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-zinc-900">
+        <p className="text-sm font-medium capitalize text-faint">{todayLabel()}</p>
+        <h1 className="text-3xl font-extrabold tracking-tight text-ink">
           {UiText.homeGreeting}
           {firstName ? `, ${firstName}` : ''} 💪
         </h1>

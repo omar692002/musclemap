@@ -11,7 +11,6 @@ export const MuscleMapConfig = {
     muscle: '#c75d54',
     muscleHover: '#e8857a',
     selected: '#f59e0b',
-    background: '#fafafa',
     /** Unmapped body parts (head/feet/hands, deep muscles) — neutral grey so
      *  the figure looks complete and dimmed muscles recede on the light theme. */
     inactive: '#c4beb4',

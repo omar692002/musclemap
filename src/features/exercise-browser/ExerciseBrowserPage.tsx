@@ -16,7 +16,7 @@ function ActiveFilterChip({ label, onClear }: { label: string; onClear: () => vo
     <button
       type="button"
       onClick={onClear}
-      className="inline-flex items-center gap-1.5 rounded-full border border-orange-200 bg-orange-50 px-3 py-1 text-xs font-medium text-orange-700 transition hover:bg-orange-100"
+      className="inline-flex items-center gap-1.5 rounded-full border border-orange-500/30 bg-orange-500/10 px-3 py-1 text-xs font-medium text-orange-600 transition hover:bg-orange-500/15"
     >
       {UiText.muscleFilterLabel}: {label}
       <X className="h-3 w-3" aria-hidden />
@@ -64,7 +64,7 @@ export function ExerciseBrowserPage() {
   return (
     <div className="mx-auto max-w-5xl px-4 py-6">
       <header className="mb-4">
-        <h1 className="text-2xl font-extrabold tracking-tight text-zinc-900">{UiText.navExercises}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-ink">{UiText.navExercises}</h1>
       </header>
 
       <div className="mb-3">
@@ -79,7 +79,7 @@ export function ExerciseBrowserPage() {
       </div>
 
       <div className="mb-5 flex flex-wrap items-center gap-2">
-        <span className="text-sm tabular-nums text-zinc-400">
+        <span className="text-sm tabular-nums text-faint">
           {results.length} {UiText.exercisesWord}
         </span>
         {headName ? <ActiveFilterChip label={headName} onClear={clearHead} /> : null}
@@ -89,7 +89,7 @@ export function ExerciseBrowserPage() {
       {loading ? (
         <CardGridSkeleton count={8} />
       ) : results.length === 0 ? (
-        <p className="rounded-2xl border border-zinc-200/80 bg-white p-6 text-center text-sm text-zinc-400">
+        <p className="rounded-2xl border border-line/80 bg-surface p-6 text-center text-sm text-faint">
           {UiText.noResults}
         </p>
       ) : (
@@ -105,7 +105,7 @@ export function ExerciseBrowserPage() {
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + UiConfig.browserPageSize)}
-                className="rounded-full border border-zinc-200 bg-white px-5 py-2.5 text-sm font-semibold text-zinc-700 shadow-sm transition hover:border-zinc-300 hover:bg-zinc-50 active:scale-95"
+                className="rounded-full border border-line bg-surface px-5 py-2.5 text-sm font-semibold text-muted shadow-sm transition hover:border-line-strong hover:bg-subtle active:scale-95"
               >
                 {UiText.loadMore} ({remaining})
               </button>
