@@ -1,0 +1,61 @@
+# ---------------------------------------------------------------------------
+# Pile de PRODUCTION pour une VM (Azure) : PostgreSQL + backend Spring Boot.
+#
+# Le FRONTEND n'est PAS dans ce compose : c'est un build statique (frontend/dist)
+# servi directement par Nginx (voir deploy/nginx.conf + DEPLOY_AZURE.md).
+#
+# Démarrage :
+#   1. cp .env.prod.example .env        # puis remplir les secrets dans .env
+#   2. docker compose -f docker-compose.prod.yml up -d --build
+#   3. docker compose -f docker-compose.prod.yml logs -f backend   # suivre le démarrage
+#
+# Sécurité réseau : le backend (8080) et Postgres (5432) sont liés à 127.0.0.1
+# uniquement → JAMAIS exposés à internet. Seul Nginx (80/443) est public et
+# proxifie /api vers le backend local. Voir le NSG Azure dans DEPLOY_AZURE.md.
+# ---------------------------------------------------------------------------
+
+services:
+  db:
+    image: postgres:16
+    container_name: musclemap-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    # Lié à localhost seulement (utile pour un pg_dump depuis la VM) ; non public.
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - musclemap-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    container_name: musclemap-backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      # Réseau interne du compose : l'hôte de la base s'appelle "db", port 5432.
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      MUSCLEMAP_JWT_SECRET: ${MUSCLEMAP_JWT_SECRET}
+      MUSCLEMAP_GOOGLE_CLIENT_ID: ${MUSCLEMAP_GOOGLE_CLIENT_ID}
+      # Même domaine que le frontend ; si tout passe par le proxy Nginx (même
+      # origine), CORS n'est même pas sollicité, mais on le renseigne par sûreté.
+      MUSCLEMAP_CORS_ALLOWED_ORIGINS: ${MUSCLEMAP_CORS_ALLOWED_ORIGINS}
+      DB_POOL_MAX: ${DB_POOL_MAX:-5}
+    # Lié à localhost : seul Nginx (sur la VM) y accède, via le proxy /api.
+    ports:
+      - "127.0.0.1:8080:8080"
+
+volumes:
+  musclemap-pgdata:

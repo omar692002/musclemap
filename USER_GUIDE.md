@@ -5,7 +5,8 @@
 > justify **every** technical and non-technical decision without re-reading the codebase.
 >
 > **Status:** PFA Evolution Sprint complete (EM1–EM12) + catalogue migration (EM13).
-> Frontend live on GitHub Pages; Spring Boot 3 backend deploys to Render.
+> Frontend live on GitHub Pages; Spring Boot 3 backend + PostgreSQL live on Render
+> (https://musclemap-q65o.onrender.com).
 > **Live demo:** https://omar692002.github.io/musclemap/
 
 ---
@@ -1248,21 +1249,32 @@ tables and run queries. (Assumes the `docker compose up -d db` container is runn
   `dist/index.html` → `dist/404.html` (**SPA fallback** so deep links work with the client router)
   and publishes `dist/` to Pages. No server is involved — a PWA is just static files.
 
-### Backend — Render
-- **Provider:** Render (Docker web service), built from `backend/Dockerfile` (multi-stage:
-  Maven build → slim JRE runtime, runs as non-root).
-- **Process:** New → Web Service → connect the repo, **root directory `backend`**, environment
-  **Docker**. New → PostgreSQL (free tier). On the web service, set: `SPRING_PROFILES_ACTIVE=prod`,
-  the `SPRING_DATASOURCE_*` from the Render DB, `MUSCLEMAP_JWT_SECRET`, `MUSCLEMAP_GOOGLE_CLIENT_ID`,
-  and `MUSCLEMAP_CORS_ALLOWED_ORIGINS=https://omar692002.github.io`. Health check path:
-  `/actuator/health`. **Flyway migrates on boot.**
-- **URL:** the Render-assigned service URL (e.g. `https://musclemap-api.onrender.com`); the
-  frontend points at it via `VITE_API_BASE_URL=<that>/api/v1`.
+### Backend — Render (LIVE)
+- **Status:** **deployed** at **https://musclemap-q65o.onrender.com** (API under `/api/v1`), Free
+  tier, Oregon region. Built from `backend/Dockerfile` (multi-stage: Maven build → slim JRE runtime,
+  non-root).
+- **Process actually used (manual, dashboard):**
+  1. New → **PostgreSQL** → `musclemap-db`, dbname/user `musclemap`, **Oregon**, Free → copy its
+     *Internal Database URL*.
+  2. New → **Web Service** → connect repo, **Root Directory `backend`**, **Docker**, **Oregon**,
+     Free, **Health Check Path `/actuator/health`**.
+  3. Env vars **set manually** (the rest have defaults): `SPRING_DATASOURCE_URL`
+     (`jdbc:postgresql://<internal-host>:5432/musclemap`, no `user:pass@`),
+     `SPRING_DATASOURCE_USERNAME=musclemap`, `SPRING_DATASOURCE_PASSWORD=<from internal URL>`,
+     `MUSCLEMAP_JWT_SECRET` (≥32 bytes, Render *Generate*), `MUSCLEMAP_GOOGLE_CLIENT_ID` (the public
+     Google client id). Already-defaulted (skip): `SPRING_PROFILES_ACTIVE=prod` (baked into the
+     Dockerfile), `MUSCLEMAP_CORS_ALLOWED_ORIGINS` (defaults to the Pages origin), `DB_POOL_MAX=5`,
+     `PORT` (injected by Render — never set it).
+  4. Deploy → **Flyway migrates on boot**, `CatalogBootstrap` seeds the 873 exercises.
+- **Wire the frontend:** set the GitHub repo **variable** `VITE_API_BASE_URL =
+  https://musclemap-q65o.onrender.com/api/v1`, then re-run the Pages deploy.
+- **Blueprint alternative:** `backend/render.yaml` reproduces all of the above via New → Blueprint.
+- ⚠️ Free tier sleeps after ~15 min idle (~30–60 s cold start).
 
-### Database — Render PostgreSQL
-- **Provider:** Render Managed PostgreSQL. The backend connects via the `SPRING_DATASOURCE_URL`
-  (SSL required). The connection pool is capped small (`DB_POOL_MAX`, default 5) to fit free-tier
-  limits.
+### Database — Render PostgreSQL (LIVE)
+- **Provider:** Render Managed PostgreSQL (`musclemap-db`, Oregon, Free). The backend connects via
+  `SPRING_DATASOURCE_URL` over the **internal** network (same region → no SSL needed; external
+  connections would need `?sslmode=require`). Pool capped small (`DB_POOL_MAX`, default 5).
 
 ### Request flow (end to end)
 

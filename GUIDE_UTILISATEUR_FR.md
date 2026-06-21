@@ -10,10 +10,11 @@
 > > 💡 **En clair :** l'explication en français simple, avec une analogie.
 >
 > **État du projet :** Sprint d'évolution PFA terminé (EM1–EM12) + migration du catalogue (EM13).
-> Le frontend est **en ligne** sur GitHub Pages. Le backend est **prêt à déployer** sur Render
-> (voir [Partie 10](#partie-10--déploiement) — il n'est **pas encore déployé**).
+> Frontend **en ligne** sur GitHub Pages ; backend + base **déployés** sur Render (voir
+> [Partie 10](#partie-10--déploiement)).
 >
-> **Démo en ligne :** https://omar692002.github.io/musclemap/
+> **Démo (frontend) :** https://omar692002.github.io/musclemap/
+> **API (backend) :** https://musclemap-q65o.onrender.com/api/v1/meta
 
 ---
 
@@ -264,7 +265,7 @@ les vidéos ? Voici la réponse complète et honnête, source par source.
 - **Source :** le projet open-source **`yuhonas/free-exercise-db`** sur GitHub (base de données
   d'exercices libre, domaine public).
 - **Ce qu'on a fait :** on a **téléchargé** son fichier JSON et on l'a **commité dans notre dépôt**.
-  Côté frontend il est dans `src/data/static/source/` ; côté backend, la copie est dans
+  Côté frontend il est dans `frontend/src/data/static/source/` ; côté backend, la copie est dans
   `backend/src/main/resources/catalog/exercises.json`. Donc il ne dépend de personne à l'exécution.
 - **Format brut d'un exercice :**
   ```json
@@ -276,7 +277,7 @@ les vidéos ? Voici la réponse complète et honnête, source par source.
 ### 2.2 Les images des exercices — *lues depuis internet (CDN)*
 - Les **images** (les 2 photos animées début→fin) ne sont **pas** embarquées (trop volumineuses).
 - Elles sont **chargées à la volée depuis internet**, via le CDN **jsDelivr** qui sert le dépôt
-  `yuhonas/free-exercise-db`. L'URL de base est dans `src/config/dataSource.config.ts` :
+  `yuhonas/free-exercise-db`. L'URL de base est dans `frontend/src/config/dataSource.config.ts` :
   `https://cdn.jsdelivr.net/gh/yuhonas/free-exercise-db@main/exercises/`.
 - 💡 **CDN = Content Delivery Network.** Un réseau de serveurs qui distribue des fichiers
   rapidement partout dans le monde. jsDelivr peut servir n'importe quel fichier d'un dépôt GitHub
@@ -324,6 +325,12 @@ les vidéos ? Voici la réponse complète et honnête, source par source.
 > Tu as demandé de remplacer le tableau « Key files » par, pour **chaque fichier** : ce qu'il
 > **fait**, ce qu'il **expose** (offre aux autres), et **comment il est lié** aux autres fichiers du
 > dépôt. Voici les fichiers qui comptent vraiment.
+
+> 📁 **Note structure (depuis la restructuration en monorepo) :** le dépôt a maintenant deux
+> dossiers côte à côte : **`frontend/`** (l'app React) et **`backend/`** (Spring Boot). Tous les
+> chemins `src/...`, `public/...`, `scripts/...` ci-dessous sont donc relatifs à **`frontend/`**
+> (ex. `src/main.tsx` = `frontend/src/main.tsx`). Les chemins commençant par `backend/...` sont,
+> eux, déjà complets.
 
 #### `src/main.tsx` — *point d'entrée & assemblage*
 - **Fait :** c'est le **tout premier fichier exécuté**. Il applique le thème + la langue mémorisés
@@ -780,8 +787,9 @@ Tu demandais : *« que se passe-t-il si on se déconnecte / si le jeton expire ?
 > 💡 **Postman.** Un outil pour **envoyer des requêtes HTTP à la main** et voir la réponse, sans
 > écrire de code. Parfait pour tester l'API. Tout ce qui suit marche aussi en `curl`.
 
-- **Base de l'URL :** `<BASE>/api/v1` où `<BASE>` est `http://localhost:8080` en local, ou l'URL
-  Render/Azure en ligne.
+- **Base de l'URL :** `<BASE>/api/v1` où `<BASE>` est `http://localhost:8080` en local, ou
+  **`https://musclemap-q65o.onrender.com`** en ligne (backend Render). Ex. en ligne :
+  `https://musclemap-q65o.onrender.com/api/v1/catalog/exercises`.
 - **En-tête d'auth :** `Authorization: Bearer <ton_jwt>`.
 - **Doc interactive :** Swagger UI sur `<BASE>/swagger-ui.html`.
 
@@ -889,17 +897,17 @@ Authorization: Bearer <token-d-un-user-FREE>
 
 ### 10.1 État réel aujourd'hui
 
-Soyons **honnêtes et clairs**, parce que tu avais un doute légitime :
-
 | Composant | État | Détail |
 |---|---|---|
 | **Frontend** | ✅ **Déployé** | GitHub Pages, automatiquement à chaque `push` sur `master` (workflow `.github/workflows/deploy.yml`). URL : https://omar692002.github.io/musclemap/ |
-| **Backend** | ⚠️ **PAS encore déployé** | Tout est **prêt** (Dockerfile, profil `prod`), mais **rien n'a été créé sur Render**. Il n'existait **aucun** blueprint dans le dépôt. |
-| **Base de données** | ⚠️ **PAS encore créée** | Sera créée en même temps que le backend (Render Postgres, ou Postgres sur la VM Azure). |
+| **Backend** | ✅ **Déployé sur Render** | Service web Docker. URL : **https://musclemap-q65o.onrender.com** (API sous `/api/v1`). Free tier. |
+| **Base de données** | ✅ **Créée sur Render** | PostgreSQL managé `musclemap-db` (même région, Oregon). Flyway a migré le schéma et `CatalogBootstrap` a rempli les 873 exercices au premier démarrage. |
 
-👉 **Donc non, tu n'avais rien fait sur Render — c'est normal que tu ne t'en souviennes pas.** Le
-`USER_GUIDE.md` décrivait seulement la *procédure*, il ne l'avait pas *exécutée*. Je viens de créer
-le fichier **`backend/render.yaml`** (le blueprint) pour que ce soit faisable en quelques clics.
+> 📜 **Note historique :** au départ rien n'avait été configuré sur Render (le `USER_GUIDE.md`
+> décrivait seulement la procédure sans l'exécuter, et il n'existait aucun blueprint). Le backend a
+> été **réellement déployé** ensuite, à la main via le dashboard (voir la procédure exacte en
+> [10.3](#103-déployer-le-backend--la-base-sur-render)). Le fichier `backend/render.yaml` reste
+> fourni comme **alternative automatisée** (Blueprint) pour reproduire le tout en quelques clics.
 
 ### 10.2 C'est quoi un « Blueprint » Render ?
 
@@ -918,29 +926,93 @@ Ce que notre `render.yaml` déclare :
 
 ### 10.3 Déployer le backend + la base sur Render
 
-**Option A — avec le Blueprint (recommandé) :**
-1. Pousser le dépôt (avec `backend/render.yaml`) sur GitHub.
-2. Sur https://dashboard.render.com → **New → Blueprint** → connecter le dépôt.
-3. Render détecte `render.yaml` et propose de créer **`musclemap-db`** + **`musclemap-api`**.
-4. Il demande les valeurs `sync: false` :
-   - **`MUSCLEMAP_JWT_SECRET`** : générer avec `openssl rand -base64 48` et coller.
-   - **`MUSCLEMAP_GOOGLE_CLIENT_ID`** : l'id client Google (le même que le frontend).
-   - **`SPRING_DATASOURCE_URL`** : après création de la base, copier son *Internal Database URL*,
-     la convertir au format JDBC :
-     `jdbc:postgresql://<host>:<port>/<database>?sslmode=require`.
-5. **Apply.** Render construit l'image Docker, lance la base, **Flyway migre au démarrage**,
-   `CatalogBootstrap` remplit le catalogue. Vérifier `https://<service>.onrender.com/actuator/health`.
+Voici la **procédure exacte réellement suivie** (à la main, via le dashboard). C'est l'ordre qui
+compte : **on crée la base d'abord**, puis le service web qui pointe dessus.
 
-**Option B — à la main (sans blueprint) :** New → PostgreSQL (free) ; puis New → Web Service →
-repo → **Root Directory = `backend`**, **Environment = Docker** ; ajouter les mêmes variables ;
-Health Check Path = `/actuator/health`.
+#### Étape 1 — Créer la base PostgreSQL
+**New → PostgreSQL**, puis :
 
-**Une fois le backend en ligne :** brancher le frontend dessus en définissant, côté GitHub Pages, la
-variable `VITE_API_BASE_URL = https://<service>.onrender.com/api/v1`, puis re-déclencher le build.
-Et **ajouter l'URL du frontend** dans `MUSCLEMAP_CORS_ALLOWED_ORIGINS` côté backend.
+| Champ | Valeur utilisée |
+|---|---|
+| Name | `musclemap-db` |
+| Database (dbname) | `musclemap` |
+| User | `musclemap` |
+| Region | **Oregon (US West)** — ⚠️ doit être **la même** que le service web (réseau privé interne) |
+| PostgreSQL Version | 18 (défaut, OK) |
+| Plan | **Free** (256 Mo / 1 Go) |
 
-> ⚠️ **Free tier Render :** le service s'endort après ~15 min d'inactivité et met ~30–60 s à se
-> réveiller au premier appel. Acceptable pour une démo, à upgrader (`starter`) pour un usage réel.
+→ **Create Database**. Ensuite, ouvrir la page de la base et copier son **Internal Database URL**
+(forme `postgresql://musclemap:MOTDEPASSE@dpg-xxxxx-a/musclemap`).
+
+#### Étape 2 — Créer le service web
+**New → Web Service** → connecter le dépôt `omar692002/musclemap`, puis :
+
+| Champ | Valeur utilisée |
+|---|---|
+| Name | `musclemap` |
+| Language / Environment | **Docker** (Render détecte `backend/Dockerfile`) |
+| Branch | `master` |
+| Region | **Oregon (US West)** (même que la base) |
+| **Root Directory** | **`backend`** ← indispensable (le Dockerfile est là) |
+| Instance Type | **Free** (512 Mo / 0.1 CPU) |
+| **Advanced → Health Check Path** | **`/actuator/health`** |
+
+#### Étape 3 — Les variables d'environnement (le point clé)
+
+On distingue **ce qu'il faut saisir à la main** de **ce qui a déjà une valeur par défaut** dans
+l'app/l'image.
+
+**À SAISIR À LA MAIN (obligatoire — pas de défaut ou secret) :**
+
+| Variable | Valeur | D'où elle vient |
+|---|---|---|
+| `SPRING_DATASOURCE_URL` | `jdbc:postgresql://dpg-xxxxx-a:5432/musclemap` | l'*Internal Database URL* convertie : préfixer `jdbc:`, ajouter `:5432`, **retirer** le `user:pass@` |
+| `SPRING_DATASOURCE_USERNAME` | `musclemap` | l'utilisateur de la base |
+| `SPRING_DATASOURCE_PASSWORD` | *(le mot de passe de l'Internal URL)* | **secret** — jamais dans le code |
+| `MUSCLEMAP_JWT_SECRET` | *(≥ 32 octets aléatoires)* | bouton **Generate** de Render, ou `openssl rand -base64 48` |
+| `MUSCLEMAP_GOOGLE_CLIENT_ID` | `702692182934-…apps.googleusercontent.com` | l'id client Google (**public**, le même que le frontend) |
+
+> ⚠️ **Le `client_secret`** présent dans le fichier `client_secret_*.json` ne se met **nulle part**
+> sur Render : notre flux « Sign in with Google » n'a besoin que du **client_id** (utilisé comme
+> *audience*). Le secret servirait à un autre flux OAuth qu'on n'utilise pas.
+
+**DÉJÀ FOURNI — inutile de saisir (mais sans danger si on le fait) :**
+
+| Variable | Défaut existant | Où |
+|---|---|---|
+| `SPRING_PROFILES_ACTIVE` | `prod` | **déjà gravé dans le Dockerfile** (`ENV SPRING_PROFILES_ACTIVE=prod`) |
+| `MUSCLEMAP_CORS_ALLOWED_ORIGINS` | `https://omar692002.github.io` | défaut dans `application-prod.yml` |
+| `DB_POOL_MAX` | `5` | défaut |
+| `PORT` | injecté par Render | **ne pas l'ajouter** ; l'app lit `${PORT:8080}` |
+
+→ **Deploy web service.** Render construit l'image Docker (la 1re fois est longue), **Flyway migre
+le schéma**, `CatalogBootstrap` insère les 873 exercices.
+
+#### Étape 4 — Vérifier
+```
+https://musclemap-q65o.onrender.com/actuator/health        → {"status":"UP"}
+https://musclemap-q65o.onrender.com/api/v1/meta            → {"name":"MuscleMap","version":...}
+https://musclemap-q65o.onrender.com/api/v1/catalog/exercises → la liste des exercices
+```
+
+#### Étape 5 — Brancher le frontend sur le backend
+Dans **GitHub → repo → Settings → Secrets and variables → Actions → Variables**, définir la
+variable :
+```
+VITE_API_BASE_URL = https://musclemap-q65o.onrender.com/api/v1
+```
+puis re-déclencher le déploiement Pages (Actions → « Deploy to GitHub Pages » → Run workflow, ou un
+nouveau `push`). Le site bascule alors du mode hors-ligne au **vrai backend**. (Le workflow
+`deploy.yml` lit déjà cette variable.)
+
+> ⚠️ **Free tier Render :** le service **s'endort après ~15 min** d'inactivité et met ~30–60 s à se
+> réveiller au premier appel. Acceptable pour une démo ; passer en `Starter` (7 $/mois) pour qu'il
+> reste toujours allumé le jour de la soutenance.
+
+**Alternative automatisée (Blueprint) :** au lieu des étapes 1–3 à la main, on peut faire
+**New → Blueprint** et laisser Render lire `backend/render.yaml`, qui déclare la base + le service +
+les variables (les secrets en `sync: false` sont demandés une fois). Même résultat, en quelques
+clics.
 
 ### 10.4 Déployer frontend + backend sur une VM Azure
 
@@ -969,21 +1041,22 @@ l'architecture recommandée et les étapes.
 > backend. Avantage : **un seul domaine, un seul certificat HTTPS**, et le frontend et le backend
 > ont la *même origine* → plus de souci CORS.
 
-**Étapes (résumé) :**
-1. **Préparer la VM :** installer Docker + Docker Compose + Nginx + Certbot (Let's Encrypt).
-2. **Backend + base :** réutiliser `backend/docker-compose.yml` (il lance déjà Postgres) et y
-   ajouter le service backend (build depuis le Dockerfile), ou lancer les deux conteneurs. Définir
-   les variables d'env (profil `prod`, secret JWT, id Google, `SPRING_DATASOURCE_URL` pointant sur le
-   conteneur Postgres).
-3. **Frontend :** `npm run build` (avec `VITE_API_BASE_URL=https://<ton-domaine>/api/v1` et
-   `VITE_GOOGLE_CLIENT_ID`), puis copier le dossier `dist/` là où Nginx le sert (ex.
-   `/var/www/musclemap`).
-4. **Nginx :** configurer le bloc `server` avec les deux règles (statique + proxy `/api`), activer
-   HTTPS via Certbot.
-5. **CORS :** comme tout est servi sur le même domaine, mettre `MUSCLEMAP_CORS_ALLOWED_ORIGINS` =
-   `https://<ton-domaine>` (ou rien si même origine via le proxy).
-6. **Google :** ajouter `https://<ton-domaine>` dans les *Authorized JavaScript origins* de la
-   console Google Cloud (sinon le bouton Google refusera de se charger).
+**Les fichiers prêts pour ça (déjà dans le dépôt) :**
+- **`docker-compose.prod.yml`** (racine) — lance `db` (PostgreSQL + volume) + `backend` (build
+  depuis `./backend`), tous deux liés à `127.0.0.1` (jamais publics).
+- **`.env.prod.example`** (racine) — modèle des secrets ; à copier en `.env` puis remplir.
+- **`deploy/nginx.conf`** — la config du reverse proxy (statique sur `/`, proxy sur `/api`).
+- **`DEPLOY_AZURE.md`** (racine) — **le guide pas-à-pas complet**, avec toutes les commandes.
+
+**Étapes (résumé — détail dans `DEPLOY_AZURE.md`) :**
+1. **Préparer la VM :** installer Docker + Nginx + Certbot ; ouvrir les ports 22/80/443.
+2. **Backend + base :** `cp .env.prod.example .env`, remplir les secrets, puis
+   `docker compose -f docker-compose.prod.yml up -d --build`.
+3. **Frontend :** `cd frontend && npm ci && VITE_API_BASE_URL=https://<domaine>/api/v1
+   VITE_GOOGLE_CLIENT_ID=<id> npm run build`, puis copier `dist/` dans `/var/www/musclemap`.
+4. **Nginx :** installer `deploy/nginx.conf`, lancer `certbot --nginx` pour le HTTPS.
+5. **Google :** ajouter `https://<domaine>` dans les *Authorized JavaScript origins* (console Google
+   Cloud), sinon le bouton Google ne se charge pas.
 
 ### 10.5 Spécifications de la VM & checklist des livrables
 
@@ -1012,11 +1085,11 @@ l'architecture recommandée et les étapes.
 **Livrables (à fournir au jury / pour la mise en production) :**
 - [x] `backend/render.yaml` — le blueprint Render (créé).
 - [x] `backend/Dockerfile` — image multi-étapes (existant).
-- [x] `backend/docker-compose.yml` — Postgres local (existant ; à étendre pour la VM).
+- [x] `backend/docker-compose.yml` — Postgres local pour le dev (existant).
+- [x] `docker-compose.prod.yml` + `.env.prod.example` — pile de prod (backend + Postgres) pour la VM.
+- [x] `deploy/nginx.conf` — reverse proxy (frontend statique + proxy `/api`).
+- [x] `DEPLOY_AZURE.md` — guide de déploiement VM Azure pas-à-pas.
 - [x] Ce guide (`GUIDE_UTILISATEUR_FR.md`) + `USER_GUIDE.md` (version EN).
-- [ ] **À produire ensemble si tu veux :** un `docker-compose.prod.yml` (backend + Postgres) et un
-  fichier `nginx.conf` prêts pour la VM, plus un petit `DEPLOY_AZURE.md` pas-à-pas. Dis-moi et je
-  les ajoute.
 
 > 💡 **Récap de la « danse » du déploiement :** le **frontend** est juste des fichiers statiques
 > (GitHub Pages *ou* Nginx sur la VM). Le **backend** est une **image Docker** identique partout

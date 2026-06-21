@@ -29,3 +29,8 @@ screenshots
 # Google OAuth credential downloads — never commit
 client_secret_*.json
 .env.local
+
+# Production secrets for the VM (docker-compose.prod) — never commit
+# (.env.prod.example IS committed as the template; the filled .env is not)
+.env
+.env.prod
