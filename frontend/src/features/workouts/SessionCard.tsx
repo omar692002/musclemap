@@ -26,7 +26,9 @@ export function SessionHeroCard({ session }: { session: WorkoutSession }) {
           <session.icon className="h-6 w-6" />
         </span>
       </div>
-      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-surface px-4 py-2 text-sm font-bold text-orange-600 shadow-sm transition group-hover:bg-orange-500/10">
+      {/* Solid white chip on the ember banner — stays opaque & high-contrast in
+          every state (the translucent hover used to wash the text out). */}
+      <span className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold text-orange-600 shadow-sm transition group-hover:bg-orange-50 group-hover:text-orange-700 group-hover:shadow-md">
         {UiText.startWorkout}
         <ChevronRight className="h-4 w-4 rtl:rotate-180" aria-hidden />
       </span>

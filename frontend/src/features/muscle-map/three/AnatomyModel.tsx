@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { useGLTF, useCursor } from '@react-three/drei'
 import type { ThreeEvent } from '@react-three/fiber'
-import { Box3, Group, Mesh, MeshStandardMaterial, Object3D, Vector3 } from 'three'
+import { Box3, BoxGeometry, Group, Mesh, MeshStandardMaterial, Object3D, SphereGeometry, Vector3 } from 'three'
 import type { Muscle } from '../../../domain/models/Muscle'
 import type { MuscleId } from '../../../domain/enums/MuscleId'
 import type { MuscleRole } from '../../../domain/enums/MuscleRole'
@@ -25,10 +25,75 @@ const NO_EMISSIVE = '#000000'
 // (Aponeuroses are kept visible: the galea aponeurotica forms the scalp dome.)
 const CONNECTIVE = /fascia|retinacul|septum|sheath|bursa|ligament|tendon|trochlea|raphe|membrane/i
 // Cranial (face/eye/jaw) and foot-intrinsic meshes: skinless they look like a
-// zombie and aren't trainable groups. Identified by the model's own region
-// groups — "of head"/"cranial part of muscular system" and "of foot" — which
-// never collide with muscle *heads* ("…head of triceps") or the neck/calves.
-const COSMETIC_EXTREMITY = /muscles of head|cranial part of muscular system|muscles of foot/i
+// zombie. We swap them for clean neutral placeholders (a smooth head, simple
+// feet). Identified by the model's own region groups — which never collide with
+// muscle *heads* ("…head of triceps") or the neck/calves.
+const HEAD_REGION = /muscles of head|cranial part of muscular system/i
+const FOOT_REGION = /muscles of foot/i
+
+/** Bounding box of a set of meshes (in the parent's local frame), or null. */
+function regionBox(meshes: readonly Object3D[]): Box3 | null {
+  if (meshes.length === 0) return null
+  const box = new Box3()
+  for (const mesh of meshes) box.expandByObject(mesh)
+  return box.isEmpty() ? null : box
+}
+
+/**
+ * Builds clean neutral stand-ins for the cranium and feet, sized and placed from
+ * the *original* meshes' bounding boxes (so they land exactly where the anatomy
+ * was). The head is a smooth ellipsoid; each foot is a simple rounded block. All
+ * non-interactive. Added to `root` before the fit so they centre/scale with it.
+ */
+function addExtremityPlaceholders(
+  root: Object3D,
+  headMeshes: readonly Object3D[],
+  footMeshes: readonly Object3D[],
+  color: string,
+): void {
+  const material = () => new MeshStandardMaterial({ color, roughness: 0.7, metalness: 0.04 })
+  const center = new Vector3()
+  const size = new Vector3()
+
+  const headBox = regionBox(headMeshes)
+  if (headBox) {
+    headBox.getCenter(center)
+    headBox.getSize(size)
+    const head = new Mesh(new SphereGeometry(0.5, 28, 20), material())
+    // Slightly slimmer than the raw skull box, a touch taller, dropped a hair to
+    // meet the neck so there's no floating gap.
+    head.scale.set(size.x * 0.78, size.y * 0.96, size.z * 0.82)
+    head.position.set(center.x, center.y - size.y * 0.06, center.z)
+    head.raycast = () => {}
+    root.add(head)
+  }
+
+  const footBox = regionBox(footMeshes)
+  if (footBox) {
+    // Split the foot meshes into left/right by the foot region's mid-x, so each
+    // real foot gets its own block at its own position.
+    const midX = footBox.getCenter(center).x
+    const centerXOf = (mesh: Object3D): number => {
+      const box = regionBox([mesh])
+      return box ? box.getCenter(new Vector3()).x : midX
+    }
+    const sides = [
+      footMeshes.filter((mesh) => centerXOf(mesh) <= midX),
+      footMeshes.filter((mesh) => centerXOf(mesh) > midX),
+    ]
+    for (const side of sides) {
+      const box = regionBox(side)
+      if (!box) continue
+      box.getCenter(center)
+      box.getSize(size)
+      const foot = new Mesh(new BoxGeometry(1, 1, 1), material())
+      foot.scale.set(Math.max(size.x, 0.02), Math.max(size.y * 0.7, 0.02), Math.max(size.z, 0.02))
+      foot.position.copy(center)
+      foot.raycast = () => {}
+      root.add(foot)
+    }
+  }
+}
 // Pointer travel (px) above which a press counts as an orbit drag, not a click.
 const DRAG_PX = 6
 
@@ -71,14 +136,19 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
   const fitted = useMemo(() => {
     const colors = MuscleMapConfig.model3d
     const root = scene.clone(true)
-    // Strip the cranial/foot cosmetic meshes first so they neither render nor
-    // count toward the bounding box (the figure then fits tighter on the trunk).
+    // Replace the cranial/foot anatomy with clean neutral placeholders: collect
+    // those meshes, build stand-ins sized from their boxes, then drop the originals.
     if (AnatomyModelConfig.hideExtremities) {
-      const drop: Object3D[] = []
+      const headMeshes: Object3D[] = []
+      const footMeshes: Object3D[] = []
       root.traverse((object) => {
-        if ((object as Mesh).isMesh && COSMETIC_EXTREMITY.test(chainOf(object))) drop.push(object)
+        if (!(object as Mesh).isMesh) return
+        const chain = chainOf(object)
+        if (HEAD_REGION.test(chain)) headMeshes.push(object)
+        else if (FOOT_REGION.test(chain)) footMeshes.push(object)
       })
-      drop.forEach((mesh) => mesh.removeFromParent())
+      addExtremityPlaceholders(root, headMeshes, footMeshes, colors.inactive)
+      ;[...headMeshes, ...footMeshes].forEach((mesh) => mesh.removeFromParent())
     }
     root.traverse((object) => {
       const mesh = object as Mesh

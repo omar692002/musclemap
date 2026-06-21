@@ -6,12 +6,13 @@ export const AnatomyModelConfig = {
    *  the visible frame (camera below) so the figure has clear margin. */
   targetHeight: 2.6,
   /**
-   * Drop the cranial (face/eye/jaw) and foot-intrinsic meshes when fitting the
-   * model. Flayed (skinless) these read as unsettling "zombie" detail and aren't
-   * trainable muscle groups anyway, so hiding them yields a clean torso-to-ankle
-   * mannequin that frames tighter on the muscles that matter. The body's own
-   * region grouping makes this exact: every such mesh sits under "Muscles of
-   * head" / "Cranial part of muscular system" or "Muscles of foot".
+   * Replace the cranial (face/eye/jaw) and foot-intrinsic meshes with clean
+   * neutral placeholders (a smooth head, simple feet). Flayed (skinless) the real
+   * anatomy reads as unsettling "zombie" detail and isn't a trainable group; the
+   * stand-ins are sized/placed from the originals' bounding boxes so the figure
+   * still looks complete. The body's own region grouping makes the swap exact:
+   * every such mesh sits under "Muscles of head" / "Cranial part of muscular
+   * system" or "Muscles of foot".
    */
   hideExtremities: true,
   /** Required CC-BY-SA attribution, shown under the model. */
