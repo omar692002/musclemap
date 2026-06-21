@@ -1,0 +1,75 @@
+# ---------------------------------------------------------------------------
+# Render Blueprint (Infrastructure as Code).
+#
+# Un "Blueprint" = un fichier qui décrit TOUTE l'infrastructure (le service web
+# + la base de données + les variables) pour que Render puisse la créer
+# automatiquement, au lieu de tout cliquer à la main dans le dashboard.
+#
+# Comment l'utiliser :
+#   1. Pousser ce fichier dans le dépôt Git.
+#   2. Sur https://dashboard.render.com  ->  New  ->  Blueprint.
+#   3. Connecter le dépôt GitHub ; Render lit ce fichier et propose de créer
+#      le service "musclemap-api" + la base "musclemap-db".
+#   4. Render demande les valeurs marquées "sync: false" (les secrets) : on les
+#      saisit une seule fois dans l'interface (elles ne sont jamais commitées).
+#
+# NOTE IMPORTANTE sur SPRING_DATASOURCE_URL :
+#   Spring veut une URL au format  jdbc:postgresql://HOTE:PORT/BASE?sslmode=require
+#   Render expose l'hôte/port/base separement, mais ne sait pas les concatener
+#   dans un render.yaml. On la met donc en "sync: false" : apres la creation de
+#   la base, copier son "Internal Database URL", la convertir en format jdbc
+#   (prefixer par "jdbc:" et ajouter "?sslmode=require") et la coller ici.
+# ---------------------------------------------------------------------------
+
+databases:
+  - name: musclemap-db
+    plan: free                 # 256 Mo / 1 Go free tier ; passer a "starter" en prod reelle
+    databaseName: musclemap
+    user: musclemap
+
+services:
+  - type: web
+    name: musclemap-api
+    runtime: docker
+    repo: https://github.com/omar692002/musclemap   # adapter si le remote differe
+    branch: master
+    rootDir: backend                                 # le Dockerfile est dans /backend
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /actuator/health                # Render attend un 200 ici pour declarer le service "live"
+    autoDeploy: true                                 # redeploie a chaque push sur master
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+
+      # --- Connexion base de donnees ---
+      # user + password peuvent etre lies automatiquement a la base ci-dessus :
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: musclemap-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: musclemap-db
+          property: password
+      # ... mais l'URL JDBC doit etre saisie a la main (voir note en haut) :
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+
+      # --- Secret de signature des JWT (>= 32 octets aleatoires) ---
+      # Generer par ex. avec :  openssl rand -base64 48
+      - key: MUSCLEMAP_JWT_SECRET
+        sync: false
+
+      # --- Identifiant client Google (le MEME que celui du frontend) ---
+      # Public, mais on le laisse en sync:false pour le saisir au moment du deploy.
+      - key: MUSCLEMAP_GOOGLE_CLIENT_ID
+        sync: false
+
+      # --- Origines autorisees (CORS) : l'URL exacte du frontend ---
+      - key: MUSCLEMAP_CORS_ALLOWED_ORIGINS
+        value: https://omar692002.github.io
+
+      # --- Taille du pool de connexions DB (petit pour le free tier) ---
+      - key: DB_POOL_MAX
+        value: "5"
