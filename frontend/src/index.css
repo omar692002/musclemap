@@ -136,6 +136,16 @@ html {
   outline-offset: 2px;
 }
 
+/* Forms surface validation through their own error UI, so suppress the browser's
+   native ":invalid" styling — Firefox paints a red glow/box-shadow on an empty
+   required field the moment it's focused, which looked like an error on the
+   sign-in inputs before anything was even submitted. */
+input:invalid,
+textarea:invalid,
+select:invalid {
+  box-shadow: none;
+}
+
 /* Honour the OS "reduce motion" setting: drop entrance/looping animations. */
 @media (prefers-reduced-motion: reduce) {
   *,

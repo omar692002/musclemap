@@ -46,6 +46,10 @@ const HEAD_RULES: readonly HeadRule[] = [
   { keyword: 'biceps femoris', headId: MuscleHeadId.HamBicepsFemoris },
   { keyword: 'semitendinosus', headId: MuscleHeadId.HamSemitendinosus },
   { keyword: 'semimembranosus', headId: MuscleHeadId.HamSemimembranosus },
+  // Abdomen: split the front six-pack from the obliques on the sides. (Both the
+  // external and internal oblique meshes carry "abdominal oblique".)
+  { keyword: 'rectus abdominis', headId: MuscleHeadId.AbsRectus },
+  { keyword: 'abdominal oblique', headId: MuscleHeadId.AbsObliques },
 ]
 
 /** Resolves a mesh's ancestor-chain to a muscle head id (or null). */

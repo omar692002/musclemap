@@ -35,4 +35,7 @@ export enum MuscleHeadId {
   HamBicepsFemoris = 'ham-biceps-femoris',
   HamSemitendinosus = 'ham-semitendinosus',
   HamSemimembranosus = 'ham-semimembranosus',
+  // Abdomen: the six-pack front vs. the obliques on the sides
+  AbsRectus = 'abs-rectus',
+  AbsObliques = 'abs-obliques',
 }

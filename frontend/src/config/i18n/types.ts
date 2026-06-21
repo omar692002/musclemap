@@ -266,6 +266,7 @@ export interface UiStrings {
   readonly coachFieldThumbnailUrl: string
   readonly coachFieldExercise: string
   readonly coachFieldMuscle: string
+  readonly coachMuscleRequiredHint: string
   readonly coachFieldPremium: string
   readonly coachFieldDuration: string
   readonly coachFormCreate: string

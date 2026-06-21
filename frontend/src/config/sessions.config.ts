@@ -52,7 +52,9 @@ export function suggestedSessionFor(date: Date): WorkoutSession {
 
 /** Tuning for the quick sessions (richer than the planner's 1/group). */
 export const SessionConfig = {
-  perGroup: 2,
+  // Exercises picked per muscle group of the day. Kept generous (5) so a body
+  // part like chest/back gets a full menu of options, not just a token pair.
+  perGroup: 5,
   cardioCount: 4,
   goal: TrainingGoal.Hypertrophy,
 } as const

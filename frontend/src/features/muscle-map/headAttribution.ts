@@ -83,6 +83,16 @@ const RULES_BY_MUSCLE: Partial<Record<MuscleId, MuscleHeadRules>> = {
     rules: [],
     fallback: [D.HamBicepsFemoris, D.HamSemitendinosus, D.HamSemimembranosus],
   },
+  [MuscleId.RectusAbdominis]: {
+    rules: [
+      {
+        keywords: ['oblique', 'twist', 'side bend', 'side plank', 'woodchop', 'wood chop', 'russian', 'windshield', 'side crunch'],
+        heads: [D.AbsObliques],
+      },
+    ],
+    // Default ab work (crunch, sit-up, leg raise, plank) targets the front wall.
+    fallback: [D.AbsRectus],
+  },
 }
 
 const ROLE_RANK: Readonly<Record<MuscleRole, number>> = {

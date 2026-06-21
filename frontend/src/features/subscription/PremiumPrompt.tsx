@@ -4,6 +4,7 @@ import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { isAuthEnabled } from '../../config/auth.config'
 import { useAuth } from '../auth/AuthContext'
+import { isStaff } from '../auth/roles'
 import { useSubscription } from './SubscriptionContext'
 
 /**
@@ -14,7 +15,7 @@ import { useSubscription } from './SubscriptionContext'
 export function PremiumPrompt() {
   const { user } = useAuth()
   const { isPremium } = useSubscription()
-  if (!isAuthEnabled() || !user || isPremium) return null
+  if (!isAuthEnabled() || !user || isPremium || isStaff(user)) return null
 
   return (
     <Link

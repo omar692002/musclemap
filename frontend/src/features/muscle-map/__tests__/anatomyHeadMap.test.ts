@@ -27,6 +27,8 @@ const CASES: ReadonlyArray<readonly [string, MuscleHeadId]> = [
   ['Long head of biceps femoris.l', MuscleHeadId.HamBicepsFemoris],
   ['Semitendinosus muscle.l', MuscleHeadId.HamSemitendinosus],
   ['Semimembranosus muscle.l', MuscleHeadId.HamSemimembranosus],
+  ['Rectus abdominis muscle.l', MuscleHeadId.AbsRectus],
+  ['External abdominal oblique muscle.l', MuscleHeadId.AbsObliques],
 ]
 
 describe('anatomy mesh → head mapping', () => {

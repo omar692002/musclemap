@@ -5,6 +5,7 @@ import { AppRoutes } from '../../config/routes'
 import { UiText } from '../../config/labels'
 import { getActiveLanguage } from '../../config/i18n'
 import { useAuth } from '../auth/AuthContext'
+import { isStaff } from '../auth/roles'
 import { useProfile } from '../onboarding/ProfileContext'
 import { OnboardingPrompt } from '../onboarding/OnboardingPrompt'
 import { PremiumPrompt } from '../subscription/PremiumPrompt'
@@ -54,6 +55,8 @@ export function HomePage() {
   const { profile } = useProfile()
   const firstName = user?.name.split(' ')[0]
   const showDashboard = user != null && profile?.onboardingCompleted === true
+  // Coaches/admins don't onboard or buy premium — those nudges are member-only.
+  const member = user != null && !isStaff(user)
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
@@ -65,8 +68,8 @@ export function HomePage() {
         </h1>
       </header>
 
-      <OnboardingPrompt />
-      <PremiumPrompt />
+      {member ? <OnboardingPrompt /> : null}
+      {member ? <PremiumPrompt /> : null}
 
       {showDashboard ? <Dashboard /> : <SessionLanding />}
     </div>

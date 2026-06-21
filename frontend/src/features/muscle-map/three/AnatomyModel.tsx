@@ -24,6 +24,11 @@ const NO_EMISSIVE = '#000000'
 // Pure connective tissue — hidden to a faint shell so it never veils muscles.
 // (Aponeuroses are kept visible: the galea aponeurotica forms the scalp dome.)
 const CONNECTIVE = /fascia|retinacul|septum|sheath|bursa|ligament|tendon|trochlea|raphe|membrane/i
+// Cranial (face/eye/jaw) and foot-intrinsic meshes: skinless they look like a
+// zombie and aren't trainable groups. Identified by the model's own region
+// groups — "of head"/"cranial part of muscular system" and "of foot" — which
+// never collide with muscle *heads* ("…head of triceps") or the neck/calves.
+const COSMETIC_EXTREMITY = /muscles of head|cranial part of muscular system|muscles of foot/i
 // Pointer travel (px) above which a press counts as an orbit drag, not a click.
 const DRAG_PX = 6
 
@@ -66,6 +71,15 @@ export function AnatomyModel({ muscleIndex, highlight, selected, onSelect, onHov
   const fitted = useMemo(() => {
     const colors = MuscleMapConfig.model3d
     const root = scene.clone(true)
+    // Strip the cranial/foot cosmetic meshes first so they neither render nor
+    // count toward the bounding box (the figure then fits tighter on the trunk).
+    if (AnatomyModelConfig.hideExtremities) {
+      const drop: Object3D[] = []
+      root.traverse((object) => {
+        if ((object as Mesh).isMesh && COSMETIC_EXTREMITY.test(chainOf(object))) drop.push(object)
+      })
+      drop.forEach((mesh) => mesh.removeFromParent())
+    }
     root.traverse((object) => {
       const mesh = object as Mesh
       if (!mesh.isMesh) return

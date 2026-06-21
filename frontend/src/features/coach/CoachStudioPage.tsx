@@ -3,9 +3,10 @@ import { Navigate } from 'react-router-dom'
 import { GraduationCap, Pencil, Plus, Trash2 } from 'lucide-react'
 import { UserRole } from '../../domain/enums/UserRole'
 import { CoachContentType } from '../../domain/enums/CoachContentType'
+import { MuscleGroup } from '../../domain/enums/MuscleGroup'
 import type { CoachVideo, CoachVideoDraft } from '../../domain/models/CoachVideo'
 import { AppRoutes } from '../../config/routes'
-import { UiText, COACH_CONTENT_TYPE_LABELS } from '../../config/labels'
+import { UiText, COACH_CONTENT_TYPE_LABELS, MUSCLE_GROUP_LABELS } from '../../config/labels'
 import { Skeleton } from '../../components/Skeleton'
 import { EmptyState, ErrorState } from '../../components/StateMessage'
 import { useAuth } from '../auth/AuthContext'
@@ -29,6 +30,24 @@ const EMPTY_DRAFT: CoachVideoDraft = {
   muscleGroup: '',
   premium: false,
   durationSeconds: null,
+}
+
+/**
+ * The target muscle group(s) are stored on the (single) `muscleGroup` string as a
+ * comma-separated list of {@link MuscleGroup} codes — so a coach can tag content
+ * with one *or several* groups without a schema change. These two helpers parse
+ * and serialise that list.
+ */
+function parseGroups(csv: string): MuscleGroup[] {
+  const valid = new Set<string>(Object.values(MuscleGroup))
+  return csv
+    .split(',')
+    .map((value) => value.trim())
+    .filter((value): value is MuscleGroup => valid.has(value))
+}
+
+function serialiseGroups(groups: readonly MuscleGroup[]): string {
+  return groups.join(',')
 }
 
 /** Maps an existing item back to an editable draft (drops server-only fields). */
@@ -61,13 +80,21 @@ function ContentForm({
   onCancel: () => void
 }) {
   const [draft, setDraft] = useState(initial)
+  const groups = parseGroups(draft.muscleGroup)
+  // Title and at least one target muscle group are required to save.
+  const canSave = draft.title.trim().length > 0 && groups.length > 0
 
   const set = <K extends keyof CoachVideoDraft>(key: K, value: CoachVideoDraft[K]) =>
     setDraft((prev) => ({ ...prev, [key]: value }))
 
+  const toggleGroup = (group: MuscleGroup) => {
+    const next = groups.includes(group) ? groups.filter((value) => value !== group) : [...groups, group]
+    set('muscleGroup', serialiseGroups(next))
+  }
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!draft.title.trim()) return
+    if (!canSave) return
     onSubmit({ ...draft, title: draft.title.trim() })
   }
 
@@ -141,15 +168,6 @@ function ContentForm({
           />
         </label>
         <label className="block text-xs font-semibold text-muted">
-          {UiText.coachFieldMuscle}
-          <input
-            type="text"
-            value={draft.muscleGroup}
-            onChange={(e) => set('muscleGroup', e.target.value)}
-            className={fieldClass}
-          />
-        </label>
-        <label className="block text-xs font-semibold text-muted">
           {UiText.coachFieldDuration}
           <input
             type="number"
@@ -160,6 +178,36 @@ function ContentForm({
           />
         </label>
       </div>
+
+      {/* Target muscle group(s): required, multi-select (one or several). */}
+      <fieldset className="mt-3">
+        <legend className="text-xs font-semibold text-muted">
+          {UiText.coachFieldMuscle} <span className="text-rose-500">*</span>
+        </legend>
+        <div className="mt-1.5 flex flex-wrap gap-1.5">
+          {Object.values(MuscleGroup).map((group) => {
+            const selected = groups.includes(group)
+            return (
+              <button
+                key={group}
+                type="button"
+                onClick={() => toggleGroup(group)}
+                aria-pressed={selected}
+                className={`rounded-full border px-2.5 py-1 text-xs font-semibold transition active:scale-95 ${
+                  selected
+                    ? 'border-orange-500 bg-orange-500/10 text-orange-600'
+                    : 'border-line bg-subtle text-muted hover:border-line-strong'
+                }`}
+              >
+                {MUSCLE_GROUP_LABELS[group]}
+              </button>
+            )
+          })}
+        </div>
+        {groups.length === 0 ? (
+          <p className="mt-1.5 text-[11px] font-medium text-faint">{UiText.coachMuscleRequiredHint}</p>
+        ) : null}
+      </fieldset>
 
       <label className="mt-3 flex items-center gap-2 text-sm font-medium text-muted">
         <input
@@ -174,7 +222,7 @@ function ContentForm({
       <div className="mt-4 flex gap-2">
         <button
           type="submit"
-          disabled={busy || !draft.title.trim()}
+          disabled={busy || !canSave}
           className="rounded-full bg-orange-600 px-4 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-700 disabled:opacity-50"
         >
           {isEdit ? UiText.coachFormSave : UiText.coachFormCreate}

@@ -8,6 +8,7 @@ import { AppRoutes } from '../../config/routes'
 import { UiText, SUBSCRIPTION_PLAN_LABELS } from '../../config/labels'
 import { useSubscription } from '../subscription/SubscriptionContext'
 import { useAuth } from './AuthContext'
+import { isStaff } from './roles'
 
 /**
  * Top-bar auth controls: a "Sign in" button (→ the auth screen) when signed out,
@@ -18,6 +19,8 @@ export function UserMenu() {
   const { user, signOut } = useAuth()
   const { isPremium } = useSubscription()
   const [open, setOpen] = useState(false)
+  // Coaches/admins manage the platform: hide the member-only plan/profile/upsell.
+  const member = !isStaff(user)
 
   if (!isAuthEnabled() && !isBackendAuthEnabled()) return null
 
@@ -64,30 +67,36 @@ export function UserMenu() {
         <div className="absolute end-0 top-10 z-50 w-56 rounded-2xl border border-line bg-surface p-3 shadow-lg">
           <p className="truncate text-sm font-semibold text-ink">{user.name}</p>
           <p className="truncate text-xs text-faint">{user.email}</p>
-          <span
-            className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${
-              isPremium ? 'bg-amber-500/15 text-amber-600' : 'bg-subtle text-muted'
-            }`}
-          >
-            {isPremium ? <Crown className="h-3 w-3" aria-hidden /> : null}
-            {SUBSCRIPTION_PLAN_LABELS[isPremium ? SubscriptionPlan.Premium : SubscriptionPlan.Free]}
-          </span>
-          <Link
-            to={AppRoutes.onboarding}
-            onClick={() => setOpen(false)}
-            className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
-          >
-            <UserCog className="h-3.5 w-3.5" aria-hidden />
-            {UiText.editProfile}
-          </Link>
-          <Link
-            to={AppRoutes.subscription}
-            onClick={() => setOpen(false)}
-            className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
-          >
-            <Crown className="h-3.5 w-3.5" aria-hidden />
-            {UiText.navSubscription}
-          </Link>
+          {member ? (
+            <span
+              className={`mt-1.5 inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold ${
+                isPremium ? 'bg-amber-500/15 text-amber-600' : 'bg-subtle text-muted'
+              }`}
+            >
+              {isPremium ? <Crown className="h-3 w-3" aria-hidden /> : null}
+              {SUBSCRIPTION_PLAN_LABELS[isPremium ? SubscriptionPlan.Premium : SubscriptionPlan.Free]}
+            </span>
+          ) : null}
+          {member ? (
+            <Link
+              to={AppRoutes.onboarding}
+              onClick={() => setOpen(false)}
+              className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
+            >
+              <UserCog className="h-3.5 w-3.5" aria-hidden />
+              {UiText.editProfile}
+            </Link>
+          ) : null}
+          {member ? (
+            <Link
+              to={AppRoutes.subscription}
+              onClick={() => setOpen(false)}
+              className="mt-2 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
+            >
+              <Crown className="h-3.5 w-3.5" aria-hidden />
+              {UiText.navSubscription}
+            </Link>
+          ) : null}
           {isBackendAuthEnabled() ? (
             <Link
               to={AppRoutes.content}

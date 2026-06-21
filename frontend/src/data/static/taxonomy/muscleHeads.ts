@@ -33,6 +33,8 @@ export const MUSCLE_HEADS: readonly MuscleHead[] = [
   { id: MuscleHeadId.HamBicepsFemoris, parent: MuscleId.Hamstrings, name: 'Biceps femoris' },
   { id: MuscleHeadId.HamSemitendinosus, parent: MuscleId.Hamstrings, name: 'Semitendinosus' },
   { id: MuscleHeadId.HamSemimembranosus, parent: MuscleId.Hamstrings, name: 'Semimembranosus' },
+  { id: MuscleHeadId.AbsRectus, parent: MuscleId.RectusAbdominis, name: 'Rectus abdominis' },
+  { id: MuscleHeadId.AbsObliques, parent: MuscleId.RectusAbdominis, name: 'Obliques' },
 ]
 
 export const MUSCLE_HEAD_BY_ID: ReadonlyMap<MuscleHeadId, MuscleHead> = new Map(

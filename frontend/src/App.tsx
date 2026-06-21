@@ -16,6 +16,22 @@ import { OnboardingPage } from './features/onboarding/OnboardingPage'
 import { AuthPage } from './features/auth/AuthPage'
 import { TopBar } from './components/TopBar'
 import { BottomNav } from './components/BottomNav'
+import { useAuth } from './features/auth/AuthContext'
+import { isStaff } from './features/auth/roles'
+import { useProfile } from './features/onboarding/ProfileContext'
+
+/**
+ * Mandatory onboarding gate. A signed-in *member* (not a coach/admin) who hasn't
+ * completed their profile is funnelled straight into the onboarding wizard and
+ * cannot reach the rest of the app until it's done — so the first thing a new
+ * member sees after signing in is the profile form, not the session launcher.
+ * Staff and already-onboarded users pass through untouched.
+ */
+function useMustOnboard(): boolean {
+  const { user } = useAuth()
+  const { profile, loading } = useProfile()
+  return user != null && !isStaff(user) && !loading && profile != null && !profile.onboardingCompleted
+}
 
 /**
  * Application shell: a mobile-style top bar + bottom tab nav around the routed
@@ -24,6 +40,13 @@ import { BottomNav } from './components/BottomNav'
  */
 function App() {
   const location = useLocation()
+  const mustOnboard = useMustOnboard()
+  // Allow only the wizard (and the auth screen) while onboarding is outstanding.
+  const onboardingExempt =
+    location.pathname === AppRoutes.onboarding || location.pathname === AppRoutes.login
+  if (mustOnboard && !onboardingExempt) {
+    return <Navigate to={AppRoutes.onboarding} replace />
+  }
   return (
     <div className="flex min-h-dvh flex-col bg-canvas text-ink">
       <TopBar />
