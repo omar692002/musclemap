@@ -13,12 +13,36 @@ import { CoachStudioPage } from './features/coach/CoachStudioPage'
 import { ContentLibraryPage } from './features/content/ContentLibraryPage'
 import { SubscriptionPage } from './features/subscription/SubscriptionPage'
 import { OnboardingPage } from './features/onboarding/OnboardingPage'
+import { ProfilePage } from './features/onboarding/ProfilePage'
 import { AuthPage } from './features/auth/AuthPage'
+import type { ReactNode } from 'react'
 import { TopBar } from './components/TopBar'
 import { BottomNav } from './components/BottomNav'
 import { useAuth } from './features/auth/AuthContext'
 import { isStaff } from './features/auth/roles'
 import { useProfile } from './features/onboarding/ProfileContext'
+import { UserRole } from './domain/enums/UserRole'
+import { isAuthEnabled, isBackendAuthEnabled } from './config/auth.config'
+
+/** Whether this build has any sign-in method configured (so guards apply). */
+const authConfigured = isAuthEnabled() || isBackendAuthEnabled()
+
+/** Gate a route behind a signed-in session (→ login when configured & absent). */
+function RequireAuth({ children }: { children: ReactNode }) {
+  const { user } = useAuth()
+  if (authConfigured && !user) return <Navigate to={AppRoutes.login} replace />
+  return <>{children}</>
+}
+
+/** Gate a route behind one of `roles` (→ login if signed out, else → home). */
+function RequireRole({ roles, children }: { roles: readonly UserRole[]; children: ReactNode }) {
+  const { user } = useAuth()
+  if (authConfigured && !user) return <Navigate to={AppRoutes.login} replace />
+  if (user && (user.role == null || !roles.includes(user.role))) {
+    return <Navigate to={AppRoutes.home} replace />
+  }
+  return <>{children}</>
+}
 
 /**
  * Mandatory onboarding gate. A signed-in *member* (not a coach/admin) who hasn't
@@ -58,13 +82,17 @@ function App() {
           <Route path={AppRoutes.browser} element={<ExerciseBrowserPage />} />
           <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />
           <Route path={AppRoutes.program} element={<ProgramGeneratorPage />} />
-          <Route path={AppRoutes.progress} element={<AnalyticsPage />} />
+          <Route path={AppRoutes.progress} element={<RequireAuth><AnalyticsPage /></RequireAuth>} />
           <Route path={AppRoutes.intel} element={<MuscleIntelPage />} />
-          <Route path={AppRoutes.admin} element={<AdminPage />} />
-          <Route path={AppRoutes.coach} element={<CoachStudioPage />} />
+          <Route path={AppRoutes.admin} element={<RequireRole roles={[UserRole.Admin]}><AdminPage /></RequireRole>} />
+          <Route
+            path={AppRoutes.coach}
+            element={<RequireRole roles={[UserRole.Coach, UserRole.Admin]}><CoachStudioPage /></RequireRole>}
+          />
           <Route path={AppRoutes.content} element={<ContentLibraryPage />} />
-          <Route path={AppRoutes.subscription} element={<SubscriptionPage />} />
-          <Route path={AppRoutes.onboarding} element={<OnboardingPage />} />
+          <Route path={AppRoutes.subscription} element={<RequireAuth><SubscriptionPage /></RequireAuth>} />
+          <Route path={AppRoutes.onboarding} element={<RequireAuth><OnboardingPage /></RequireAuth>} />
+          <Route path={AppRoutes.profile} element={<RequireAuth><ProfilePage /></RequireAuth>} />
           <Route path={AppRoutes.login} element={<AuthPage />} />
           <Route path={AppRoutes.exerciseDetail} element={<ExerciseDetailPage />} />
           <Route path="*" element={<Navigate to={AppRoutes.home} replace />} />

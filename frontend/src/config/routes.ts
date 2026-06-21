@@ -16,6 +16,7 @@ export const AppRoutes = {
   content: '/content',
   subscription: '/subscription',
   onboarding: '/onboarding',
+  profile: '/profile',
   login: '/login',
 } as const
 

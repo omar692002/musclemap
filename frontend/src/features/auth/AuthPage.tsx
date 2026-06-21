@@ -46,6 +46,25 @@ export function AuthPage() {
 
   const isSignUp = mode === 'signup'
 
+  // Turn an auth failure into a clear, actionable message. Internal sentinels map
+  // to friendly copy; anything else is the backend's own validation / credentials
+  // message (e.g. "Email already registered", "Password must be ≥ 8 characters"),
+  // which we surface verbatim instead of a generic "something went wrong".
+  function messageFor(err: unknown): string {
+    if (!(err instanceof AuthApiError)) return UiText.authError
+    switch (err.message) {
+      case 'backend-required':
+        return UiText.authBackendNote
+      case 'network':
+        return UiText.authNetworkError
+      case 'login-failed':
+      case 'register-failed':
+        return UiText.authError
+      default:
+        return err.message
+    }
+  }
+
   async function handleSubmit(event: FormEvent) {
     event.preventDefault()
     if (busy || !backendReady) return
@@ -58,7 +77,7 @@ export function AuthPage() {
       signIn(session.user)
       navigate(AppRoutes.home, { replace: true })
     } catch (err) {
-      setError(err instanceof AuthApiError && err.message === 'backend-required' ? UiText.authBackendNote : UiText.authError)
+      setError(messageFor(err))
     } finally {
       setBusy(false)
     }

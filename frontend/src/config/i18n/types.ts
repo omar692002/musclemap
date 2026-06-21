@@ -114,6 +114,13 @@ export interface UiStrings {
   readonly onboardingPromptCta: string
   readonly onboardingSkip: string
   readonly editProfile: string
+  readonly profileEditTitle: string
+  readonly profileEditSubtitle: string
+  readonly profileSave: string
+  readonly profileCancel: string
+  readonly profileSaved: string
+  readonly profileSaveError: string
+  readonly authNetworkError: string
   readonly onboardingComplete: string
   readonly ageQuestion: string
   readonly genderQuestion: string

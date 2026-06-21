@@ -79,7 +79,7 @@ export function UserMenu() {
           ) : null}
           {member ? (
             <Link
-              to={AppRoutes.onboarding}
+              to={AppRoutes.profile}
               onClick={() => setOpen(false)}
               className="mt-3 inline-flex w-full items-center justify-center gap-1.5 rounded-full border border-line bg-subtle px-3 py-1.5 text-xs font-semibold text-muted transition hover:bg-subtle"
             >
