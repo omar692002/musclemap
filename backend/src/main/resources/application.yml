@@ -33,9 +33,12 @@ musclemap:
     version: 0.6.0
     milestone: "EM12 - Product Polish"
   admin:
-    # First-admin bootstrap (EM9): comma-separated emails elevated to ADMIN on
-    # startup. Defaults to the platform owner so there is always a way in.
+    # Role bootstrap (EM9): comma-separated emails granted a role automatically,
+    # both on startup AND on first sign-in (no restart needed). Never demotes.
+    # Admin defaults to the platform owner so there is always a way in.
     bootstrap-emails: ${MUSCLEMAP_ADMIN_EMAILS:omarmnif123@gmail.com}
+    # Designated coach emails -> COACH on sign-in (e.g. the brother's account).
+    bootstrap-coach-emails: ${MUSCLEMAP_COACH_EMAILS:}
   api:
     base-path: /api/v1
   catalog:

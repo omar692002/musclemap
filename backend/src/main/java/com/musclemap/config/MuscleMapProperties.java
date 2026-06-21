@@ -25,7 +25,7 @@ public class MuscleMapProperties {
         this.cors = cors != null ? cors : new Cors(List.of());
         this.security = security != null ? security : new Security(null);
         this.oauth = oauth != null ? oauth : new Oauth(null);
-        this.admin = admin != null ? admin : new Admin(List.of());
+        this.admin = admin != null ? admin : new Admin(List.of(), List.of());
     }
 
     public App getApp() {
@@ -97,13 +97,17 @@ public class MuscleMapProperties {
 
     /**
      * Platform administration settings (EM9). {@code bootstrapEmails} are
-     * first-admin accounts: any existing user whose email matches is elevated to
-     * ADMIN on startup (see {@code AdminBootstrap}), so the platform always has a
-     * way in without hand-editing the database. Empty = no bootstrap.
+     * first-admin accounts and {@code bootstrapCoachEmails} are designated coach
+     * accounts: any user whose email matches is elevated to ADMIN / COACH — both at
+     * startup (see {@code AdminBootstrap}) and, crucially, on the very first
+     * sign-in (see {@code BootstrapRoles} + the auth flow), so the platform always
+     * has a way in without a restart or hand-editing the database. Never demotes.
+     * Empty lists = no bootstrap.
      */
-    public record Admin(List<String> bootstrapEmails) {
+    public record Admin(List<String> bootstrapEmails, List<String> bootstrapCoachEmails) {
         public Admin {
             bootstrapEmails = bootstrapEmails != null ? List.copyOf(bootstrapEmails) : List.of();
+            bootstrapCoachEmails = bootstrapCoachEmails != null ? List.copyOf(bootstrapCoachEmails) : List.of();
         }
     }
 

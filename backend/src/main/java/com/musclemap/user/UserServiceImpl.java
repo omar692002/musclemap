@@ -69,6 +69,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
+    public User assignRole(User user, Role role) {
+        user.setRole(role != null ? role : Role.USER);
+        return userRepository.save(user);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public User getById(UUID id) {
         return userRepository.findById(id)

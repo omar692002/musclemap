@@ -23,6 +23,9 @@ public interface UserService {
      */
     User findOrCreateOAuthUser(String email, String displayName, String avatarUrl, AuthProvider provider);
 
+    /** Sets the user's authorization role and persists it. */
+    User assignRole(User user, Role role);
+
     User getById(UUID id);
 
     User getByEmail(String email);

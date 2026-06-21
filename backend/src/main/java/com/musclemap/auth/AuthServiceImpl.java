@@ -6,6 +6,7 @@ import com.musclemap.auth.dto.GoogleAuthRequest;
 import com.musclemap.auth.dto.LoginRequest;
 import com.musclemap.auth.dto.RegisterRequest;
 import com.musclemap.auth.dto.UserSummary;
+import com.musclemap.config.BootstrapRoles;
 import com.musclemap.user.AuthProvider;
 import com.musclemap.user.Role;
 import com.musclemap.user.User;
@@ -28,15 +29,18 @@ public class AuthServiceImpl implements AuthService {
     private final AuthenticationManager authenticationManager;
     private final GoogleTokenVerifier googleTokenVerifier;
     private final JwtService jwtService;
+    private final BootstrapRoles bootstrapRoles;
 
     public AuthServiceImpl(UserService userService,
                            AuthenticationManager authenticationManager,
                            GoogleTokenVerifier googleTokenVerifier,
-                           JwtService jwtService) {
+                           JwtService jwtService,
+                           BootstrapRoles bootstrapRoles) {
         this.userService = userService;
         this.authenticationManager = authenticationManager;
         this.googleTokenVerifier = googleTokenVerifier;
         this.jwtService = jwtService;
+        this.bootstrapRoles = bootstrapRoles;
     }
 
     @Override
@@ -64,7 +68,12 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private AuthResponse toResponse(User user) {
-        String token = jwtService.generateToken(user);
-        return AuthResponse.bearer(token, jwtService.ttlSeconds(), UserSummary.from(user));
+        // Apply any configured role designation (owner email -> ADMIN, designated
+        // coach email -> COACH) so it takes effect on the very first sign-in, with
+        // no restart. resolve() never demotes, so this is safe to run every time.
+        Role target = bootstrapRoles.resolve(user.getRole(), user.getEmail());
+        User effective = target != user.getRole() ? userService.assignRole(user, target) : user;
+        String token = jwtService.generateToken(effective);
+        return AuthResponse.bearer(token, jwtService.ttlSeconds(), UserSummary.from(effective));
     }
 }

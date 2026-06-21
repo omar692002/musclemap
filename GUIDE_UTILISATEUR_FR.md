@@ -41,6 +41,7 @@
   - [10.3 Déployer le backend + la base sur Render](#103-déployer-le-backend--la-base-sur-render)
   - [10.4 Déployer frontend + backend sur une VM Azure](#104-déployer-frontend--backend-sur-une-vm-azure)
   - [10.5 Spécifications de la VM & checklist des livrables](#105-spécifications-de-la-vm--checklist-des-livrables)
+- [Partie 11 — Administration : rôles & accès à la base](#partie-11--administration--rôles--accès-à-la-base)
 - [Annexe — Questions probables du jury](#annexe--questions-probables-du-jury)
 
 ---
@@ -743,6 +744,8 @@ Tu demandais : *« que se passe-t-il si on se déconnecte / si le jeton expire ?
 | `SPRING_DATASOURCE_URL` | backend | URL JDBC de la base | partiellement | pas de base → pas de démarrage |
 | `SPRING_DATASOURCE_USERNAME` / `PASSWORD` | backend | identifiants base | **OUI (password)** | idem |
 | `MUSCLEMAP_CORS_ALLOWED_ORIGINS` | backend | quelles origines (sites) peuvent appeler l'API | Non | défaut = le domaine GitHub Pages |
+| `MUSCLEMAP_ADMIN_EMAILS` | backend | emails promus **ADMIN** automatiquement (à la connexion + au démarrage) | Non | défaut = `omarmnif123@gmail.com` (le propriétaire) |
+| `MUSCLEMAP_COACH_EMAILS` | backend | emails promus **COACH** automatiquement (ex. le compte du frère coach) | Non | vide = aucun coach désigné |
 | `SPRING_PROFILES_ACTIVE` | backend | `dev` ou `prod` | Non | défaut `dev` |
 | `DB_POOL_MAX` | backend | nb max de connexions DB (petit en free tier) | Non | défaut 5 |
 
@@ -1095,6 +1098,94 @@ l'architecture recommandée et les étapes.
 > (GitHub Pages *ou* Nginx sur la VM). Le **backend** est une **image Docker** identique partout
 > (Render *ou* VM). La **base** est un Postgres managé (Render) ou un conteneur (VM). La seule chose
 > qui « branche » le frontend au backend est la variable **`VITE_API_BASE_URL`** au moment du build.
+
+---
+
+## Partie 11 — Administration : rôles & accès à la base
+
+### 11.1 Les 3 rôles et comment on les obtient
+
+Il y a 3 rôles (`USER` < `COACH` < `ADMIN`). Le rôle voyage **dans le JWT** : après tout changement
+de rôle, il faut **se déconnecter / reconnecter** pour obtenir un nouveau jeton à jour.
+
+**Comment devenir ADMIN ?** Le propriétaire devient admin **automatiquement** : tout email listé
+dans `MUSCLEMAP_ADMIN_EMAILS` (défaut `omarmnif123@gmail.com`) est **promu ADMIN à la connexion**.
+Donc : connecte-toi (Google ou email/mdp) avec cet email → tu es ADMIN dès cette session.
+
+> 💡 **Le bug qu'on a corrigé.** Avant, la promotion n'avait lieu **qu'au démarrage** du serveur
+> (`AdminBootstrap`). Sur un déploiement neuf (0 utilisateur au boot), personne n'était promu, et il
+> fallait se connecter **puis redémarrer** Render — pénible. Désormais la promotion est aussi
+> appliquée **à la connexion** (composant `BootstrapRoles` utilisé par le flux d'auth), donc **plus
+> besoin de redémarrer**. La logique ne **rétrograde jamais** un rôle (un admin listé comme coach
+> reste admin).
+
+**Comment créer des COACH ? Deux façons :**
+1. **Désignation par email (le « pré-seed » des coachs) :** mettre l'email du coach (ex. le compte
+   de ton frère) dans `MUSCLEMAP_COACH_EMAILS`. À sa prochaine connexion, il devient COACH
+   automatiquement. Idéal pour un coach attitré.
+2. **Via l'interface admin (à la volée) :** une fois ADMIN, ouvrir **`/admin`** → la liste des
+   utilisateurs → changer le rôle d'un compte en **COACH** (ou ADMIN) dans le menu déroulant.
+
+> 💡 **Pourquoi on ne « pré-seed » pas de faux comptes coach ?** Parce qu'un coach est un **vrai
+> compte** (souvent Google) : on ne peut pas inventer son mot de passe à l'avance. La bonne méthode
+> est donc de **désigner son email** (option 1) ou de le **promouvoir** une fois inscrit (option 2).
+> Le catalogue (exercices/muscles), lui, est bien pré-rempli — voir `CatalogBootstrap`.
+
+### 11.2 Ce que l'interface `/admin` permet (déjà en place)
+
+L'écran admin (`AdminPage.tsx`, réservé au rôle ADMIN) offre :
+- **Métriques de plateforme** : nb d'utilisateurs, profils, programmes, séances, vidéos coach…
+- **Gestion des utilisateurs** : pour chaque compte, un **menu déroulant de rôle** (USER/COACH/
+  ADMIN) et un **bouton activer/désactiver**. Ton propre compte est **verrouillé** (impossible de te
+  retirer ADMIN ou de te désactiver — protection aussi appliquée côté serveur dans `AdminServiceImpl`).
+
+API correspondante : `GET /admin/metrics`, `GET /admin/users`, `PATCH /admin/users/{id}/role`,
+`PATCH /admin/users/{id}/status`.
+
+### 11.3 Recette express : se connecter en admin puis en coach
+
+1. **Déploie** le backend à jour (le correctif « rôle à la connexion » doit être en ligne).
+2. Connecte-toi sur le site avec **`omarmnif123@gmail.com`** → tu es **ADMIN** (menu *Admin*
+   visible). Si tu étais déjà connecté avant le déploiement, **déconnecte-toi puis reconnecte-toi**.
+3. Inscris un **2ᵉ compte** (ex. `coach@demo.com`), ou désigne-le via `MUSCLEMAP_COACH_EMAILS`.
+4. Dans **`/admin`**, passe ce compte en **COACH** (si tu n'as pas utilisé la désignation par email).
+5. Connecte-toi avec ce 2ᵉ compte → le **Coach Studio** (`/coach`) apparaît.
+
+### 11.4 Connecter IntelliJ (ou DBeaver) à la base Postgres de Render
+
+> 💡 **Interne vs externe.** L'URL **interne** (hôte `dpg-xxxxx-a`) ne fonctionne **que depuis
+> l'intérieur de Render** (c'est ce que le backend utilise). Depuis ton PC, il faut l'URL
+> **externe**, dont l'hôte finit par `.<region>-postgres.render.com` et qui **exige le SSL**.
+
+**Où trouver l'URL externe ?** Dans le dashboard Render → clique sur la base **`musclemap-db`** →
+section **« Connections »** (ou le bouton **« Connect »** en haut à droite). Tu y vois plusieurs
+champs : *Hostname*, *Port*, *Database*, *Username*, *Password*, **Internal Database URL**, et
+**External Database URL** (+ une *PSQL Command*). Copie l'**External Database URL** ; elle ressemble à :
+```
+postgresql://musclemap:MOTDEPASSE@dpg-xxxxx-a.oregon-postgres.render.com/musclemap
+```
+
+**Dans IntelliJ** (fenêtre **Database** → **+** → **Data Source → PostgreSQL**) :
+
+| Champ | Valeur |
+|---|---|
+| Host | `dpg-xxxxx-a.oregon-postgres.render.com` (l'hôte **externe**) |
+| Port | `5432` |
+| User | `musclemap` |
+| Password | *(celui de l'External URL)* — cocher *Save password* |
+| Database | `musclemap` |
+| **SSL** | onglet **Advanced** → propriété `sslmode` = `require` (obligatoire en externe) |
+
+Si IntelliJ propose *Download missing driver files* → **Download**, puis **Test Connection** (vert) →
+**OK**. Parcourir : `musclemap → public → tables` (`users`, `exercises`, …).
+
+**Astuce — changer un rôle en SQL** (si tu préfères, une fois connecté) :
+```sql
+SELECT id, email, role FROM users;
+UPDATE users SET role = 'COACH' WHERE email = 'coach@demo.com';
+```
+(Pense à te reconnecter ensuite pour rafraîchir le jeton.) Mais avec la désignation par email
+(11.1), tu n'en as normalement plus besoin.
 
 ---
 

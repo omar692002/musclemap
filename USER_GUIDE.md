@@ -638,10 +638,17 @@ sequenceDiagram
 - The role is a **JWT claim**, surfaced as a Spring `ROLE_*` authority by the filter.
 - Route gates in `SecurityConfig`: `/admin/**` → ADMIN, `/coach/**` → COACH or ADMIN, public
   read for `/catalog/**` and `/generator/**`, everything else authenticated.
-- **Bootstrap:** `AdminBootstrap` elevates the configured owner email
-  (`musclemap.admin.bootstrap-emails`, default `omarmnif123@gmail.com`) to ADMIN on startup — so
-  there is always a way in. Admins **cannot lock themselves out** (the service refuses to drop your
-  own ADMIN role or disable yourself).
+- **Role bootstrap:** designated emails are granted a role **automatically — both at startup AND on
+  first sign-in** (no restart needed), via the shared `BootstrapRoles` resolver. `MUSCLEMAP_ADMIN_EMAILS`
+  (default `omarmnif123@gmail.com`) → ADMIN; `MUSCLEMAP_COACH_EMAILS` → COACH (e.g. the coach's
+  account). `resolve()` only ever **raises** a role (USER < COACH < ADMIN), never demotes. This fixes
+  the original chicken-and-egg where a fresh deploy (0 users at boot) left no way to become the first
+  admin without a restart/SQL.
+- **Admin-managed roles:** an ADMIN can change any user's role (USER/COACH/ADMIN) and enable/disable
+  accounts via `/admin` (UI) → `PATCH /admin/users/{id}/role|status`. Admins **cannot lock themselves
+  out** (the service refuses to drop your own ADMIN role or disable yourself).
+- **Caveat:** the role lives in the JWT, so after any role change the affected user must **sign out
+  and back in** to receive a token carrying the new role.
 
 ### The relationship: Google OAuth ↔ OAuth2 ↔ JWT ↔ Spring Security
 - **OAuth2** is the *authorization framework*. **"Sign in with Google" (OIDC)** is an OAuth2-based
