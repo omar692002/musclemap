@@ -1,13 +1,9 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Gauge } from 'lucide-react'
-import type { WorkoutLog } from '../../domain/models/WorkoutLog'
-import type { Exercise } from '../../domain/models/Exercise'
 import { MuscleRole } from '../../domain/enums/MuscleRole'
 import { TrainingStatus } from '../../domain/enums/TrainingStatus'
 import { MuscleReadiness } from '../../domain/enums/MuscleReadiness'
-import { computeMuscleIntel, type MuscleGroupIntel } from './muscleIntel'
-import { useExerciseData } from '../exercise-browser/useExerciseData'
-import { listWorkouts, readLocalWorkouts } from '../workouts/workoutApi'
+import { fetchMuscleIntel, type MuscleGroupIntel, type MuscleIntelSummary } from './intelApi'
 import { Skeleton } from '../../components/Skeleton'
 import { EmptyState } from '../../components/StateMessage'
 import {
@@ -19,19 +15,20 @@ import {
   RECOVERY_ADVICE_LABELS,
 } from '../../config/labels'
 
-/** Seeds workout logs from the local cache, then refreshes from the backend (EM6 pattern). */
-function useWorkoutLogs(): WorkoutLog[] {
-  const [logs, setLogs] = useState<WorkoutLog[]>(readLocalWorkouts)
+function useMuscleIntel(): { summary: MuscleIntelSummary | null; loading: boolean; error: boolean } {
+  const [summary, setSummary] = useState<MuscleIntelSummary | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
+
   useEffect(() => {
     let active = true
-    listWorkouts()
-      .then((l) => active && setLogs(l))
-      .catch(() => undefined)
-    return () => {
-      active = false
-    }
+    fetchMuscleIntel()
+      .then((data) => { if (active) { setSummary(data); setLoading(false) } })
+      .catch(() => { if (active) { setError(true); setLoading(false) } })
+    return () => { active = false }
   }, [])
-  return logs
+
+  return { summary, loading, error }
 }
 
 /** Trims trailing zeros: 4 → "4", 2.5 → "2.5". */
@@ -39,7 +36,6 @@ function num(value: number): string {
   return Number.isInteger(value) ? String(value) : value.toFixed(1)
 }
 
-/** Tailwind tone per training status (text / bg pairs for the badge). */
 const STATUS_TONE: Readonly<Record<TrainingStatus, string>> = {
   [TrainingStatus.Untrained]: 'bg-subtle text-muted',
   [TrainingStatus.Undertrained]: 'bg-amber-500/10 text-amber-600',
@@ -47,7 +43,6 @@ const STATUS_TONE: Readonly<Record<TrainingStatus, string>> = {
   [TrainingStatus.Overtrained]: 'bg-rose-500/10 text-rose-600',
 }
 
-/** Bar/dot fill per training status. */
 const STATUS_FILL: Readonly<Record<TrainingStatus, string>> = {
   [TrainingStatus.Untrained]: 'bg-line',
   [TrainingStatus.Undertrained]: 'bg-amber-400',
@@ -55,14 +50,12 @@ const STATUS_FILL: Readonly<Record<TrainingStatus, string>> = {
   [TrainingStatus.Overtrained]: 'bg-rose-500',
 }
 
-/** Dot colour per readiness. */
 const READINESS_DOT: Readonly<Record<MuscleReadiness, string>> = {
   [MuscleReadiness.Ready]: 'bg-emerald-500',
   [MuscleReadiness.Recovering]: 'bg-amber-400',
   [MuscleReadiness.Fatigued]: 'bg-rose-500',
 }
 
-/** A muscle group's weekly volume against its MEV/MAV/MRV landmarks. */
 function LandmarkBar({ intel }: { intel: MuscleGroupIntel }) {
   const { weeklyEffectiveSets: weekly, landmarks, trainingStatus } = intel
   const scaleMax = Math.max(landmarks.mrv * 1.15, weekly * 1.05, 1)
@@ -86,7 +79,6 @@ function LandmarkBar({ intel }: { intel: MuscleGroupIntel }) {
   )
 }
 
-/** A thin recovery-progress bar tinted by readiness. */
 function RecoveryBar({ intel }: { intel: MuscleGroupIntel }) {
   return (
     <div className="h-1.5 rounded-full bg-subtle">
@@ -101,7 +93,9 @@ function RecoveryBar({ intel }: { intel: MuscleGroupIntel }) {
 function lastTrainedLabel(intel: MuscleGroupIntel): string {
   if (intel.hoursSinceLast == null) return UiText.intelNotTrained
   const h = intel.hoursSinceLast
-  const value = h >= 24 ? `${Math.round(h / 24)}${UiText.daysUnitShort}` : `${Math.max(1, Math.round(h))}${UiText.hoursUnitShort}`
+  const value = h >= 24
+    ? `${Math.round(h / 24)}${UiText.daysUnitShort}`
+    : `${Math.max(1, Math.round(h))}${UiText.hoursUnitShort}`
   return `${UiText.intelLastTrained}: ${value}`
 }
 
@@ -156,24 +150,8 @@ function GroupCard({ intel }: { intel: MuscleGroupIntel }) {
   )
 }
 
-/**
- * Advanced Muscle Intelligence (EM8): per-muscle-group fatigue, recovery
- * readiness and weekly volume vs evidence-based landmarks (MEV/MAV/MRV), derived
- * from the EM6 workout history. Shows an honest empty state until the first
- * session is tracked.
- */
 export function MuscleIntelPage() {
-  const logs = useWorkoutLogs()
-  const { exercises, muscleIndex, loading } = useExerciseData()
-
-  const exerciseIndex = useMemo(
-    () => new Map<string, Exercise>(exercises.map((e) => [e.id, e])),
-    [exercises],
-  )
-  const summary = useMemo(
-    () => computeMuscleIntel(logs, exerciseIndex, muscleIndex),
-    [logs, exerciseIndex, muscleIndex],
-  )
+  const { summary, loading, error } = useMuscleIntel()
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-6">
@@ -193,7 +171,11 @@ export function MuscleIntelPage() {
             <Skeleton key={i} className="h-36 w-full rounded-2xl" />
           ))}
         </div>
-      ) : summary.hasData ? (
+      ) : error || !summary ? (
+        <EmptyState icon={Gauge} title={UiText.intelNoData} description={UiText.intelNoDataHint} />
+      ) : !summary.hasData ? (
+        <EmptyState icon={Gauge} title={UiText.intelNoData} description={UiText.intelNoDataHint} />
+      ) : (
         <>
           <div className="grid grid-cols-2 gap-3">
             <div className="rounded-2xl border border-line/80 bg-surface p-4 shadow-sm">
@@ -212,8 +194,6 @@ export function MuscleIntelPage() {
             ))}
           </div>
         </>
-      ) : (
-        <EmptyState icon={Gauge} title={UiText.intelNoData} description={UiText.intelNoDataHint} />
       )}
     </div>
   )

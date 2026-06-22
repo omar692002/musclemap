@@ -25,10 +25,11 @@ public record ProfileResponse(
         Integer weeklyFrequency,
         List<Equipment> availableEquipment,
         String injuryLimitations,
-        boolean onboardingCompleted) {
+        boolean onboardingCompleted,
+        boolean onboardingSkipped) {
 
     /** The "no profile yet" response: onboarding has not been completed. */
     public static ProfileResponse empty() {
-        return new ProfileResponse(null, null, null, null, null, null, null, null, List.of(), null, false);
+        return new ProfileResponse(null, null, null, null, null, null, null, null, List.of(), null, false, false);
     }
 }

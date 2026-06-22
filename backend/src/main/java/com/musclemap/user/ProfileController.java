@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -43,5 +44,11 @@ public class ProfileController {
     public ProfileResponse saveMyProfile(@AuthenticationPrincipal AuthenticatedUser principal,
                                          @Valid @RequestBody ProfileRequest request) {
         return profileService.save(principal.id(), request);
+    }
+
+    @PostMapping("/skip")
+    @Operation(summary = "Dismiss the onboarding prompt for the current user (idempotent)")
+    public ProfileResponse skipOnboarding(@AuthenticationPrincipal AuthenticatedUser principal) {
+        return profileService.skipOnboarding(principal.id());
     }
 }

@@ -66,4 +66,7 @@ public class UserProfile extends BaseEntity {
 
     @Column(name = "onboarding_completed", nullable = false)
     private boolean onboardingCompleted = false;
+
+    @Column(name = "onboarding_skipped", nullable = false)
+    private boolean onboardingSkipped = false;
 }

@@ -23,6 +23,7 @@ export interface UserProfile {
   readonly availableEquipment: readonly Equipment[]
   readonly injuryLimitations: string | null
   readonly onboardingCompleted: boolean
+  readonly onboardingSkipped: boolean
 }
 
 /** A blank profile — the starting point for a user who has not onboarded yet. */
@@ -39,5 +40,6 @@ export function emptyProfile(): UserProfile {
     availableEquipment: [],
     injuryLimitations: null,
     onboardingCompleted: false,
+    onboardingSkipped: false,
   }
 }

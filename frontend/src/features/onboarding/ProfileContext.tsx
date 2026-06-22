@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react'
 import type { UserProfile } from '../../domain/models/UserProfile'
 import { useAuth } from '../auth/AuthContext'
-import { fetchProfile, isOnboardingSkipped, skipOnboarding } from './profileApi'
+import { fetchProfile, isOnboardingSkipped, skipOnboarding, skipOnboardingOnBackend } from './profileApi'
 
 interface ProfileContextValue {
   /** The signed-in user's profile, or null while unknown / signed out. */
@@ -38,6 +38,7 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
   const skip = useCallback(() => {
     if (!user) return
     skipOnboarding(user.email)
+    void skipOnboardingOnBackend()
     setSkipped(true)
   }, [user])
 
@@ -49,7 +50,8 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
     }
     setLoading(true)
     try {
-      setProfile(await fetchProfile())
+      const loaded = await fetchProfile()
+      if (loaded !== null) setProfile(loaded)
     } finally {
       setLoading(false)
     }
@@ -74,7 +76,10 @@ export function ProfileProvider({ children }: { children: ReactNode }) {
       }
       try {
         const loaded = await fetchProfile()
-        if (active) setProfile(loaded)
+        if (active && loaded !== null) {
+          setProfile(loaded)
+          if (loaded.onboardingSkipped) setSkipped(true)
+        }
       } finally {
         if (active) setLoading(false)
       }

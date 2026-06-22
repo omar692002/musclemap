@@ -16,4 +16,7 @@ public interface UserProfileService {
 
     /** Creates or updates the user's profile from the onboarding payload. */
     ProfileResponse save(UUID userId, ProfileRequest request);
+
+    /** Marks the onboarding prompt as dismissed for this user (idempotent). */
+    ProfileResponse skipOnboarding(UUID userId);
 }

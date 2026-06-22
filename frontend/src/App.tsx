@@ -83,13 +83,13 @@ function App() {
           <Route path={AppRoutes.muscleMap} element={<MuscleMapPage />} />
           <Route path={AppRoutes.program} element={<ProgramGeneratorPage />} />
           <Route path={AppRoutes.progress} element={<RequireAuth><AnalyticsPage /></RequireAuth>} />
-          <Route path={AppRoutes.intel} element={<MuscleIntelPage />} />
+          <Route path={AppRoutes.intel} element={<RequireAuth><MuscleIntelPage /></RequireAuth>} />
           <Route path={AppRoutes.admin} element={<RequireRole roles={[UserRole.Admin]}><AdminPage /></RequireRole>} />
           <Route
             path={AppRoutes.coach}
             element={<RequireRole roles={[UserRole.Coach, UserRole.Admin]}><CoachStudioPage /></RequireRole>}
           />
-          <Route path={AppRoutes.content} element={<ContentLibraryPage />} />
+          <Route path={AppRoutes.content} element={<RequireAuth><ContentLibraryPage /></RequireAuth>} />
           <Route path={AppRoutes.subscription} element={<RequireAuth><SubscriptionPage /></RequireAuth>} />
           <Route path={AppRoutes.onboarding} element={<RequireAuth><OnboardingPage /></RequireAuth>} />
           <Route path={AppRoutes.profile} element={<RequireAuth><ProfilePage /></RequireAuth>} />

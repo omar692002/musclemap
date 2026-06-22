@@ -28,6 +28,7 @@ interface ProfilePayload {
   availableEquipment: string[]
   injuryLimitations: string | null
   onboardingCompleted?: boolean
+  onboardingSkipped?: boolean
 }
 
 function toProfile(payload: ProfilePayload): UserProfile {
@@ -44,6 +45,7 @@ function toProfile(payload: ProfilePayload): UserProfile {
     availableEquipment: (payload.availableEquipment as UserProfile['availableEquipment']) ?? base.availableEquipment,
     injuryLimitations: payload.injuryLimitations ?? null,
     onboardingCompleted: payload.onboardingCompleted ?? false,
+    onboardingSkipped: payload.onboardingSkipped ?? false,
   }
 }
 
@@ -91,8 +93,20 @@ function authHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {}
 }
 
-/** Loads the current user's profile (backend when available, else local cache). */
-export async function fetchProfile(): Promise<UserProfile> {
+/**
+ * Loads the current user's profile.
+ *
+ * When a backend is configured:
+ *   - 200 OK  → use the server response (source of truth).
+ *   - failure → use the local cache if non-empty, otherwise `null`.
+ *     Returning `null` (rather than `emptyProfile()`) prevents a blank cache
+ *     after sign-out from being misread as "onboarding not done" and triggering
+ *     the mandatory-onboarding redirect on the next sign-in.
+ *
+ * When no backend is configured (static/guest mode):
+ *   - always return the local cache (falls back to `emptyProfile()`).
+ */
+export async function fetchProfile(): Promise<UserProfile | null> {
   if (usesBackend()) {
     try {
       const res = await fetch(`${AuthConfig.apiBaseUrl}/profile`, {
@@ -104,10 +118,25 @@ export async function fetchProfile(): Promise<UserProfile> {
         return profile
       }
     } catch {
-      // Network/CORS error or backend down: fall through to the local cache.
+      // Network / CORS error: fall through to the cache.
     }
+    // Backend reachable but returned non-OK, or threw. Use local cache only
+    // if it actually contains data (i.e. was written before sign-out).
+    const cached = readLocalOrNull()
+    return cached
   }
   return readLocal()
+}
+
+/** Returns null when nothing has been written to the local cache yet. */
+function readLocalOrNull(): UserProfile | null {
+  try {
+    const raw = localStorage.getItem(StorageKey.UserProfile)
+    if (!raw) return null
+    return toProfile(JSON.parse(raw) as ProfilePayload)
+  } catch {
+    return null
+  }
 }
 
 /** Saves the profile (backend when available); always caches locally. */
@@ -153,6 +182,23 @@ export function clearLocalProfile(): void {
     localStorage.removeItem(StorageKey.UserProfile)
   } catch {
     // Nothing stored / storage unavailable — nothing to do.
+  }
+}
+
+/**
+ * Tells the backend to mark this user's onboarding as dismissed. The returned
+ * profile (with onboardingSkipped: true) is the source of truth across devices;
+ * localStorage remains the fallback for offline / no-backend sessions.
+ */
+export async function skipOnboardingOnBackend(): Promise<void> {
+  if (!usesBackend()) return
+  try {
+    await fetch(`${AuthConfig.apiBaseUrl}/profile/skip`, {
+      method: 'POST',
+      headers: { ...authHeaders() },
+    })
+  } catch {
+    // Network failure: localStorage already recorded the skip.
   }
 }
 

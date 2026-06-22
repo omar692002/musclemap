@@ -128,4 +128,35 @@ class UserProfileServiceImplTest {
         assertThat(response.age()).isNull();
         assertThat(response.availableEquipment()).isEmpty();
     }
+
+    @Test
+    void skipOnboarding_setsOnboardingSkippedOnExistingProfile() {
+        UUID userId = UUID.randomUUID();
+        UserProfile existing = new UserProfile();
+        existing.setUser(new User());
+        when(profileRepository.findByUserId(userId)).thenReturn(Optional.of(existing));
+        when(profileRepository.save(any(UserProfile.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        ProfileResponse response = service.skipOnboarding(userId);
+
+        assertThat(existing.isOnboardingSkipped()).isTrue();
+        assertThat(response.onboardingSkipped()).isTrue();
+        verify(userRepository, never()).findById(any());
+    }
+
+    @Test
+    void skipOnboarding_createsProfileRowWhenNoneExists() {
+        UUID userId = UUID.randomUUID();
+        User user = new User();
+        user.setEmail("test@example.com");
+        when(profileRepository.findByUserId(userId)).thenReturn(Optional.empty());
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(profileRepository.save(any(UserProfile.class))).thenAnswer(inv -> inv.getArgument(0));
+
+        ProfileResponse response = service.skipOnboarding(userId);
+
+        verify(profileRepository).save(profileCaptor.capture());
+        assertThat(profileCaptor.getValue().isOnboardingSkipped()).isTrue();
+        assertThat(response.onboardingSkipped()).isTrue();
+    }
 }

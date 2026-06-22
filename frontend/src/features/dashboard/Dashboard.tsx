@@ -167,7 +167,7 @@ export function Dashboard() {
       <div className="mt-6 flex items-center justify-between">
         <h2 className="text-xs font-semibold uppercase tracking-widest text-faint">{UiText.yourProfile}</h2>
         <Link
-          to={AppRoutes.onboarding}
+          to={AppRoutes.profile}
           className="inline-flex items-center gap-1 text-xs font-semibold text-orange-600 hover:text-orange-600"
         >
           <Pencil className="h-3.5 w-3.5" aria-hidden />

@@ -65,6 +65,15 @@ public class UserProfileServiceImpl implements UserProfileService {
         return toResponse(profileRepository.save(profile));
     }
 
+    @Override
+    @Transactional
+    public ProfileResponse skipOnboarding(UUID userId) {
+        UserProfile profile = profileRepository.findByUserId(userId)
+                .orElseGet(() -> newProfileFor(userId));
+        profile.setOnboardingSkipped(true);
+        return toResponse(profileRepository.save(profile));
+    }
+
     private UserProfile newProfileFor(UUID userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ResourceNotFoundException.of("User", userId));
@@ -120,6 +129,7 @@ public class UserProfileServiceImpl implements UserProfileService {
                 profile.getWeeklyFrequency(),
                 deserializeEquipment(profile.getAvailableEquipment()),
                 profile.getInjuryLimitations(),
-                profile.isOnboardingCompleted());
+                profile.isOnboardingCompleted(),
+                profile.isOnboardingSkipped());
     }
 }
